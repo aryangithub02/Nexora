@@ -1,26 +1,726 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ===== APPEARANCE CONFIGURATION SYSTEM ===== */
+  
+  /* 1. Base Theme (Default: Dark) */
+  /* [data-theme="dark"] default fallback */
+  --bg-main: #0b0e13;
+  --bg-card: #121722;
+  --bg-panel: #161c29;
+  --bg-hover: #1d2536;
+  --border-soft: rgba(255,255,255,.06);
+  --text-main: #ffffff;
+  --text-muted: #aab3c0;
+  --glass: rgba(0,0,0,.45);
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.4);
+
+  /* 2. Accent System (Default: Mint) */
+  --accent: #4ef2b2; /* Will be overridden by JS */
+
+  /* Legacy Backward Compatibility Maps */
+  --bg-primary: var(--bg-main);
+  /* --bg-card matches exactly, so it works automatically if defined above */
+  --text-primary: var(--text-main);
+  /* --text-muted matches exactly */
+  --text-disabled: var(--text-muted); /* approximate */
+  
+  --background: var(--bg-main);
+  --foreground: var(--text-main);
+  
+  --accent-primary: var(--accent); 
+  --accent-highlight: var(--accent);
+  --accent-secondary: #FF6B6B;
+}
+
+/* ===== THEME VARIANTS ===== */
+
+/* Midnight Theme (Deep Blue/Black) */
+[data-theme="midnight"] {
+  --bg-main: #05060a;
+  --bg-card: #0b0d15;
+  --bg-panel: #10121b;
+  --bg-hover: #161926;
+  --border-soft: rgba(255,255,255,.04);
+  --text-main: #f5f7ff;
+  --text-muted: #8b93a6;
+  --glass: rgba(0,0,0,.6);
+  --shadow-soft: 0 14px 40px rgba(0,0,0,.6);
+}
+
+/* Solar Dusk Theme (Warm Evening) */
+/* Solar Dusk Theme (Warm Evening) */
+[data-theme="solar"] {
+  --bg-main: #26190e;
+  --bg-card: #302012;
+  --bg-panel: #3b2818;
+  --bg-hover: #4a321f;
+  --border-soft: rgba(255,200,150,.12);
+  --text-main: #fff1e2;
+  --text-muted: #d1bfa8;
+  --glass: rgba(40,20,10,.75);
+  --shadow-soft: 0 12px 32px rgba(0,0,0,.5);
+}
+
+/* ===== TEXT SCALING ===== */
+[data-text="small"] { font-size: 14px; } /* Root scaling */
+[data-text="normal"] { font-size: 16px; }
+[data-text="large"] { font-size: 18px; }
+
+/* ===== MOTION REDUCTION ===== */
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-card: var(--bg-card);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-highlight: var(--accent-highlight);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+  
+  --font-heading: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* ===== MOBILE-FIRST LAYOUT RULES ===== */
+/* On mobile, spacing comes from component geometry, not page layout */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure no horizontal scroll */
+  html, body {
+    max-width: 100vw;
+  }
+  
+  /* Remove any desktop centering artifacts */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ===== DESKTOP FEED ENVELOPE ===== */
+/* On desktop, the feed becomes the scroll container centered on viewport */
+
+/* Medium screens (768px+): Feed centered on full viewport */
+@media (min-width: 769px) {
+  body {
+    overflow: hidden;
+  }
+  
+  .feed-envelope {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center reels on full viewport */
+    padding-top: 20px;
+    z-index: 10; /* Below sidebars (z-40) */
+  }
+  
+  .feed-envelope .reel-wrapper {
+    height: auto;
+    max-height: 75vh;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    margin-bottom: 24px;
+  }
+}
+
+/* Mobile reel snap behavior */
+@media (max-width: 768px) {
+  .reel-wrapper {
+    scroll-snap-align: start;
+    scroll-snap-stop: always; /* One scroll = one reel */
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Navbar Animations */
+@keyframes navbarFadeIn {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-navbar-fade {
+  animation: navbarFadeIn 300ms ease-out;
+}
+
+/* ===== LIKE - Emotional Impulse ===== */
+/* Coral Heart Bloom Animation */
+@keyframes heartBloom {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  15% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  45% {
+    transform: scale(1.15);
+  }
+  60% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-heart-bloom {
+  animation: heartBloom 900ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Heart Particle Drift */
+@keyframes particleDrift {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.animate-particle-drift {
+  animation: particleDrift 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Like Counter Spring Animation */
+@keyframes counterSpring {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-8px);
+  }
+  40% {
+    transform: translateY(2px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+  80% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-counter-spring {
+  animation: counterSpring 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Like Button Pulse */
+@keyframes likePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.animate-like-pulse {
+  animation: likePulse 200ms ease-in-out;
+}
+
+/* ===== COMMENT - Conversational Gravity ===== */
+/* Comment Sheet Slide */
+@keyframes sheetSlideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sheetSlideDown {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0.5;
+  }
+}
+
+.animate-sheet-up {
+  animation: sheetSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-sheet-down {
+  animation: sheetSlideDown 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mint Shimmer for new comments */
+@keyframes mintShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-mint-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(45, 226, 166, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: mintShimmer 1.5s ease-out forwards;
+}
+
+/* Comment Input Glow */
+@keyframes inputGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(45, 226, 166, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(45, 226, 166, 0.5);
+  }
+}
+
+.animate-input-glow {
+  animation: inputGlow 2s ease-in-out infinite;
+}
+
+/* ===== SHARE - Outward Motion ===== */
+/* Radial Menu Expansion */
+@keyframes radialExpand {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-radial-expand {
+  animation: radialExpand 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Reel Shrink during share */
+@keyframes reelShrink {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.92);
+  }
+}
+
+.animate-reel-shrink {
+  animation: reelShrink 300ms ease-out forwards;
+}
+
+/* Sent Badge Pulse */
+@keyframes sentPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-sent-pulse {
+  animation: sentPulse 1.5s ease-out forwards;
+}
+
+/* Share Icon Ripple */
+@keyframes shareRipple {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.animate-share-ripple {
+  animation: shareRipple 600ms ease-out forwards;
+}
+
+/* ===== BOOKMARK - Memory Act ===== */
+/* Mint Fill Animation */
+@keyframes bookmarkFill {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  30% {
+    transform: scale(1.3);
+    filter: brightness(1.5);
+  }
+  60% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.animate-bookmark-fill {
+  animation: bookmarkFill 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Border Glow for bookmarked reels */
+@keyframes borderGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(45, 226, 166, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(45, 226, 166, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(45, 226, 166, 0);
+  }
+}
+
+.animate-border-glow {
+  animation: borderGlow 1s ease-out forwards;
+}
+
+/* Memory Recall Pulse - when opening from Saved */
+@keyframes memoryPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  40% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.animate-memory-pulse {
+  animation: memoryPulse 2s ease-out forwards;
+}
+
+/* ===== GENERAL UI ANIMATIONS ===== */
+/* Backdrop Blur Fade */
+@keyframes backdropFade {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+.animate-backdrop-fade {
+  animation: backdropFade 300ms ease-out forwards;
+}
+
+/* Fade In Up */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 300ms ease-out forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 200ms ease-out forwards;
+}
+
+/* Button Press */
+@keyframes buttonPress {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.92);
+  }
+}
+
+.animate-button-press {
+  animation: buttonPress 150ms ease-out;
+}
+
+/* Spin */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== LEFT SPINE - Heartbeat System ===== */
+/* Active Icon Idle Pulse - Every 12 seconds */
+@keyframes idlePulse {
+  0%, 92%, 100% {
+    box-shadow: 0 0 0 0 rgba(79, 140, 255, 0);
+    transform: scale(1);
+  }
+  96% {
+    box-shadow: 0 0 20px 8px rgba(79, 140, 255, 0.4);
+    transform: scale(1.1);
+  }
+}
+
+.animate-idle-pulse {
+  animation: idlePulse 12s ease-in-out infinite;
+}
+
+/* Glow Ring for Active Icons */
+@keyframes glowRing {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.3), 0 0 15px 2px rgba(79, 140, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(79, 140, 255, 0.4), 0 0 25px 4px rgba(79, 140, 255, 0.3);
+  }
+}
+
+.animate-glow-ring {
+  animation: glowRing 3s ease-in-out infinite;
+}
+
+/* ===== FLOATING BUTTON - Light Trail ===== */
+@keyframes lightTrail {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 100;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-light-trail {
+  animation: lightTrail 1.5s ease-out forwards;
+}
+
+/* Slow breathing pulse */
+@keyframes slowBreath {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(79, 140, 255, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(79, 140, 255, 0.7);
+  }
+}
+
+.animate-slow-breath {
+  animation: slowBreath 4s ease-in-out infinite;
+}
+
+/* ===== REEL LUMINOSITY ===== */
+/* Video glow effect */
+@keyframes videoGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(79, 140, 255, 0.15),
+      0 0 60px rgba(45, 226, 166, 0.1),
+      0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(79, 140, 255, 0.2),
+      0 0 80px rgba(45, 226, 166, 0.15),
+      0 25px 70px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.animate-video-glow {
+  animation: videoGlow 8s ease-in-out infinite;
+}
+
+.shadow-accent-glow {
+  box-shadow: 0 20px 50px -12px color-mix(in srgb, var(--accent), transparent 60%);
+}
+
+/* Control Rail Glass Effect */
+.control-rail {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Social Badge Pill */
+.social-badge {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Caption Gradient Veil */
+.caption-veil {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.8) 30%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%
+  );
+}
+
+
+/* Slide Up Animation */
+@keyframes slideUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 200ms ease-out forwards;
+}
+
+/* ===== SKELETON LOADING ===== */
+@keyframes skeletonShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-skeleton-shimmer {
+  animation: skeletonShimmer 2s infinite linear;
+}
+
+/* ===== GHOST PULSE (Live Radar) ===== */
+@keyframes ghostPulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 0.9; 
+  }
+}
+
+.animate-ghost-pulse {
+  animation: ghostPulse 8s ease-in-out infinite;
 }
