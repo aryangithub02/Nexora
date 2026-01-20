@@ -134,7 +134,7 @@ export default function RegisterPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-black-500"
               placeholder="Confirm your password"
             />
           </div>
