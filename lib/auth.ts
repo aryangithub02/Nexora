@@ -2,6 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
+import { authenticator } from "@otplib/preset-default";
 import { connectToDatabase } from "./db";
 import UserModel from "../models/User";
 import Profile from "../models/Profile";
@@ -31,7 +32,6 @@ export const authOptions: NextAuthOptions = {
             throw new Error("No user found with this email");
           }
 
-          // Ensure user.password exists and is a string
           if (!user.password || typeof user.password !== 'string') {
             throw new Error("Invalid user data");
           }
@@ -64,13 +64,11 @@ export const authOptions: NextAuthOptions = {
           let existingUser = await UserModel.findOne({ email: user.email });
 
           if (!existingUser) {
-            // Create new user for Google OAuth (no password needed)
             existingUser = await UserModel.create({
               email: user.email,
             });
           }
 
-          // Ensure Profile exists
           const existingProfile = await Profile.findOne({ userId: existingUser._id });
           if (!existingProfile) {
             const baseUsername = user.email?.split("@")[0] || "user";
@@ -88,7 +86,6 @@ export const authOptions: NextAuthOptions = {
               avatarUrl: user.image,
             });
           } else if (!existingProfile.avatarUrl && user.image) {
-            // Update missing avatar for existing users
             existingProfile.avatarUrl = user.image;
             await existingProfile.save();
           }
@@ -101,17 +98,14 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async jwt({ token, user, account, trigger, session }) {
-      // 1. Initial Sign In
       if (user && account) {
         token.id = user.id;
-        // On login, fetch fresh version from DB (or use default if new)
         await connectToDatabase();
         const dbUser = await UserModel.findOne({ email: user.email });
         if (dbUser) {
           token.tokenVersion = dbUser.tokenVersion || 0;
           token.id = dbUser._id.toString();
 
-          // Fetch Profile for updated info
           const profile = await Profile.findOne({ userId: dbUser._id });
           if (profile) {
             token.picture = profile.avatarUrl || token.picture;
@@ -119,12 +113,10 @@ export const authOptions: NextAuthOptions = {
             token.username = profile.username;
           }
 
-          // Initial 2FA Check
           if (dbUser.twoFactorEnabled) {
             token.requires2FA = true;
             token.isTwoFactorVerified = false;
           } else {
-            // Enforce Mandatory 2FA Setup
             token.requires2FASetup = true;
           }
         }
@@ -143,18 +135,24 @@ export const authOptions: NextAuthOptions = {
               return token;
             }
 
-            // Check OTP
-            const { verify } = require("otplib");
+            const otpCode = String(session.otp).trim();
             let isValid = false;
 
-            // Try TOTP
-            try {
-              isValid = verify({ token: session.otp, secret: dbUser.twoFactorSecret });
-            } catch (e) { /* ignore */ }
+            // Validate and try TOTP (must be exactly 6 digits)
+            if (/^\d{6}$/.test(otpCode)) {
+              try {
+                isValid = authenticator.verify({ token: otpCode, secret: dbUser.twoFactorSecret });
+              } catch (e) {
+                console.error("TOTP verification error:", e);
+              }
+            }
 
-            // Try Backup Code
-            if (!isValid && dbUser.backupCodes && dbUser.backupCodes.length > 0) {
-              const backupCodeIndex = dbUser.backupCodes.indexOf(session.otp);
+            // Try Backup Code (must be exactly 8 alphanumeric characters)
+            if (!isValid && /^[A-Za-z0-9]{8}$/.test(otpCode) && dbUser.backupCodes && dbUser.backupCodes.length > 0) {
+              const normalizedCode = otpCode.toUpperCase();
+              const backupCodeIndex = dbUser.backupCodes.findIndex(
+                (code: string) => code.toUpperCase() === normalizedCode
+              );
               if (backupCodeIndex > -1) {
                 isValid = true;
                 dbUser.backupCodes.splice(backupCodeIndex, 1);

@@ -85,14 +85,12 @@ function SessionHistoryList() {
 export default function AccountSettings() {
     const { data: session } = useSession();
 
-    // Email State
     const [isChangingEmail, setIsChangingEmail] = useState(false);
     const [newEmail, setNewEmail] = useState("");
     const [emailStep, setEmailStep] = useState<"input" | "verify">("input");
     const [emailOtp, setEmailOtp] = useState("");
     const [loadingEmail, setLoadingEmail] = useState(false);
 
-    // Password State
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -101,30 +99,25 @@ export default function AccountSettings() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loadingPass, setLoadingPass] = useState(false);
 
-    // 2FA State
-    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false); // Should fetch from profile first? Assuming false for now or fetch
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
     const [show2FAModal, setShow2FAModal] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState("");
     const [twoFactorCode, setTwoFactorCode] = useState("");
     const [loading2FA, setLoading2FA] = useState(false);
 
-    // Backup Codes
     const [backupCodes, setBackupCodes] = useState<string[]>([]);
     const [showBackupModal, setShowBackupModal] = useState(false);
     const [loadingBackup, setLoadingBackup] = useState(false);
 
 
 
-    // Delete Account
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
     const [deletePassword, setDeletePassword] = useState("");
     const [loadingDelete, setLoadingDelete] = useState(false);
 
-    // Data Download
     const [downloading, setDownloading] = useState(false);
 
-    // Privacy State
     const [privacy, setPrivacy] = useState({
         isPublic: true,
         requireFollowApproval: false,
@@ -136,7 +129,6 @@ export default function AccountSettings() {
     const [loadingPrivacy, setLoadingPrivacy] = useState(true);
 
     useEffect(() => {
-        // Fetch privacy settings
         fetch("/api/settings/privacy", { method: "PATCH", body: JSON.stringify({}) }) // Using empty patch to get current or use GET if implemented
             .then(res => res.json())
             .then(data => {

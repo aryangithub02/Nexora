@@ -30,7 +30,7 @@ export interface ReelCardRef {
   isMuted: () => boolean;
 }
 
-// Heart Particle Component for Like Animation
+
 function HeartParticle({ x, y, delay }: { x: number; y: number; delay: number }) {
   return (
     <div
@@ -63,27 +63,22 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    // Removed local showPlayButton, isMuted state, etc. where it conflicts with global
     const [showPlayButton, setShowPlayButton] = useState(false);
     const [progress, setProgress] = useState(0);
-    // const [volume, setVolume] = useState(1); // REPLACED BY CONTEXT
+
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [showVolumeSlider, setShowVolumeSlider] = useState(false);
     const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Sync volume to video element whenever global state changes
     useEffect(() => {
       if (videoRef.current) {
-        // Calculate target volume based on user setting + square law
         let targetVolume = volume * volume;
 
-        // Apply Safety Cap if enabled (Max 0.85)
         if (autoVolumeProtection && targetVolume > 0.85) {
           targetVolume = 0.85;
         }
 
-        // Apply immediately
         videoRef.current.volume = targetVolume;
         videoRef.current.muted = isMuted;
       }
@@ -106,7 +101,6 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     const [isRailActive, setIsRailActive] = useState(true);
     const railTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [loadingFollow, setLoadingFollow] = useState(false);
-    // Fetch creator profile using Cache
     const creatorProfile = useProfileCache(video.uploadedBy?._id?.toString());
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
@@ -120,27 +114,22 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     const [commentCount, setCommentCount] = useState(0);
     const [isCommentSheetOpen, setIsCommentSheetOpen] = useState(false);
 
-    // ===== SHARE STATE =====
     const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
     const [showSentBadge, setShowSentBadge] = useState(false);
 
-    // ===== BOOKMARK STATE =====
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [bookmarkAnimating, setBookmarkAnimating] = useState(false);
     const [showBorderGlow, setShowBorderGlow] = useState(false);
 
-    // ===== OPTIONS MENU STATE =====
     const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState(video.title);
     const [editDescription, setEditDescription] = useState(video.description || "");
     const [isSavingEdit, setIsSavingEdit] = useState(false);
 
-    // ===== CAPTION SHEET STATE =====
     const [isCaptionSheetOpen, setIsCaptionSheetOpen] = useState(false);
     const previousVolumeRef = useRef(1);
 
-    // Expose methods to parent
     useImperativeHandle(ref, () => ({
       play: () => {
         videoRef.current?.play().catch(() => {
@@ -169,13 +158,11 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
       isMuted: () => isMuted,
     }));
 
-    // Fetch interaction states on mount
     useEffect(() => {
       const fetchInteractionStates = async () => {
         if (!video._id) return;
         const videoId = video._id.toString();
 
-        // Fetch like status
         try {
           const likeRes = await fetch(`/api/likes?videoId=${videoId}`);
           if (likeRes.ok) {
@@ -187,7 +174,6 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           console.error("Failed to fetch like status", error);
         }
 
-        // Fetch comment count
         try {
           const commentRes = await fetch(`/api/comments?videoId=${videoId}&limit=1`);
           if (commentRes.ok) {
@@ -198,7 +184,6 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           console.error("Failed to fetch comment count", error);
         }
 
-        // Fetch bookmark status
         try {
           const bookmarkRes = await fetch(`/api/bookmarks?videoId=${videoId}`);
           if (bookmarkRes.ok) {
@@ -215,7 +200,6 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
       }
     }, [video._id, session?.user]);
 
-    // Check follow status on mount
     useEffect(() => {
       const checkFollowStatus = async () => {
         if (!video.uploadedBy?._id) return;
@@ -235,13 +219,11 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
 
 
-    // ===== LIKE HANDLERS =====
     const triggerLikeAnimation = useCallback((x: number, y: number) => {
       setHeartPosition({ x, y });
       setShowHeartAnimation(true);
       setLikeAnimating(true);
 
-      // Generate particles
       const particles = [];
       for (let i = 0; i < 6; i++) {
         particles.push({
@@ -252,7 +234,6 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
       }
       setHeartParticles(particles);
 
-      // Clean up animations
       setTimeout(() => setShowHeartAnimation(false), 900);
       setTimeout(() => setHeartParticles([]), 1500);
       setTimeout(() => setLikeAnimating(false), 500);

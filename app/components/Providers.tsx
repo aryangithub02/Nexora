@@ -6,6 +6,8 @@ import { NotificationProvider } from "@/app/context/NotificationContext";
 import { VolumeProvider } from "@/app/context/VolumeContext";
 import { AppearanceProvider } from "@/app/context/AppearanceContext";
 import NotificationPanel from "@/app/components/NotificationPanel";
+import RouteLoadingBar from "@/app/components/RouteLoadingBar";
+import { Suspense } from "react";
 
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -18,6 +20,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider refetchInterval={5 * 60}>
       <AppearanceProvider>
+        <Suspense fallback={null}>
+          <RouteLoadingBar />
+        </Suspense>
         <VolumeProvider>
           <NotificationProvider>
             <NotificationPanel />

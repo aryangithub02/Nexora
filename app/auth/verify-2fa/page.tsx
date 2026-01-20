@@ -22,8 +22,20 @@ export default function VerifyTwoFactor() {
         }
     }, [status, session, router]);
 
+    const expectedLength = isBackup ? 8 : 6;
+    const isCodeValid = code.length === expectedLength;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Client-side validation
+        if (!isCodeValid) {
+            setError(isBackup
+                ? "Backup code must be exactly 8 characters."
+                : "Code must be exactly 6 digits.");
+            return;
+        }
+
         setLoading(true);
         setError("");
 
@@ -91,9 +103,20 @@ export default function VerifyTwoFactor() {
                                 <input
                                     type="text"
                                     value={code}
-                                    onChange={(e) => setCode(e.target.value.trim())}
-                                    className="block w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg" // Added center and tracking
+                                    onChange={(e) => {
+                                        const value = e.target.value.trim();
+                                        // For OTP, only allow digits; for backup, allow alphanumeric
+                                        if (isBackup) {
+                                            setCode(value.toUpperCase().slice(0, 8));
+                                        } else {
+                                            setCode(value.replace(/\D/g, '').slice(0, 6));
+                                        }
+                                    }}
+                                    className="block w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
                                     placeholder={isBackup ? "XXXXXXXX" : "000000"}
+                                    maxLength={expectedLength}
+                                    minLength={expectedLength}
+                                    pattern={isBackup ? "[A-Za-z0-9]{8}" : "[0-9]{6}"}
                                     required
                                     autoFocus
                                     autoComplete="off"
@@ -109,7 +132,7 @@ export default function VerifyTwoFactor() {
 
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || !isCodeValid}
                             className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
@@ -120,6 +143,11 @@ export default function VerifyTwoFactor() {
                                 </>
                             )}
                         </button>
+
+                        {/* Character count indicator */}
+                        <p className="text-center text-xs text-white">
+                            {code.length} / {expectedLength} characters
+                        </p>
                     </form>
 
                     <div className="mt-6 text-center">
