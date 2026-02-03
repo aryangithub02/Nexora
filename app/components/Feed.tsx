@@ -13,13 +13,13 @@ interface FeedProps {
 export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   const reelRefs = useRef<Map<string, React.MutableRefObject<ReelCardRef | null>>>(new Map());
   const [activeReelId, setActiveReelId] = useState<string | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0); 
+  const [activeIndex, setActiveIndex] = useState(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const highlightId = searchParams.get('reelId');
   const fromSaved = searchParams.get('fromSaved') === 'true';
-  const [memoryGlowId, setMemoryGlowId] = useState<string | null>(null);  
+  const [memoryGlowId, setMemoryGlowId] = useState<string | null>(null);
   const getOrCreateRef = useCallback((videoId: string) => {
     if (!reelRefs.current.has(videoId)) {
       reelRefs.current.set(videoId, { current: null });
@@ -29,8 +29,8 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
 
   useEffect(() => {
     const options = {
-      root: containerRef.current, 
-      threshold: 0.6, 
+      root: containerRef.current,
+      threshold: 0.6,
     };
 
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {
@@ -57,27 +57,27 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
     return () => {
       observerRef.current?.disconnect();
     };
-  }, [videos]); 
+  }, [videos]);
 
   useEffect(() => {
     if (highlightId && videos.length > 0) {
-      
+
       setTimeout(() => {
         const el = document.getElementById(`reel-${highlightId}`);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          
+
           setActiveReelId(highlightId);
 
           if (fromSaved) {
             setMemoryGlowId(highlightId);
-            
+
             setTimeout(() => setMemoryGlowId(null), 2000);
           }
         }
       }, 500);
     }
-  }, [highlightId, videos, fromSaved]); 
+  }, [highlightId, videos, fromSaved]);
 
   useEffect(() => {
     if (!activeReelId || videos.length === 0) return;
@@ -85,7 +85,7 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
     const index = videos.findIndex(v => v._id.toString() === activeReelId);
     if (index !== -1 && index < videos.length - 1) {
       const nextVideo = videos[index + 1];
-      
+
       import("@/lib/video-cache").then(({ VideoCache }) => {
         VideoCache.save(nextVideo._id.toString(), nextVideo.videoUrl);
       });
@@ -149,7 +149,7 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
 
   useEffect(() => {
     const calculateSafeHeight = () => {
-      const TOP_BAR_HEIGHT = 0; 
+      const TOP_BAR_HEIGHT = 64;
       const BOTTOM_BAR_HEIGHT = 72;
       const safeHeight = window.innerHeight - TOP_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
       document.documentElement.style.setProperty("--safe-height", `${safeHeight}px`);
@@ -163,10 +163,10 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope"
+      className="w-full h-[calc(100vh-64px)] md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope mt-16 md:mt-0"
     >
 
-      {}
+      { }
       <div className="flex flex-col items-center w-full">
         <div className="text-center mb-6 opacity-50 hidden md:block">
           <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-[family-name:var(--font-jetbrains-mono)]">The Lens</p>
@@ -189,13 +189,13 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
             >
               <div className={`w-full h-full md:w-[340px] md:max-h-[70vh] md:aspect-[9/16] relative transition-all duration-500 group ${isHighlighted ? 'md:ring-1 md:ring-[var(--accent)]/50 md:shadow-[0_0_30px_color-mix(in_srgb,var(--accent),transparent_85%)] md:rounded-3xl' : ''
                 }`}>
-                {}
+                { }
                 <div className="hidden md:block absolute -inset-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
 
-                {}
+                { }
                 <div className="hidden md:block absolute -bottom-12 left-4 right-4 h-12 bg-[var(--accent)]/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-                {}
+                { }
                 {isMemoryGlow && (
                   <div
                     className="absolute -inset-3 rounded-[36px] -z-10"
@@ -207,27 +207,27 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
                   />
                 )}
 
-                {}
+                { }
                 {isHighlighted && !isMemoryGlow && (
                   <div className="absolute -inset-4 rounded-[40px] bg-[var(--accent)]/15 blur-xl -z-10" />
                 )}
 
                 <div className="w-full h-full md:rounded-2xl md:overflow-hidden md:shadow-[0_25px_50px_-12px_color-mix(in_srgb,var(--accent),transparent_70%)] relative">
-                  {}
+                  { }
                   {Math.abs(index - activeIndex) <= 1 ? (
                     <ReelCard
                       ref={ref}
                       video={video}
                       isActive={activeReelId === videoId}
                       priority={index === 0}
-                      onVisibilityChange={() => { }} 
+                      onVisibilityChange={() => { }}
                       onVideoDeleted={onVideoDeleted}
                     />
                   ) : (
-                    
+
                     <div className="w-full h-full bg-[#0F1117] flex items-center justify-center">
                       <div className="w-full h-full relative overflow-hidden">
-                        {}
+                        { }
                         {video.thumbnailUrl && (
                           <img
                             src={video.thumbnailUrl}
@@ -237,7 +237,7 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
                           />
                         )}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          {}
+                          { }
                         </div>
                       </div>
                     </div>
