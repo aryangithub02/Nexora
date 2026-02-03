@@ -89,11 +89,11 @@ export default function FloatingNavbar() {
         ${isCollapsed ? "h-[52px]" : "h-[64px]"}
         `}
         style={{
-          background: "var(--glass)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--border-soft)",
-          boxShadow: "var(--shadow-soft)",
+          background: isHome ? "transparent" : "var(--glass)",
+          backdropFilter: isHome ? "none" : "blur(12px)",
+          WebkitBackdropFilter: isHome ? "none" : "blur(12px)",
+          borderBottom: isHome ? "none" : "1px solid var(--border-soft)",
+          boxShadow: isHome ? "none" : "var(--shadow-soft)",
         }}
       >
         <div className="h-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
@@ -129,7 +129,7 @@ export default function FloatingNavbar() {
             {status === "authenticated" && (
               <>
                 { }
-                <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"}`} />
+                <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"} ${isHome ? "hidden md:block" : ""}`} />
 
                 { }
                 <button
@@ -154,14 +154,14 @@ export default function FloatingNavbar() {
                 { }
                 <button
                   onClick={handleUploadClick}
-                  className={`relative p-2 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90" : "scale-100"}`}
+                  className={`relative p-2 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90" : "scale-100"} ${isHome ? "hidden md:block" : ""}`}
                   aria-label="Upload"
                 >
                   <Plus className={`text-white transition-all ${isCollapsed ? "w-5 h-5" : "w-6 h-6"}`} strokeWidth={2.5} />
                 </button>
 
                 { }
-                <div className="relative">
+                <div className={`relative ${isHome ? "hidden md:block" : ""}`}>
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className={`flex items-center justify-center rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] text-white font-semibold hover:shadow-lg hover:shadow-[#4F8CFF]/20 transition-all duration-200 overflow-hidden ${isCollapsed ? "w-9 h-9 text-sm scale-90" : "w-10 h-10 text-base"}`}

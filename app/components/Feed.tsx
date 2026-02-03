@@ -163,7 +163,7 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-[calc(100vh-64px)] md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope mt-16 md:mt-0"
+      className="w-full h-screen md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope"
     >
 
       { }
