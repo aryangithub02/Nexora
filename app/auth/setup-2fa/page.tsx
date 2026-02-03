@@ -162,7 +162,7 @@ export default function SetupTwoFactor() {
                                         value={code}
                                         onChange={(e) => setCode(e.target.value.trim())}
                                         placeholder="000 000"
-                                        className="w-full bg-[#0a0a0a] border border-white/20 rounded-lg px-4 py-3 text-center text-xl tracking-[0.5em] font-mono focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all outline-none"
+                                        className="w-full bg-white border border-white/20 rounded-lg px-4 py-3 text-center text-xl tracking-[0.5em] font-mono text-black focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all outline-none"
                                         maxLength={6}
                                         autoFocus
                                     />

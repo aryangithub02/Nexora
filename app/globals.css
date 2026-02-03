@@ -99,7 +99,7 @@ body {
 }
 
 input, textarea {
-  color: #000000;
+  color: inherit;
 }
 
 /* ===== MOBILE-FIRST LAYOUT RULES ===== */
