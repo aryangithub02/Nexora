@@ -56,8 +56,8 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
         <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[72px] bg-[var(--glass)] backdrop-blur-md border-r border-[var(--border-soft)] flex-col items-center py-6 z-50">
             {/* App Logo */}
             <div className="mb-8 w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer">
-                <Link href="/">
-                    <img src="/logo.png" alt="Nexora" className="w-full h-full object-contain" />
+                <Link href="/" className="relative w-10 h-10 block">
+                    <Image src="/logo.png" alt="Nexora" fill className="object-contain" priority />
                 </Link>
             </div>
 

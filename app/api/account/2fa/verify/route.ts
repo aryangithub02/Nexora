@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import UserModel from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
-import { verify } from "otplib";
+import { authenticator } from "@otplib/preset-default";
 
 
 
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
         }
 
         // Use top-level verify (which might be async in this version)
-        const isValid = await verify({ token: code, secret: user.twoFactorSecret });
+        const isValid = authenticator.verify({ token: code, secret: user.twoFactorSecret });
 
         if (!isValid) {
             return NextResponse.json({ error: "Invalid authenticator code" }, { status: 400 });

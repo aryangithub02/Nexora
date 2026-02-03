@@ -99,7 +99,7 @@ body {
 }
 
 input, textarea {
-  color: #000000;
+  color: var(--text-main);
 }
 
 /* ===== MOBILE-FIRST LAYOUT RULES ===== */

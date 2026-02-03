@@ -83,7 +83,7 @@ export default function VerifyTwoFactor() {
                     </div>
 
                     <h2 className="text-3xl font-bold text-center text-white mb-2 tracking-tight">
-                        Two-Factor Authentication
+                        Factor Authentication
                     </h2>
                     <p className="text-center text-gray-400 mb-8">
                         {isBackup
@@ -112,7 +112,8 @@ export default function VerifyTwoFactor() {
                                             setCode(value.replace(/\D/g, '').slice(0, 6));
                                         }
                                     }}
-                                    className="block w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
+                                    className="block w-full pl-10 pr-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-pink-500 placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
+
                                     placeholder={isBackup ? "XXXXXXXX" : "000000"}
                                     maxLength={expectedLength}
                                     minLength={expectedLength}

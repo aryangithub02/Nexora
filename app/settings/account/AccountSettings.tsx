@@ -738,7 +738,8 @@ export default function AccountSettings() {
                                 value={twoFactorCode}
                                 onChange={e => setTwoFactorCode(e.target.value)}
                                 placeholder="Enter 6-digit code"
-                                className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 text-white text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
+                                className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 text-[#ec4899] text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
+
                                 maxLength={6}
                             />
                             <div className="flex gap-3">
