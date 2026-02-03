@@ -55,7 +55,13 @@ export default withAuth(
         }
 
         // Public routes & API (Let API routes pass through to be handled by Route Handlers or above middleware logic)
-        if (pathname === "/" || pathname.startsWith("/api/") || pathname === "/upload") {
+        if (
+          pathname === "/" ||
+          pathname.startsWith("/api/") ||
+          pathname === "/upload" ||
+          pathname === "/logo.png" ||
+          /\.(?:svg|png|jpg|jpeg|gif|webp)$/.test(pathname)
+        ) {
           return true;
         }
         // All other routes require authentication
@@ -74,6 +80,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    "/((?!api/auth|api/uploadthing|_next|favicon.ico|login|\\.well-known).*)",
+    "/((?!api/auth|api/uploadthing|_next|favicon.ico|logo.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|login|register|forgot-password|reset-password|\\.well-known).*)",
   ],
 };
