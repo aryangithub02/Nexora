@@ -113,7 +113,7 @@ export default function VerifyTwoFactor() {
                                         }
                                     }}
                                     className="block w-full pl-10 pr-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
-                                    style={{ color: '#ec4899' }}
+
                                     placeholder={isBackup ? "XXXXXXXX" : "000000"}
                                     maxLength={expectedLength}
                                     minLength={expectedLength}
