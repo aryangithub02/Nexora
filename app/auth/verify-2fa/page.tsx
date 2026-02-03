@@ -83,7 +83,7 @@ export default function VerifyTwoFactor() {
                     </div>
 
                     <h2 className="text-3xl font-bold text-center text-white mb-2 tracking-tight">
-                        Two-Factor Authentication
+                        Factor Authentication
                     </h2>
                     <p className="text-center text-gray-400 mb-8">
                         {isBackup
