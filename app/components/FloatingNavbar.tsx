@@ -29,7 +29,7 @@ export default function FloatingNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      
+
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
@@ -82,61 +82,30 @@ export default function FloatingNavbar() {
   const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
   const isAuthPage = authPaths.some(path => pathname.startsWith(path));
 
-  if (isHome && !isAuthPage) {
-    return (
-      <>
-        {}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-transparent">
-          <div className="relative w-16 h-16 -ml-2">
-            <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  const shouldHideNavbar = !isAuthPage && !isHome; 
-
-  if (!isAuthPage && !isHome) {
-    return (
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-transparent">
-        <div className="relative w-16 h-16 -ml-2">
-          <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade 
         ${isCollapsed ? "h-[52px]" : "h-[64px]"}
-        `} 
+        `}
         style={{
-          background: isHome ? "transparent" : "var(--glass)",
-          backdropFilter: isHome ? "none" : "blur(12px)",
-          WebkitBackdropFilter: isHome ? "none" : "blur(12px)",
-          borderBottom: isHome ? "none" : "1px solid var(--border-soft)",
-          boxShadow: isHome ? "none" : "var(--shadow-soft)",
+          background: "var(--glass)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--border-soft)",
+          boxShadow: "var(--shadow-soft)",
         }}
       >
-        <div className="h-full max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {}
-          <Link href="/" className="hidden md:flex items-center gap-2">
-            <div className={`relative transition-all duration-300 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"}`}>
+        <div className="h-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 transition-transform active:scale-95">
+            <div className={`relative transition-all duration-300 ${!isHome ? (isCollapsed ? "w-8 h-8" : "w-10 h-10") : "w-12 h-12 md:w-10 md:h-10"}`}>
               <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
             </div>
           </Link>
 
-          {}
-          <div className="md:hidden">
-            <div className="relative w-8 h-8">
-              <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
-            </div>
-          </div>
 
-          {}
+
+          { }
           <div
             className={`hidden md:block transition-all duration-300 ease-out ${isSearchFocused ? "w-[480px]" : "w-[320px]"} ${isCollapsed ? "scale-95" : "scale-100"}`}
           >
@@ -155,34 +124,34 @@ export default function FloatingNavbar() {
             </div>
           </div>
 
-          {}
+          { }
           <div className="flex items-center gap-4">
             {status === "authenticated" && (
               <>
-                {}
-                <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"} hidden md:block`} />
+                { }
+                <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"}`} />
 
-                {}
+                { }
                 <button
                   onClick={() => setIsRadarOpen(true)}
                   className={`hidden md:block relative p-2 rounded-full hover:bg-white/5 transition-all duration-300 group ${isCollapsed ? "scale-90" : "scale-100"}`}
                   aria-label="Live Radar"
                 >
                   {liveUsers.length > 0 ? (
-                    
+
                     <div className="relative flex items-center justify-center">
                       <span className="absolute inline-flex h-full w-full rounded-full bg-[#2DE2A6] opacity-30 animate-ping duration-[3000ms]" />
                       <Circle className="w-5 h-5 text-[#2DE2A6] fill-[#2DE2A6]" strokeWidth={2.5} />
-                      {}
+                      { }
                       <span className="absolute -inset-1 rounded-full border border-[#2DE2A6]/40 animate-pulse" />
                     </div>
                   ) : (
-                    
+
                     <Circle className="w-5 h-5 text-[#5C6270]" strokeWidth={2} />
                   )}
                 </button>
 
-                {}
+                { }
                 <button
                   onClick={handleUploadClick}
                   className={`relative p-2 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90" : "scale-100"}`}
@@ -191,8 +160,8 @@ export default function FloatingNavbar() {
                   <Plus className={`text-white transition-all ${isCollapsed ? "w-5 h-5" : "w-6 h-6"}`} strokeWidth={2.5} />
                 </button>
 
-                {}
-                <div className="hidden md:block relative">
+                { }
+                <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className={`flex items-center justify-center rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] text-white font-semibold hover:shadow-lg hover:shadow-[#4F8CFF]/20 transition-all duration-200 overflow-hidden ${isCollapsed ? "w-9 h-9 text-sm scale-90" : "w-10 h-10 text-base"}`}
@@ -208,7 +177,7 @@ export default function FloatingNavbar() {
                       getInitial(session?.user?.email)
                     )}
                   </button>
-                  {}
+                  { }
                   {showUserMenu && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
@@ -245,15 +214,15 @@ export default function FloatingNavbar() {
         </div>
       </nav >
 
-      {}
+      { }
       {isAuthPage && (
         <div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`} />
       )}
 
-      {}
+      { }
       <NotificationPanel />
 
-      {}
+      { }
       <NetworkSheet isOpen={isRadarOpen} onClose={() => setIsRadarOpen(false)} liveUsers={liveUsers} />
     </>
   );
