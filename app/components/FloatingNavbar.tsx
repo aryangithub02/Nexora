@@ -89,8 +89,8 @@ export default function FloatingNavbar() {
   if (isHome && !isAuthPage) {
     return (
       <>
-        {/* Mobile Header Section - Slim Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-gradient-to-b from-black/80 to-transparent">
+        {/* Mobile Header Section - Transparent Header */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-transparent">
           <div className="relative w-16 h-16 -ml-2">
             <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
           </div>
@@ -110,7 +110,7 @@ export default function FloatingNavbar() {
 
   if (!isAuthPage && !isHome) {
     return (
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-gradient-to-b from-black/80 to-transparent">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-transparent">
         <div className="relative w-16 h-16 -ml-2">
           <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
         </div>

@@ -168,7 +168,7 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   // Calculate Safe Viewport Height
   useEffect(() => {
     const calculateSafeHeight = () => {
-      const TOP_BAR_HEIGHT = 64; // Match h-16 header
+      const TOP_BAR_HEIGHT = 0; // Don't subtract for centering logic, let flex handle it
       const BOTTOM_BAR_HEIGHT = 72;
       const safeHeight = window.innerHeight - TOP_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
       document.documentElement.style.setProperty("--safe-height", `${safeHeight}px`);
@@ -182,10 +182,10 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-[var(--safe-height,100dvh)] md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope mt-16 md:mt-0"
+      className="w-full h-screen md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope"
     >
       {/* Journey Progress Bar */}
-      <div className="fixed top-16 md:top-0 left-1/2 -translate-x-1/2 w-[340px] h-1 z-50">
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[340px] h-1 z-50">
         <div className="h-full bg-gradient-to-r from-[#4F8CFF] to-[#2DE2A6] w-[15%]" />
       </div>
 
