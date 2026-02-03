@@ -34,7 +34,7 @@ export function useLiveRadar() {
         };
 
         fetchRadar();
-        const interval = setInterval(fetchRadar, 20000); // Poll every 20s
+        const interval = setInterval(fetchRadar, 20000); 
         return () => clearInterval(interval);
     }, [status]);
 

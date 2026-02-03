@@ -30,17 +30,16 @@ export async function POST(request: NextRequest) {
         const isLiked = comment.likes && comment.likes.includes(userId);
 
         if (isLiked) {
-            // Unlike
+            
             await Comment.findByIdAndUpdate(commentObjectId, {
                 $pull: { likes: userId }
             });
         } else {
-            // Like
+            
             await Comment.findByIdAndUpdate(commentObjectId, {
                 $addToSet: { likes: userId }
             });
 
-            // Notify comment owner
             if (comment.userId.toString() !== userId.toString()) {
                 await Notification.create({
                     recipient: comment.userId,
@@ -53,7 +52,6 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Get updated count
         const updatedComment = await Comment.findById(commentObjectId);
 
         return NextResponse.json({

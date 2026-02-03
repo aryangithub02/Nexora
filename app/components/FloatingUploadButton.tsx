@@ -9,12 +9,11 @@ export default function FloatingUploadButton() {
   const [isHovered, setIsHovered] = useState(false);
   const [showLightTrail, setShowLightTrail] = useState(false);
 
-  // When hovered, show the light trail connection
   useEffect(() => {
     if (isHovered) {
       setShowLightTrail(true);
     } else {
-      // Small delay before hiding
+      
       const timer = setTimeout(() => setShowLightTrail(false), 300);
       return () => clearTimeout(timer);
     }
@@ -26,7 +25,7 @@ export default function FloatingUploadButton() {
 
   return (
     <>
-      {/* Light Trail SVG - Curved path from center to button */}
+      {}
       {showLightTrail && (
         <svg
           className="fixed pointer-events-none z-40 animate-light-trail"
@@ -55,7 +54,7 @@ export default function FloatingUploadButton() {
         </svg>
       )}
 
-      {/* Floating Button */}
+      {}
       <button
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -77,7 +76,7 @@ export default function FloatingUploadButton() {
           strokeWidth={2.5}
         />
 
-        {/* Tooltip on hover */}
+        {}
         <div
           className={`absolute right-full mr-4 px-4 py-2 bg-[#171B22]/95 backdrop-blur-md rounded-xl border border-white/10 transition-all duration-300 whitespace-nowrap ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
             }`}
@@ -97,7 +96,7 @@ export default function FloatingUploadButton() {
         </div>
       </button>
 
-      {/* Outer glow ring on hover */}
+      {}
       {isHovered && (
         <div
           className="fixed bottom-8 right-8 w-16 h-16 rounded-full pointer-events-none z-40"

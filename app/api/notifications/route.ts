@@ -22,11 +22,9 @@ export async function GET(request: NextRequest) {
             .limit(50)
             .lean();
 
-        // Collect IDs for enrichment
         const actorIds = [...new Set(notifications.map(n => n.actor.toString()))];
         const reelIds = [...new Set(notifications.filter(n => n.entityType === "Reel" && n.entityId).map(n => n.entityId!.toString()))];
 
-        // Fetch Data
         const [profiles, videos] = await Promise.all([
             Profile.find({ userId: { $in: actorIds } }).lean(),
             Video.find({ _id: { $in: reelIds } }).select("thumbnailUrl").lean()
@@ -35,7 +33,6 @@ export async function GET(request: NextRequest) {
         const profileMap = new Map(profiles.map((p: any) => [p.userId.toString(), p]));
         const videoMap = new Map(videos.map((v: any) => [v._id.toString(), v]));
 
-        // Enrich
         const enrichedNotifications = notifications.map((notif: any) => {
             const actorProfile = profileMap.get(notif.actor.toString());
             const video = (notif.entityType === "Reel" && notif.entityId) ? videoMap.get(notif.entityId.toString()) : null;
@@ -75,7 +72,6 @@ export async function DELETE(request: NextRequest) {
         await connectToDatabase();
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
 
-        // Only delete if the notification belongs to the current user
         const result = await Notification.findOneAndDelete({
             _id: new mongoose.Types.ObjectId(notificationId),
             recipient: userId

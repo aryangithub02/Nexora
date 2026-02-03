@@ -17,26 +17,21 @@ export async function GET(req: Request) {
         const currentUser = await User.findOne({ email: session.user.email });
         if (!currentUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-        // Get list of users already followed
         const following = await Follow.find({ followerId: currentUser._id }).select("followingId");
         const followingIds = following.map(f => f.followingId);
 
-        // Find users to suggest
-        // Criteria: Not me, Not already followed, Allow Suggestions
         const suggestions = await User.find({
             _id: { $nin: [...followingIds, currentUser._id] },
-            'privacy.allowSuggestions': { $ne: false } // Default true, so check for not false
+            'privacy.allowSuggestions': { $ne: false } 
         })
-            .sort({ followersCount: -1, lastActive: -1 }) // Popular and active
+            .sort({ followersCount: -1, lastActive: -1 }) 
             .limit(10)
             .select("_id email followersCount");
 
-        // Fetch profiles
         const userIds = suggestions.map(u => u._id);
         const profiles = await Profile.find({ userId: { $in: userIds } })
             .select("userId displayName username avatarUrl bio");
 
-        // Merge data
         const enrichedSuggestions = suggestions.map(user => {
             const profile = profiles.find(p => p.userId.toString() === user._id.toString());
             return {

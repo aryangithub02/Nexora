@@ -64,7 +64,7 @@ export default function AppearanceSettings() {
 
     return (
         <div className="space-y-12 relative z-10">
-            {/* Page Header */}
+            {}
             <div>
                 <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Appearance
@@ -74,7 +74,7 @@ export default function AppearanceSettings() {
                 </p>
             </div>
 
-            {/* Live Preview Indicator */}
+            {}
             <div
                 className="bg-gradient-to-r from-[#4F8CFF]/10 to-[#2DE2A6]/10 rounded-xl border border-white/5 p-4 flex items-center gap-3"
                 style={{ borderColor: `${getAccentColorValue()}20` }}
@@ -88,7 +88,7 @@ export default function AppearanceSettings() {
                 </p>
             </div>
 
-            {/* Theme Selection */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Theme
@@ -107,9 +107,9 @@ export default function AppearanceSettings() {
                                 borderColor: theme === t.id ? getAccentColorValue() : undefined
                             }}
                         >
-                            {/* Theme Preview Card */}
+                            {}
                             <div className={`${t.preview.bg} rounded-xl p-4 h-32 flex flex-col justify-between`}>
-                                {/* Mini UI Preview */}
+                                {}
                                 <div className="flex items-center gap-2">
                                     <div className="w-6 h-6 rounded-full bg-white/10" />
                                     <div className="h-2 w-12 rounded bg-white/20" />
@@ -120,7 +120,7 @@ export default function AppearanceSettings() {
                                 </div>
                             </div>
 
-                            {/* Label */}
+                            {}
                             <div className="p-3">
                                 <div className="flex items-center justify-between">
                                     <div>
@@ -142,7 +142,7 @@ export default function AppearanceSettings() {
                 </div>
             </section>
 
-            {/* Accent Color */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Accent Color
@@ -187,7 +187,7 @@ export default function AppearanceSettings() {
                 </div>
             </section>
 
-            {/* Motion Level */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Motion Level
@@ -270,7 +270,7 @@ export default function AppearanceSettings() {
                 </div>
             </section>
 
-            {/* Font Scale */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Font Scale
@@ -320,7 +320,7 @@ export default function AppearanceSettings() {
                         </button>
                     </div>
 
-                    {/* Live Preview Text */}
+                    {}
                     <div className="mt-4 p-4 bg-[#171B22] rounded-xl">
                         <p
                             className={`text-white transition-all`}

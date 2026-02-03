@@ -5,7 +5,7 @@ export interface IUserInteraction {
     targetUserId?: mongoose.Types.ObjectId;
     videoId?: mongoose.Types.ObjectId;
     type: 'watch' | 'like' | 'comment' | 'profile_view';
-    duration?: number; // For watch interactions
+    duration?: number; 
     createdAt: Date;
 }
 
@@ -19,12 +19,11 @@ const userInteractionSchema = new Schema<IUserInteraction>(
             enum: ['watch', 'like', 'comment', 'profile_view'],
             required: true
         },
-        duration: { type: Number }, // in seconds
+        duration: { type: Number }, 
     },
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Indexes for efficient queries
 userInteractionSchema.index({ userId: 1, createdAt: -1 });
 userInteractionSchema.index({ userId: 1, videoId: 1 });
 userInteractionSchema.index({ userId: 1, targetUserId: 1 });

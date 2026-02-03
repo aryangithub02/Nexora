@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
 
         const { activity } = await req.json();
 
-        // Update user's last active time and current activity
         await User.findByIdAndUpdate(currentUser._id, {
             lastActive: new Date(),
             currentActivity: activity || { type: 'idle', timestamp: new Date() }

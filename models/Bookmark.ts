@@ -4,7 +4,7 @@ export interface IBookmark {
     _id: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     videoId: mongoose.Types.ObjectId;
-    revisitCount: number; // For sorting by memory, not time
+    revisitCount: number; 
     lastVisitedAt: Date;
     createdAt: Date;
 }
@@ -19,13 +19,10 @@ const bookmarkSchema = new Schema<IBookmark>(
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Unique compound index to prevent duplicate bookmarks
 bookmarkSchema.index({ userId: 1, videoId: 1 }, { unique: true });
 
-// Index for fetching user's bookmarks sorted by memory (revisitCount)
 bookmarkSchema.index({ userId: 1, revisitCount: -1 });
 
-// Index for fetching user's bookmarks sorted by last visit
 bookmarkSchema.index({ userId: 1, lastVisitedAt: -1 });
 
 const Bookmark = models.Bookmark || model<IBookmark>("Bookmark", bookmarkSchema);

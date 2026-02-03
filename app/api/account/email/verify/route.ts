@@ -6,7 +6,6 @@ import UserModel from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -35,13 +34,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
         }
 
-        // Apply change
         user.email = user.pendingEmail;
         user.pendingEmail = undefined;
         user.emailChangeToken = undefined;
         user.emailChangeExpires = undefined;
 
-        // Security practice: Invalidate sessions on email change
         user.tokenVersion = (user.tokenVersion || 0) + 1;
 
         try {
@@ -52,8 +49,6 @@ export async function POST(req: Request) {
             }
             throw e;
         }
-
-
 
         return NextResponse.json({ message: "Email updated successfully. Please login again." });
 

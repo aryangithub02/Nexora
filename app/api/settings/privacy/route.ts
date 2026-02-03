@@ -21,7 +21,6 @@ export async function PATCH(req: NextRequest) {
         await connectToDatabase();
         const body = await req.json();
 
-        // 1. Filter body
         const updateData: any = {};
         Object.keys(body).forEach(key => {
             if (ALLOWED_FIELDS.includes(key)) {
@@ -29,13 +28,11 @@ export async function PATCH(req: NextRequest) {
             }
         });
 
-        // 2. Fetch current settings if empty body (used for initial load in AccountSettings)
         if (Object.keys(body).length === 0) {
             const user = await User.findById((session.user as any).id).select('privacy');
             return NextResponse.json(user?.privacy || {});
         }
 
-        // 3. Update
         const user = await User.findByIdAndUpdate(
             (session.user as any).id,
             { $set: updateData },

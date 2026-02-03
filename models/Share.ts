@@ -7,8 +7,8 @@ export interface IShare {
     userId: mongoose.Types.ObjectId;
     videoId: mongoose.Types.ObjectId;
     shareType: ShareType;
-    recipientId?: mongoose.Types.ObjectId; // For 'send_user' type
-    externalPlatform?: string; // For 'external' type
+    recipientId?: mongoose.Types.ObjectId; 
+    externalPlatform?: string; 
     createdAt: Date;
 }
 
@@ -27,10 +27,8 @@ const shareSchema = new Schema<IShare>(
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Index for counting shares on a video
 shareSchema.index({ videoId: 1 });
 
-// Index for user's shares
 shareSchema.index({ userId: 1, createdAt: -1 });
 
 const Share = models.Share || model<IShare>("Share", shareSchema);

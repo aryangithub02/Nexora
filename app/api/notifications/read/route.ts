@@ -21,7 +21,6 @@ export async function PATCH(request: NextRequest) {
         await connectToDatabase();
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
 
-        // Update strictly only if the recipient is the current user
         await Notification.updateMany(
             {
                 _id: { $in: notificationIds },

@@ -28,7 +28,6 @@ export async function GET(req: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '24');
         const skip = (page - 1) * limit;
 
-        // Get users the current user already follows (to mark them as followed)
         const following = await Follow.find({ followerId: currentUser._id }).select('followingId');
         const followingIds = following.map(f => f.followingId.toString());
 
@@ -36,10 +35,10 @@ export async function GET(req: NextRequest) {
         let total = 0;
         let seams: any[] = [];
 
-        const activeThreshold = new Date(Date.now() - 30 * 60 * 1000); // 30 min for "recently online"
+        const activeThreshold = new Date(Date.now() - 30 * 60 * 1000); 
 
         if (mode === 'trending') {
-            // Most followers overall - show all users except current user
+            
             users = await User.find({
                 _id: { $ne: currentUser._id },
                 'privacy.appearInDiscover': { $ne: false }
@@ -54,7 +53,7 @@ export async function GET(req: NextRequest) {
             });
 
         } else if (mode === 'new') {
-            // Newest creators (joined in last 30 days)
+            
             const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
             users = await User.find({
                 _id: { $ne: currentUser._id },
@@ -72,7 +71,7 @@ export async function GET(req: NextRequest) {
             });
 
         } else if (mode === 'active') {
-            // Most recently active
+            
             users = await User.find({
                 _id: { $ne: currentUser._id },
                 lastActive: { $gte: activeThreshold },
@@ -89,7 +88,7 @@ export async function GET(req: NextRequest) {
             });
 
         } else if (mode === 'rising') {
-            // Rising = new users with followers (gained traction quickly)
+            
             const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
             users = await User.find({
                 _id: { $ne: currentUser._id },
@@ -109,12 +108,10 @@ export async function GET(req: NextRequest) {
             });
         }
 
-        // Get profiles for these users
         const userIds = users.map(u => u._id);
         const profiles = await Profile.find({ userId: { $in: userIds } })
             .select('userId displayName username bio avatarUrl');
 
-        // Get latest video for each user (for preview)
         const latestVideos = await Video.aggregate([
             { $match: { 'uploadedBy._id': { $in: userIds } } },
             { $sort: { createdAt: -1 } },
@@ -127,7 +124,6 @@ export async function GET(req: NextRequest) {
             }
         ]);
 
-        // Build response with profiles
         const discoveredUsers = users.map(user => {
             const profile = profiles.find(p => p.userId?.toString() === user._id?.toString());
             const video = latestVideos.find(v => v._id?.toString() === user._id?.toString());
@@ -152,7 +148,6 @@ export async function GET(req: NextRequest) {
             };
         });
 
-        // Generate discovery seams based on page
         if (page === 1) {
             seams = [
                 { position: 6, type: 'insight', text: 'Rising voices this week' },

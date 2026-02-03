@@ -9,7 +9,6 @@ import NotificationPanel from "@/app/components/NotificationPanel";
 import RouteLoadingBar from "@/app/components/RouteLoadingBar";
 import { Suspense } from "react";
 
-
 export default function Providers({ children }: { children: React.ReactNode }) {
   const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 

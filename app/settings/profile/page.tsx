@@ -15,10 +15,8 @@ export default async function ProfileSettingsPage() {
 
     await connectToDatabase();
 
-    // Fetch existing profile or return null to prompt creation
     const profileDoc = await Profile.findOne({ userId: session.user.id }).lean();
 
-    // Serializing because Mongoose objects are not plain JS objects
     const profile = profileDoc ? JSON.parse(JSON.stringify(profileDoc)) : null;
 
     return (

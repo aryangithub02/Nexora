@@ -23,26 +23,22 @@ interface BlockedUser {
 }
 
 export default function PrivacySettings() {
-    // Visibility states
+    
     const [isPublic, setIsPublic] = useState(true);
     const [requireFollowApproval, setRequireFollowApproval] = useState(false);
 
-    // Interaction controls
     const [whoCanComment, setWhoCanComment] = useState<"everyone" | "followers" | "none">("everyone");
     const [whoCanMention, setWhoCanMention] = useState<"everyone" | "followers">("everyone");
 
-    // Discovery settings
     const [appearInDiscover, setAppearInDiscover] = useState(true);
     const [allowSuggestions, setAllowSuggestions] = useState(true);
 
-    // Blocked users
     const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([
         { id: "1", username: "spammer123", displayName: "Spammer" },
         { id: "2", username: "troll_account", displayName: "Troll" },
     ]);
     const [searchBlockedQuery, setSearchBlockedQuery] = useState("");
 
-    // Generate visibility summary
     const getVisibilitySummary = () => {
         const parts: string[] = [];
 
@@ -115,7 +111,7 @@ export default function PrivacySettings() {
 
     return (
         <div className="space-y-12 relative z-10">
-            {/* Page Header */}
+            {}
             <div>
                 <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Privacy
@@ -125,7 +121,7 @@ export default function PrivacySettings() {
                 </p>
             </div>
 
-            {/* Visibility Summary Banner */}
+            {}
             <div className="bg-gradient-to-r from-[#4F8CFF]/10 to-[#2DE2A6]/10 rounded-xl border border-white/5 p-4">
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-[#4F8CFF]/20 flex items-center justify-center">
@@ -142,13 +138,13 @@ export default function PrivacySettings() {
                 </div>
             </div>
 
-            {/* Account Visibility Section */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Account Visibility
                 </h2>
 
-                {/* Public/Private Toggle */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -176,7 +172,7 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {/* Follow Permissions */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -198,13 +194,13 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {/* Interaction Controls */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Interaction Controls
                 </h2>
 
-                {/* Who Can Comment */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center">
@@ -234,7 +230,7 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {/* Who Can Mention */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-[#F4D03F]/10 flex items-center justify-center">
@@ -260,13 +256,13 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {/* Discovery Settings */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Discovery Settings
                 </h2>
 
-                {/* Appear in Discover */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -284,7 +280,7 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {/* Profile Suggestions */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -303,14 +299,14 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {/* Blocked Users */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Blocked Users
                 </h2>
 
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] overflow-hidden">
-                    {/* Search */}
+                    {}
                     <div className="p-4 border-b border-[#2A2F3A]">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C6270]" />
@@ -324,7 +320,7 @@ export default function PrivacySettings() {
                         </div>
                     </div>
 
-                    {/* Blocked List */}
+                    {}
                     {blockedUsers.length === 0 ? (
                         <div className="p-8 text-center">
                             <Ban className="w-8 h-8 text-[#5C6270] mx-auto mb-3" />

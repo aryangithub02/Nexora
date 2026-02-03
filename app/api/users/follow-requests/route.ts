@@ -7,7 +7,6 @@ import Follow from "@/models/Follow";
 import User from "@/models/User";
 import Notification from "@/models/Notification";
 
-// GET: List pending follow requests
 export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -23,7 +22,7 @@ export async function GET(req: Request) {
             recipientId: currentUser._id,
             status: "pending"
         })
-            .populate("requesterId", "name email image _id username") // Assuming User has these fields
+            .populate("requesterId", "name email image _id username") 
             .sort({ createdAt: -1 });
 
         return NextResponse.json(requests);
@@ -34,7 +33,6 @@ export async function GET(req: Request) {
     }
 }
 
-// POST: Accept or Reject a request
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -42,7 +40,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { requestId, action } = await req.json(); // action: "accept" | "reject"
+        const { requestId, action } = await req.json(); 
 
         if (!requestId || !["accept", "reject"].includes(action)) {
             return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -62,41 +60,31 @@ export async function POST(req: Request) {
         }
 
         if (action === "accept") {
-            // Create Follow
+            
             await Follow.create({
                 followerId: request.requesterId,
                 followingId: currentUser._id
             });
 
-            // Update request status
-            request.status = "accepted"; // Or delete it? Model says 'rejected' but maybe accepted requests are deleted? 
-            // Plan said: "User A accepts request -> Verify Follow record created, FollowRequest deleted/updated."
-            // Let's delete it to keep DB clean, or marking it as accepted requires enum update.
-            // Model has status: 'pending' | 'rejected'. So we should delete or add 'accepted'.
-            // Deleting is cleaner for "pending list".
+            request.status = "accepted"; 
+
             await FollowRequest.findByIdAndDelete(requestId);
 
-            // Update counts
             await User.findByIdAndUpdate(request.requesterId, { $inc: { followingCount: 1 } });
             await User.findByIdAndUpdate(currentUser._id, { $inc: { followersCount: 1 } });
 
-            // Notify requester
             await Notification.create({
                 recipient: request.requesterId,
                 actor: currentUser._id,
-                type: "follow_accept", // Ensure enum support
+                type: "follow_accept", 
                 entityType: "User",
                 entityId: currentUser._id
             });
         } else {
-            // Reject
-            // We can mark as rejected or delete. 
+
             request.status = "rejected";
             await request.save();
-            // Or delete? If rejected, they can request again?
-            // Usually specific cooldown or just "Delete" so they can try again later?
-            // Let's stick to updating status to blocked/rejected if we want to prevent spam.
-            // But for now, updating status to rejected is fine.
+
         }
 
         return NextResponse.json({ message: `Request ${action}ed` });

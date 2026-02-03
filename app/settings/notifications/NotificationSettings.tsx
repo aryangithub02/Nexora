@@ -115,7 +115,7 @@ export default function NotificationSettings() {
 
     return (
         <div className="space-y-12 relative z-10">
-            {/* Page Header */}
+            {}
             <div>
                 <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Notifications
@@ -125,14 +125,14 @@ export default function NotificationSettings() {
                 </p>
             </div>
 
-            {/* Master Controls */}
+            {}
             <section className="space-y-4">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Notification Channels
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Push Notifications */}
+                    {}
                     <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -149,7 +149,7 @@ export default function NotificationSettings() {
                         </div>
                     </div>
 
-                    {/* Email Notifications */}
+                    {}
                     <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -167,7 +167,7 @@ export default function NotificationSettings() {
                     </div>
                 </div>
 
-                {/* Sound Toggle */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -189,7 +189,7 @@ export default function NotificationSettings() {
                 </div>
             </section>
 
-            {/* Activity Notifications */}
+            {}
             <section className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
@@ -202,7 +202,7 @@ export default function NotificationSettings() {
                 </div>
 
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] divide-y divide-[#2A2F3A]">
-                    {/* Quick Toggle All Row */}
+                    {}
                     <div className="flex items-center justify-between p-4 bg-[#171B22]">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-[#2A2F3A] flex items-center justify-center">
@@ -231,7 +231,7 @@ export default function NotificationSettings() {
                         </div>
                     </div>
 
-                    {/* Individual Preferences */}
+                    {}
                     {preferences.map((pref) => (
                         <div key={pref.type} className="flex items-center justify-between p-4 hover:bg-[#1E232F] transition-colors">
                             <div className="flex items-center gap-4">
@@ -269,7 +269,7 @@ export default function NotificationSettings() {
                 </div>
             </section>
 
-            {/* Quiet Hours */}
+            {}
             <section className="space-y-4">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Quiet Hours

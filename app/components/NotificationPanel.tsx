@@ -7,13 +7,12 @@ import { X, Heart, MessageCircle, UserPlus, AtSign, UserCheck } from "lucide-rea
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
-// Helper to extract thumbnail from media URL (handles video files)
 const getContextImageUrl = (url?: string) => {
     if (!url) return null;
-    // If it's an ImageKit video URL, request the first frame as thumbnail
+    
     if (url.includes("ik.imagekit.io") && /\.(mp4|mov|webm)($|\?)/i.test(url)) {
         const [path, query] = url.split('?');
-        // Use ik-thumbnail.jpg endpoint + so-0 (start offset 0) to get the first frame
+        
         return `${path}/ik-thumbnail.jpg?tr=w-160,h-240,c-maintain_ratio,so-0${query ? '&' + query : ''}`;
     }
     return url;
@@ -34,7 +33,7 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
                     }
                 });
             },
-            { threshold: 0.8 } // 80% visible to count as read
+            { threshold: 0.8 } 
         );
 
         if (itemRef.current) {
@@ -44,13 +43,12 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
         return () => observer.disconnect();
     }, [note.read, note._id, onRead]);
 
-    // Icons based on type
     const getIcon = () => {
         switch (note.type) {
             case "like": return <Heart size={14} className="fill-[#FF6B6B] text-[#FF6B6B]" />;
             case "comment": return <MessageCircle size={14} className="fill-[var(--accent)] text-[var(--accent)]" />;
             case "follow": return <UserPlus size={14} className="text-[var(--accent)]" />;
-            case "follow_request": return <UserPlus size={14} className="text-[#FFD700]" />; // Gold for request
+            case "follow_request": return <UserPlus size={14} className="text-[#FFD700]" />; 
             case "follow_accepted": return <UserCheck size={14} className="text-[var(--accent)]" />;
             case "mention": return <AtSign size={14} className="text-[#F4D03F]" />;
             default: return null;
@@ -69,7 +67,6 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
         }
     };
 
-    // Dynamic Styles based on Signal Type
     const getAccentColor = () => {
         switch (note.type) {
             case "like": return "border-[#FF6B6B] shadow-[0_0_10px_rgba(255,107,107,0.2)]";
@@ -97,9 +94,9 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
             });
 
             if (res.ok) {
-                // User explicitly requested an alert
+                
                 window.alert(action === 'approve' ? "Request Approved" : "Request Rejected");
-                onDismiss(note._id); // Remove notification immediately
+                onDismiss(note._id); 
             } else {
                 const errorText = await res.text();
                 console.error("Action failed", errorText);
@@ -126,12 +123,12 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
                 : "bg-[var(--accent)]/5 border-l-2 border-l-[var(--accent)]"
                 } hover:bg-[var(--bg-hover)]`}
         >
-            {/* Unread Mint Glow Effect */}
+            {}
             {!note.read && (
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent)]/5 to-transparent pointer-events-none" />
             )}
 
-            {/* Avatar with Emotional Weight */}
+            {}
             <div className="relative shrink-0 mt-1">
                 <div className={`w-12 h-12 rounded-full p-[2px] transition-all duration-300 ${getAccentColor()}`}>
                     <div className="w-full h-full rounded-full overflow-hidden bg-[var(--bg-card)]">
@@ -145,13 +142,13 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
                     </div>
                 </div>
 
-                {/* Micro-Badge */}
+                {}
                 <div className="absolute -bottom-1 -right-1 bg-[var(--bg-main)] p-1.5 rounded-full border border-[var(--border-soft)] shadow-md">
                     {getIcon()}
                 </div>
             </div>
 
-            {/* Story Fragment */}
+            {}
             <div className="flex-1 min-w-0 flex flex-col justify-center z-10 pt-1">
                 <p className="text-sm font-[family-name:var(--font-inter)] leading-snug text-[var(--text-muted)]">
                     <span className="font-bold text-[var(--text-main)] mr-1.5">
@@ -172,7 +169,7 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
                     )}
                 </div>
 
-                {/* Action Buttons for Follow Requests */}
+                {}
                 {note.type === 'follow_request' && (
                     <div className="flex items-center gap-2 mt-3" onClick={(e) => e.stopPropagation()}>
                         <button
@@ -193,29 +190,29 @@ const NotificationItem = ({ note, onRead, onDismiss }: { note: any; onRead: (id:
                 )}
             </div>
 
-            {/* Context Anchor - The Reel Thumbnail (Only if not request) */}
+            {}
             {note.type !== 'follow_request' && (
                 <div className="shrink-0 relative group/thumb pt-1">
                     {thumbUrl ? (
                         <div className="w-10 h-14 rounded-md overflow-hidden border border-[var(--border-soft)] bg-[var(--bg-card)] shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-2">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            {}
                             <img
                                 src={thumbUrl}
                                 alt="Reel Preview"
                                 className="w-full h-full object-cover"
                                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
                             />
-                            {/* Mint Overlay on Hover */}
+                            {}
                             <div className="absolute inset-0 bg-[var(--accent)]/20 opacity-0 group-hover/thumb:opacity-100 transition-opacity" />
                         </div>
                     ) : (
-                        // Fallback/Spacer
+                        
                         <div className="w-10 h-14" />
                     )}
                 </div>
             )}
 
-            {/* Dismiss X Button - appears on hover */}
+            {}
             <button
                 onClick={(e) => {
                     e.stopPropagation();
@@ -242,15 +239,15 @@ export default function NotificationPanel() {
 
     return (
         <>
-            {/* Backdrop - Lighter & mistier */}
+            {}
             <div
                 className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[90] transition-opacity duration-300"
                 onClick={togglePanel}
             />
 
-            {/* Panel - Layered Glass */}
+            {}
             <aside className="fixed right-0 top-0 h-screen w-full max-w-[400px] bg-[var(--bg-panel)]/80 backdrop-blur-2xl border-l border-[var(--border-soft)] z-[100] shadow-2xl animate-in slide-in-from-right duration-500 ease-out flex flex-col">
-                {/* Header with Motion */}
+                {}
                 <div className="flex items-center justify-between p-6 border-b border-[var(--border-soft)]">
                     <div className="flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--accent)" }} />
@@ -266,9 +263,9 @@ export default function NotificationPanel() {
                     </button>
                 </div>
 
-                {/* Scroll Area */}
+                {}
                 <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-                    {/* Unread Section */}
+                    {}
                     {unread.length > 0 && (
                         <div className="py-2">
                             <div className="px-5 py-3 text-xs font-bold text-[var(--accent)] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
@@ -304,7 +301,7 @@ export default function NotificationPanel() {
                         </div>
                     )}
 
-                    {/* Read Section */}
+                    {}
                     {read.length > 0 && (
                         <div className="py-2">
                             <div className="px-5 py-3 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
@@ -343,7 +340,7 @@ export default function NotificationPanel() {
                         </div>
                     )}
 
-                    {/* Decay Safe Space */}
+                    {}
                     <div className="h-20" />
                 </div>
             </aside>

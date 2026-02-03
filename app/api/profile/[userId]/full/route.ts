@@ -22,7 +22,6 @@ export async function GET(
 
         const { userId } = await params;
 
-        // Validate userId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
         }
@@ -32,7 +31,6 @@ export async function GET(
             return NextResponse.json({ error: "Current user not found" }, { status: 404 });
         }
 
-        // Get target user
         const targetUser = await User.findById(userId)
             .select('_id email followersCount followingCount lastActive createdAt privacy');
 
@@ -40,10 +38,8 @@ export async function GET(
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Get profile
         const profile = await Profile.findOne({ userId: targetUser._id });
 
-        // Check if current user follows this user
         const follow = await Follow.findOne({
             followerId: currentUser._id,
             followingId: targetUser._id
@@ -54,7 +50,7 @@ export async function GET(
         if (follow) {
             followState = 'following';
         } else {
-            // Check for pending request
+            
             const { default: FollowRequest } = await import("@/models/FollowRequest");
             const request = await FollowRequest.findOne({
                 requesterId: currentUser._id,
@@ -66,7 +62,6 @@ export async function GET(
             }
         }
 
-        // Check if online (active in last 5 min)
         const activeThreshold = new Date(Date.now() - 5 * 60 * 1000);
         const isOnline = targetUser.lastActive && new Date(targetUser.lastActive) > activeThreshold;
 
@@ -82,7 +77,7 @@ export async function GET(
                 followersCount: targetUser.followersCount || 0,
                 followingCount: targetUser.followingCount || 0,
                 isFollowing: !!follow,
-                followState, // Add explicit state
+                followState, 
                 isOwnProfile: currentUser._id?.toString() === targetUser._id?.toString(),
                 isOnline,
                 joinedAt: targetUser.createdAt,

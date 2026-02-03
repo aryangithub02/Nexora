@@ -8,7 +8,7 @@ export async function generateThumbnailFromUrl(videoUrl: string): Promise<Blob> 
         video.playsInline = true;
 
         video.onloadedmetadata = () => {
-            // Seek to frame 0 (or slightly after to avoid black frames if any)
+            
             video.currentTime = 0.1;
         };
 
@@ -32,9 +32,9 @@ export async function generateThumbnailFromUrl(videoUrl: string): Promise<Blob> 
                     } else {
                         reject(new Error("Thumbnail generation failed"));
                     }
-                    // Cleanup
+                    
                     video.remove();
-                }, "image/jpeg", 0.85); // Quality 0.85
+                }, "image/jpeg", 0.85); 
 
             } catch (e) {
                 reject(e);

@@ -9,7 +9,6 @@ import User from "@/models/User";
 import Notification from "@/models/Notification";
 import mongoose from "mongoose";
 
-// GET - Get comments for a video (newest first)
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -26,24 +25,20 @@ export async function GET(request: NextRequest) {
 
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Get comments with user info
         const comments = await Comment.find({ videoId: videoObjectId })
-            .sort({ createdAt: -1 }) // Newest first
+            .sort({ createdAt: -1 }) 
             .skip(skip)
             .limit(limit)
             .lean();
 
-        // Get total count
         const totalCount = await Comment.countDocuments({ videoId: videoObjectId });
 
-        // Fetch user profiles for comments
         const userIds = [...new Set(comments.map(c => c.userId.toString()))];
         const profiles = await Profile.find({ userId: { $in: userIds } }).lean();
         const profileMap = new Map(profiles.map(p => [p.userId.toString(), p]));
 
         const currentUserId = session?.user ? (session.user as any).id : null;
 
-        // Enrich comments with user data
         const enrichedComments = comments.map(comment => {
             const profile = profileMap.get(comment.userId.toString());
             return {
@@ -76,7 +71,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST - Create a new comment (conversational gravity)
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -99,27 +93,24 @@ export async function POST(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Fetch user profile early for response and notifications
         const profile = await Profile.findOne({ userId }).lean();
 
-        // Check if video exists
         const video = await Video.findById(videoObjectId);
         if (!video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
-        // Privacy Check: Comments
-        const videoOwnerId = video.uploadedBy?._id || video.uploadedBy; // Depending on populate
+        const videoOwnerId = video.uploadedBy?._id || video.uploadedBy; 
         const videoOwner = await User.findById(videoOwnerId);
 
         if (videoOwner) {
-            // Blocking Check
+            
             if (videoOwnerId.toString() !== userId.toString()) {
                 const { default: Blocked } = await import("@/models/Blocked");
                 const isBlocked = await Blocked.exists({
                     $or: [
-                        { blockerId: userId, blockedId: videoOwnerId }, // I blocked them
-                        { blockerId: videoOwnerId, blockedId: userId }  // They blocked me
+                        { blockerId: userId, blockedId: videoOwnerId }, 
+                        { blockerId: videoOwnerId, blockedId: userId }  
                     ]
                 });
                 if (isBlocked) {
@@ -144,7 +135,6 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // Create comment
         const comment = await Comment.create({
             userId,
             videoId: videoObjectId,
@@ -153,7 +143,6 @@ export async function POST(request: NextRequest) {
             likes: [],
         });
 
-        // Create Notification (Comment on Reel)
         if (video.uploadedBy && videoOwnerId.toString() !== userId.toString()) {
             const notification = await Notification.create({
                 recipient: videoOwnerId,
@@ -164,14 +153,11 @@ export async function POST(request: NextRequest) {
                 text: text.trim().substring(0, 50)
             });
 
-            // Real-time Emit
-
         }
 
-        // Handle Mentions
         const mentionMatches = text.match(/@(\w+)/g);
         if (mentionMatches) {
-            const usernames = mentionMatches.map((m: string) => m.substring(1)); // remove @
+            const usernames = mentionMatches.map((m: string) => m.substring(1)); 
             const mentionedProfiles = await Profile.find({ username: { $in: usernames } });
 
             const mentionNotifications = [];
@@ -179,7 +165,6 @@ export async function POST(request: NextRequest) {
             for (const p of mentionedProfiles) {
                 if (p.userId.toString() === userId.toString()) continue;
 
-                // Privacy Check: Mentions
                 const mentionedUser = await User.findById(p.userId);
                 if (mentionedUser) {
                     const mentionPermission = mentionedUser.privacy?.mentionPermission || 'everyone';
@@ -187,7 +172,7 @@ export async function POST(request: NextRequest) {
                     if (mentionPermission === 'followers') {
                         const { default: Follow } = await import("@/models/Follow");
                         const isFollowing = await Follow.exists({ followerId: userId, followingId: p.userId });
-                        if (!isFollowing) continue; // Skip notification
+                        if (!isFollowing) continue; 
                     }
                 }
 
@@ -203,12 +188,9 @@ export async function POST(request: NextRequest) {
 
             if (mentionNotifications.length > 0) {
                 const insertedNotes = await Notification.insertMany(mentionNotifications);
-                // Real-time Emit (Batch)
 
             }
         }
-
-        // Profile already fetched above
 
         const enrichedComment = {
             ...comment.toObject(),
@@ -226,7 +208,6 @@ export async function POST(request: NextRequest) {
             parentId: comment.parentId
         };
 
-        // Get updated comment count
         const totalCount = await Comment.countDocuments({ videoId: videoObjectId });
 
         return NextResponse.json({
@@ -240,7 +221,6 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// DELETE - Delete a comment
 export async function DELETE(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -259,7 +239,6 @@ export async function DELETE(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const commentObjectId = new mongoose.Types.ObjectId(commentId);
 
-        // Check permissions
         const comment = await Comment.findById(commentObjectId);
         if (!comment) {
             return NextResponse.json({ error: "Comment not found" }, { status: 404 });
@@ -273,32 +252,30 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
         }
 
-        // Determine Delete Strategy
         const hasChildren = await Comment.exists({ parentId: commentObjectId });
 
         if (isVideoOwner && !isCommentOwner) {
-            // Moderation: Soft Delete
+            
             await Comment.findByIdAndUpdate(commentObjectId, {
                 isDeleted: true,
                 deletedBy: userId,
                 text: "[removed]"
             });
         } else {
-            // Self Delete
+            
             if (hasChildren) {
-                // Soft delete to preserve tree
+                
                 await Comment.findByIdAndUpdate(commentObjectId, {
                     isDeleted: true,
                     deletedBy: userId,
                     text: "[deleted]"
                 });
             } else {
-                // Hard delete
+                
                 await Comment.findByIdAndDelete(commentObjectId);
             }
         }
 
-        // Get updated comment count
         const totalCount = await Comment.countDocuments({ videoId: comment.videoId, isDeleted: false });
 
         return NextResponse.json({

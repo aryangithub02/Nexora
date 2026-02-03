@@ -6,8 +6,6 @@ import UserModel from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
 import { authenticator } from "@otplib/preset-default";
 
-
-
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -25,14 +23,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "2FA setup not initiated" }, { status: 400 });
         }
 
-        // Use top-level verify (which might be async in this version)
         const isValid = authenticator.verify({ token: code, secret: user.twoFactorSecret });
 
         if (!isValid) {
             return NextResponse.json({ error: "Invalid authenticator code" }, { status: 400 });
         }
 
-        // Enable 2FA
         user.twoFactorEnabled = true;
         await user.save();
 

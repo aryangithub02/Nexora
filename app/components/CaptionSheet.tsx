@@ -25,13 +25,12 @@ export default function CaptionSheet({
     onClose,
     onOpenComments,
 }: CaptionSheetProps) {
-    // Extract hashtags from description
+    
     const extractHashtags = (text: string) => {
         const hashtagRegex = /#\w+/g;
         return text.match(hashtagRegex) || [];
     };
 
-    // Extract mentions from description
     const extractMentions = (text: string) => {
         const mentionRegex = /@\w+/g;
         return text.match(mentionRegex) || [];
@@ -40,7 +39,6 @@ export default function CaptionSheet({
     const hashtags = extractHashtags(video.description || "");
     const mentions = extractMentions(video.description || "");
 
-    // Remove hashtags and mentions from description for clean display
     const cleanDescription = (video.description || "")
         .replace(/#\w+/g, "")
         .replace(/@\w+/g, "")
@@ -59,13 +57,13 @@ export default function CaptionSheet({
 
     return (
         <>
-            {/* Backdrop */}
+            {}
             <div
                 className="fixed inset-0 bg-black/60 z-[100] animate-fade-in"
                 onClick={onClose}
             />
 
-            {/* Sheet - Centered on desktop, full-width on mobile */}
+            {}
             <div
                 className="fixed z-[101] animate-slide-up bottom-0 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:max-w-[480px] md:rounded-t-3xl"
                 style={{
@@ -77,15 +75,15 @@ export default function CaptionSheet({
                     boxShadow: "0 -10px 40px rgba(0, 0, 0, 0.5)",
                 }}
             >
-                {/* Handle */}
+                {}
                 <div className="flex justify-center pt-3 pb-2">
                     <div className="w-10 h-1 rounded-full bg-white/20" />
                 </div>
 
-                {/* Header */}
+                {}
                 <div className="flex items-center justify-between px-5 pb-4 border-b border-white/10">
                     <div className="flex items-center gap-3">
-                        {/* Creator Avatar */}
+                        {}
                         <Link
                             href={`/profile/${video.uploadedBy?._id}`}
                             className="flex-shrink-0"
@@ -108,7 +106,7 @@ export default function CaptionSheet({
                             </div>
                         </Link>
 
-                        {/* Creator Info */}
+                        {}
                         <div className="min-w-0">
                             <Link
                                 href={`/profile/${video.uploadedBy?._id}`}
@@ -124,7 +122,7 @@ export default function CaptionSheet({
                         </div>
                     </div>
 
-                    {/* Close Button */}
+                    {}
                     <button
                         onClick={onClose}
                         className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
@@ -133,12 +131,12 @@ export default function CaptionSheet({
                     </button>
                 </div>
 
-                {/* Body - Scrollable */}
+                {}
                 <div
                     className="overflow-y-auto px-5 py-4"
                     style={{ height: "calc(100% - 140px)" }}
                 >
-                    {/* Title */}
+                    {}
                     <h2
                         className="text-white font-bold text-lg mb-3"
                         style={{ fontFamily: "var(--font-space-grotesk)" }}
@@ -146,7 +144,7 @@ export default function CaptionSheet({
                         {video.title}
                     </h2>
 
-                    {/* Full Description */}
+                    {}
                     {cleanDescription && (
                         <p
                             className="text-white/80 text-sm leading-relaxed mb-4"
@@ -156,7 +154,7 @@ export default function CaptionSheet({
                         </p>
                     )}
 
-                    {/* Hashtags */}
+                    {}
                     {hashtags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                             {hashtags.map((tag, index) => (
@@ -171,7 +169,7 @@ export default function CaptionSheet({
                         </div>
                     )}
 
-                    {/* Mentions */}
+                    {}
                     {mentions.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                             {mentions.map((mention, index) => (
@@ -186,7 +184,7 @@ export default function CaptionSheet({
                         </div>
                     )}
 
-                    {/* Meta Info */}
+                    {}
                     <div className="text-white/40 text-xs mt-4">
                         {video.createdAt && (
                             <span>
@@ -201,10 +199,10 @@ export default function CaptionSheet({
                     </div>
                 </div>
 
-                {/* Footer */}
+                {}
                 <div className="absolute bottom-0 left-0 right-0 px-5 py-4 border-t border-white/10 bg-[#0F1117]/80 backdrop-blur-xl">
                     <div className="flex items-center justify-between">
-                        {/* Stats */}
+                        {}
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-1.5 text-white/60">
                                 <Heart className="w-4 h-4" />
@@ -216,7 +214,7 @@ export default function CaptionSheet({
                             </div>
                         </div>
 
-                        {/* Go to Comments */}
+                        {}
                         <button
                             onClick={() => {
                                 onClose();

@@ -11,7 +11,7 @@ interface ProfileEditorProps {
 }
 
 export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
-    // State
+    
     const [persistedProfile, setPersistedProfile] = useState<IProfile | null>(initialProfile);
     const [draftProfile, setDraftProfile] = useState<Partial<IProfile>>(initialProfile || {
         username: "",
@@ -25,19 +25,15 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Cropper State
     const [cropModalOpen, setCropModalOpen] = useState(false);
     const [currentImageSrc, setCurrentImageSrc] = useState<string>("");
     const [cropTarget, setCropTarget] = useState<"avatar" | "banner">("avatar");
 
-    // Refs for file inputs
     const avatarInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
 
-    // Derived State
     const hasChanges = JSON.stringify(draftProfile) !== JSON.stringify(persistedProfile);
 
-    // Handlers
     const handleInputChange = (field: keyof IProfile, value: string) => {
         setDraftProfile(prev => ({ ...prev, [field]: value }));
         setError(null);
@@ -53,7 +49,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                 setCropModalOpen(true);
             });
             reader.readAsDataURL(file);
-            // Reset input so same file can be selected again if needed
+            
             e.target.value = "";
         }
     };
@@ -93,11 +89,10 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
         }
     };
 
-    // Live Preview / "Identity Mirror" Section
     const PreviewSection = () => (
         <div className="h-full flex flex-col items-center">
             <div className="w-full max-w-sm bg-black rounded-3xl overflow-hidden border border-[#2A2F3A] shadow-2xl relative group">
-                {/* Banner */}
+                {}
                 <div className="h-32 bg-[#1E232F] relative w-full">
                     {draftProfile.bannerUrl ? (
                         <Image src={draftProfile.bannerUrl} alt="Banner" fill className="object-cover" />
@@ -106,7 +101,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                     )}
                 </div>
 
-                {/* Avatar */}
+                {}
                 <div className="absolute top-20 left-4">
                     <div className="w-20 h-20 rounded-full border-4 border-black bg-[#171B22] overflow-hidden relative">
                         {draftProfile.avatarUrl ? (
@@ -117,7 +112,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                     </div>
                 </div>
 
-                {/* Content */}
+                {}
                 <div className="pt-10 px-4 pb-6">
                     <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)] truncate">
                         {draftProfile.displayName || "Display Name"}
@@ -131,7 +126,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                     </div>
                 </div>
 
-                {/* Theme Accent Stripe */}
+                {}
                 <div className="h-1 w-full" style={{ backgroundColor: draftProfile.themeAccent || "#2DE2A6" }} />
             </div>
 
@@ -145,15 +140,15 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
 
-            {/* Left: Edit Form */}
+            {}
             <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
 
-                {/* Visual Identity Section */}
+                {}
                 <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-white/50 uppercase tracking-wider text-xs font-[family-name:var(--font-jetbrains-mono)]">Visual Identity</h3>
 
                     <div className="flex items-start gap-6">
-                        {/* Avatar Upload */}
+                        {}
                         <div className="space-y-2 text-center">
                             <div
                                 className="w-24 h-24 rounded-full bg-[#1E232F] border-2 border-dashed border-[#2A2F3A] flex items-center justify-center cursor-pointer hover:border-[#2DE2A6] transition-colors relative group overflow-hidden"
@@ -168,7 +163,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                             <input type="file" ref={avatarInputRef} className="hidden" accept="image/*" onChange={(e) => handleFileSelect(e, "avatar")} />
                         </div>
 
-                        {/* Banner Upload */}
+                        {}
                         <div className="space-y-2 flex-1 text-center">
                             <div
                                 className="w-full h-24 rounded-xl bg-[#1E232F] border-2 border-dashed border-[#2A2F3A] flex items-center justify-center cursor-pointer hover:border-[#2DE2A6] transition-colors relative group overflow-hidden"
@@ -187,7 +182,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
 
                 <div className="w-full h-px bg-[#2A2F3A]" />
 
-                {/* Info Section */}
+                {}
                 <div className="space-y-5">
                     <h3 className="text-lg font-semibold text-white/50 uppercase tracking-wider text-xs font-[family-name:var(--font-jetbrains-mono)]">Public Info</h3>
 
@@ -227,7 +222,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                     </div>
                 </div>
 
-                {/* Feedback */}
+                {}
                 {error && (
                     <div className="flex items-center gap-2 text-[#FF6B6B] text-sm bg-[#FF6B6B]/10 p-3 rounded-lg border border-[#FF6B6B]/20">
                         <AlertCircle size={16} />
@@ -235,7 +230,7 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
                     </div>
                 )}
 
-                {/* Actions */}
+                {}
                 <div className="pt-4 flex justify-end">
                     <button
                         onClick={handleSave}
@@ -263,12 +258,12 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
 
             </div>
 
-            {/* Right: Live Preview */}
+            {}
             <div className="hidden lg:block border-l border-[#2A2F3A] pl-12">
                 <PreviewSection />
             </div>
 
-            {/* Crop Modal */}
+            {}
             <ImageCropper
                 isOpen={cropModalOpen}
                 onClose={() => setCropModalOpen(false)}

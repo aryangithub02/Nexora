@@ -12,7 +12,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // In a real app, require password here
         await connectToDatabase();
         const user = await UserModel.findById((session.user as any).id);
 

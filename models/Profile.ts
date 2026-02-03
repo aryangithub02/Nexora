@@ -19,7 +19,7 @@ const profileSchema = new mongoose.Schema<IProfile>({
     bio: { type: String },
     avatarUrl: { type: String },
     bannerUrl: { type: String },
-    themeAccent: { type: String, default: "#2DE2A6" }, // Default mint color
+    themeAccent: { type: String, default: "#2DE2A6" }, 
 },
     {
         timestamps: true

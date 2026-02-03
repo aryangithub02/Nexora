@@ -22,12 +22,11 @@ export interface IUser {
     pendingEmail?: string;
     passwordUpdatedAt?: Date;
     tokenVersion?: number;
-    // 2FA
+    
     twoFactorEnabled?: boolean;
     twoFactorSecret?: string;
     backupCodes?: string[];
 
-    // Privacy
     privacy?: {
         isPublic?: boolean;
         requireFollowApproval?: boolean;
@@ -37,7 +36,6 @@ export interface IUser {
         allowSuggestions?: boolean;
     };
 
-    // Deletion
     isDeleted?: boolean;
     deletedAt?: Date;
 }
@@ -60,21 +58,17 @@ const userSchema = new mongoose.Schema<IUser>({
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
 
-    // Email Change
     emailChangeToken: { type: String },
     emailChangeExpires: { type: Date },
     pendingEmail: { type: String },
 
-    // Security
     passwordUpdatedAt: { type: Date },
     tokenVersion: { type: Number, default: 0 },
 
-    // 2FA
     twoFactorEnabled: { type: Boolean, default: false },
     twoFactorSecret: { type: String },
     backupCodes: [{ type: String }],
 
-    // Privacy
     privacy: {
         isPublic: { type: Boolean, default: true },
         requireFollowApproval: { type: Boolean, default: false },
@@ -92,7 +86,6 @@ const userSchema = new mongoose.Schema<IUser>({
         allowSuggestions: { type: Boolean, default: true }
     },
 
-    // Deletion
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date }
 },
@@ -107,7 +100,6 @@ userSchema.pre("save", async function () {
     }
 })
 
-// Prevent duplicate model compilation in development
 if (process.env.NODE_ENV === "development") {
     if (models.User) {
         delete models.User;

@@ -57,7 +57,6 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
         return email.charAt(0).toUpperCase();
     };
 
-    // Fetch current user's profile for avatar
     useEffect(() => {
         const fetchCurrentUserProfile = async () => {
             if (!session?.user) return;
@@ -74,7 +73,6 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
         fetchCurrentUserProfile();
     }, [session]);
 
-    // Fetch live users and suggested users
     useEffect(() => {
         const fetchRadarData = async () => {
             try {
@@ -99,13 +97,12 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
 
         if (session) {
             fetchRadarData();
-            // Refresh every 30 seconds
+            
             const interval = setInterval(fetchRadarData, 30000);
             return () => clearInterval(interval);
         }
     }, [session]);
 
-    // Send activity heartbeat
     useEffect(() => {
         const sendHeartbeat = async () => {
             try {
@@ -123,7 +120,7 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
 
         if (session) {
             sendHeartbeat();
-            const interval = setInterval(sendHeartbeat, 60000); // Every minute
+            const interval = setInterval(sendHeartbeat, 60000); 
             return () => clearInterval(interval);
         }
     }, [session]);
@@ -139,10 +136,9 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
             });
 
             if (res.ok) {
-                // Remove from suggested with upward dissolve animation
+                
                 setSuggestedUsers(prev => prev.filter(u => u._id !== userId));
 
-                // Refresh live radar to potentially show the new follow
                 const liveRes = await fetch('/api/radar/live');
                 if (liveRes.ok) {
                     const liveData = await liveRes.json();
@@ -220,13 +216,13 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
 
     return (
         <aside className="fixed right-0 top-0 h-screen w-[320px] bg-transparent p-6 pl-8 hidden xl:block overflow-y-auto scrollbar-hide">
-            {/* User Card */}
+            {}
             <div
                 onClick={toggleProfileMode}
                 className="flex items-center gap-4 p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-soft)] hover:border-[#4F8CFF]/30 cursor-pointer transition-all mb-8 group"
             >
                 <div className="w-12 h-12 rounded-full p-[2px] relative" style={{ background: "var(--accent)" }}>
-                    {/* Breathing accent ring */}
+                    {}
                     <div className="absolute inset-0 rounded-full bg-[var(--accent)] opacity-20 animate-pulse" />
                     <div className="w-full h-full rounded-full bg-[var(--bg-main)] flex items-center justify-center relative z-10 overflow-hidden">
                         {currentUserProfile?.avatarUrl ? (
@@ -255,9 +251,9 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
                 </div>
             </div>
 
-            {/* Dynamic Panels */}
+            {}
             <div className="space-y-8">
-                {/* Live Radar */}
+                {}
                 <section>
                     <h4 className="text-xs font-bold text-[var(--text-disabled)] uppercase tracking-wider mb-4 font-[family-name:var(--font-jetbrains-mono)]">
                         Live Radar
@@ -295,7 +291,7 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
                                             )}
                                         </div>
 
-                                        {/* Hover tooltip */}
+                                        {}
                                         {hoveredUser === user._id && (
                                             <div className="absolute left-0 top-full mt-2 bg-[var(--bg-card)]/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[var(--border-soft)] whitespace-nowrap z-[100] animate-in fade-in slide-in-from-top-2 duration-200 shadow-[var(--shadow-soft)] pointer-events-none min-w-[140px]">
                                                 {user.username ? (
@@ -335,7 +331,7 @@ export default function RightPanel({ profileMode = false, toggleProfileMode }: R
                     </div>
                 </section>
 
-                {/* Suggested */}
+                {}
                 <section>
                     <h4 className="text-xs font-bold text-[var(--text-disabled)] uppercase tracking-wider mb-4 font-[family-name:var(--font-jetbrains-mono)]">
                         Suggested

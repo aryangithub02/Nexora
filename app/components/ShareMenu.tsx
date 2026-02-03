@@ -98,7 +98,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                 await recordShare('external', 'native');
                 setSent(true);
             } catch (error) {
-                // User cancelled, that's fine
+                
                 if ((error as Error).name !== "AbortError") {
                     console.error("Failed to share:", error);
                 }
@@ -110,7 +110,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
 
     return (
         <>
-            {/* Backdrop */}
+            {}
             <div
                 className={`fixed inset-0 z-50 ${isClosing ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
                 style={{
@@ -121,7 +121,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                 onClick={handleClose}
             />
 
-            {/* Radial Menu */}
+            {}
             <div
                 className={`fixed z-50 ${isClosing ? 'opacity-0 scale-75' : 'animate-radial-expand'}`}
                 style={{
@@ -130,7 +130,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                     transform: "translate(-50%, -50%)",
                 }}
             >
-                {/* Sent Badge */}
+                {}
                 {sent && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-sent-pulse">
                         <div
@@ -143,7 +143,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                     </div>
                 )}
 
-                {/* Central Close Button */}
+                {}
                 <div className="relative">
                     <button
                         onClick={handleClose}
@@ -155,7 +155,7 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                         <X className="w-6 h-6 text-white" />
                     </button>
 
-                    {/* Radial Options */}
+                    {}
                     {[
                         {
                             id: 'copy',
@@ -206,12 +206,12 @@ export default function ShareMenu({ videoId, isOpen, onClose }: ShareMenuProps) 
                             bgClass: 'bg-white/10 backdrop-blur-md hover:bg-white/20 shadow-black/30'
                         }
                     ].filter(item => item.condition !== false).map((item, index, array) => {
-                        // Calculate position on circle
+                        
                         const totalItems = array.length;
                         const angleStep = 360 / totalItems;
-                        const startAngle = -90; // Start at top
+                        const startAngle = -90; 
                         const angle = startAngle + (index * angleStep);
-                        const radius = 100; // px
+                        const radius = 100; 
 
                         const radian = (angle * Math.PI) / 180;
                         const x = Math.round(radius * Math.cos(radian));

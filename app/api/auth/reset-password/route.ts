@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
 
         await connectToDatabase();
 
-        // Debug: Find user by token only to see if it exists (ignoring expiry for a moment)
         const userByToken = await User.findOne({ resetPasswordToken: token });
         console.log("Reset Password: User found by token (ignoring expiry):", userByToken ? userByToken.email : "null");
 
@@ -34,7 +33,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid or expired token" }, { status: 400 });
         }
 
-        user.password = password; // Will be hashed by pre-save hook in User model
+        user.password = password; 
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
 

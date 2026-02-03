@@ -7,7 +7,6 @@ import Video from "@/models/Video";
 import Notification from "@/models/Notification";
 import mongoose from "mongoose";
 
-// GET - Check if user liked a video and get like count
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -27,10 +26,8 @@ export async function GET(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Check if user liked the video
         const userLike = await Like.findOne({ userId, videoId: videoObjectId });
 
-        // Get total like count
         const likeCount = await Like.countDocuments({ videoId: videoObjectId });
 
         return NextResponse.json({
@@ -43,7 +40,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST - Like a video (emotional impulse)
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -62,17 +58,14 @@ export async function POST(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Check if video exists
         const video = await Video.findById(videoObjectId);
         if (!video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
-        // Try to create like (will fail if already exists due to unique index)
         try {
             await Like.create({ userId, videoId: videoObjectId });
 
-            // Create Notification (Batched)
             if (video.uploadedBy && video.uploadedBy._id && video.uploadedBy._id.toString() !== userId.toString()) {
                 const existingNotif = await Notification.findOne({
                     recipient: video.uploadedBy._id,
@@ -82,15 +75,11 @@ export async function POST(request: NextRequest) {
                 });
 
                 if (existingNotif) {
-                    // Update existing notification to show latest actor and bump time
+                    
                     existingNotif.actor = userId;
-                    // Force update timestamp
-                    // @ts-ignore
+
                     existingNotif.createdAt = new Date();
                     await existingNotif.save();
-
-                    // Real-time Emit (Update)
-
 
                 } else {
                     const notification = await Notification.create({
@@ -101,20 +90,17 @@ export async function POST(request: NextRequest) {
                         entityType: "Reel"
                     });
 
-                    // Real-time Emit
-
                 }
             }
 
         } catch (e: any) {
             if (e.code === 11000) {
-                // Duplicate key error - already liked, which is fine
+                
                 return NextResponse.json({ success: true, alreadyLiked: true });
             }
             throw e;
         }
 
-        // Get updated like count
         const likeCount = await Like.countDocuments({ videoId: videoObjectId });
 
         return NextResponse.json({
@@ -127,7 +113,6 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// DELETE - Unlike a video
 export async function DELETE(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -148,7 +133,6 @@ export async function DELETE(request: NextRequest) {
 
         await Like.deleteOne({ userId, videoId: videoObjectId });
 
-        // Get updated like count
         const likeCount = await Like.countDocuments({ videoId: videoObjectId });
 
         return NextResponse.json({

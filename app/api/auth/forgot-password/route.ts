@@ -14,20 +14,17 @@ export async function POST(request: NextRequest) {
 
         const user = await User.findOne({ email });
         if (!user) {
-            // Return 200 even if user not found for security (user enumeration prevention)
+            
             return NextResponse.json({ message: "If an account exists with this email, a reset link has been sent." }, { status: 200 });
         }
 
-        // Generate token
         const resetToken = crypto.randomBytes(32).toString("hex");
 
         user.resetPasswordToken = resetToken;
-        user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+        user.resetPasswordExpires = new Date(Date.now() + 3600000); 
 
         await user.save();
 
-        // In a real app, send email here.
-        // For local dev, we log it.
         const resetUrl = `${request.nextUrl.origin}/reset-password?token=${resetToken}`;
 
         console.log("=================================================================");
@@ -37,7 +34,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             message: "If an account exists with this email, a reset link has been sent.",
-            resetLink: resetUrl // Returning link to UI for dev/testing ease
+            resetLink: resetUrl 
         }, { status: 200 });
 
     } catch (error) {

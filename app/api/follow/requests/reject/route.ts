@@ -25,7 +25,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Try finding by ID first
         let request = await FollowRequest.findOne({
             _id: requestId,
             recipientId: currentUser._id,
@@ -33,7 +32,7 @@ export async function POST(req: Request) {
         });
 
         if (!request) {
-            // Fallback: requestId might be requesterId
+            
             request = await FollowRequest.findOne({
                 requesterId: requestId,
                 recipientId: currentUser._id,
@@ -42,17 +41,17 @@ export async function POST(req: Request) {
         }
 
         if (!request) {
-            // Even if not found, we can try to delete by ID just in case it was a valid ID but not pending (redundant but safe)
+            
             const deleted = await FollowRequest.findByIdAndDelete(requestId);
             if (!deleted) {
-                // Try deleting by requester pair
+                
                 await FollowRequest.findOneAndDelete({
                     requesterId: requestId,
                     recipientId: currentUser._id,
                     status: 'pending'
                 });
             }
-            return NextResponse.json({ message: "Request rejected" }, { status: 200 }); // Return success to clear UI
+            return NextResponse.json({ message: "Request rejected" }, { status: 200 }); 
         }
 
         await FollowRequest.findByIdAndDelete(request._id);

@@ -15,25 +15,23 @@ export async function GET(
         await connectToDatabase();
         const { userId } = await params;
 
-        // Validate userId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
         }
 
-        // Privacy Check
         const targetUser = await User.findById(userId).select('privacy');
         if (!targetUser) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        const isPublic = targetUser.privacy?.isPublic !== false; // Default true
+        const isPublic = targetUser.privacy?.isPublic !== false; 
 
         if (!isPublic) {
             const session = await getServerSession(authOptions);
             const currentUserId = session?.user ? (session.user as any).id : null;
 
             if (!currentUserId || currentUserId !== userId) {
-                // Not owner, check follow
+                
                 if (!currentUserId) {
                     return NextResponse.json({ error: "Private account" }, { status: 403 });
                 }
@@ -47,7 +45,6 @@ export async function GET(
             }
         }
 
-        // Get videos by this user
         const videos = await Video.find({
             'uploadedBy._id': new mongoose.Types.ObjectId(userId)
         })

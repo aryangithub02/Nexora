@@ -6,7 +6,6 @@ import Bookmark from "@/models/Bookmark";
 import Video from "@/models/Video";
 import mongoose from "mongoose";
 
-// GET - Check if user bookmarked a video or get user's bookmarks
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -17,13 +16,12 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const videoId = searchParams.get("videoId");
         const getAll = searchParams.get("all") === "true";
-        const sortBy = searchParams.get("sortBy") || "memory"; // 'memory' or 'recent'
+        const sortBy = searchParams.get("sortBy") || "memory"; 
 
         await connectToDatabase();
 
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
 
-        // If videoId is provided, check bookmark status
         if (videoId) {
             const videoObjectId = new mongoose.Types.ObjectId(videoId);
             const bookmark = await Bookmark.findOne({ userId, videoId: videoObjectId });
@@ -33,7 +31,6 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        // If getAll is true, return all bookmarks
         if (getAll) {
             const sortOption = sortBy === "memory"
                 ? { revisitCount: -1 as const, lastVisitedAt: -1 as const }
@@ -59,7 +56,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST - Bookmark a video (memory act)
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -78,13 +74,11 @@ export async function POST(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Check if video exists
         const video = await Video.findById(videoObjectId);
         if (!video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
-        // Try to create bookmark (will fail if already exists)
         try {
             await Bookmark.create({
                 userId,
@@ -94,7 +88,7 @@ export async function POST(request: NextRequest) {
             });
         } catch (e: any) {
             if (e.code === 11000) {
-                // Already bookmarked - increment revisit count
+                
                 await Bookmark.updateOne(
                     { userId, videoId: videoObjectId },
                     {
@@ -116,7 +110,6 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// DELETE - Remove bookmark
 export async function DELETE(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);

@@ -24,7 +24,6 @@ const SessionSchema = new Schema<ISession>(
     { timestamps: true }
 );
 
-// Index for quick lookup and auto-expiry logic if needed
 SessionSchema.index({ userId: 1, lastActive: -1 });
 
 export default mongoose.models.Session || mongoose.model<ISession>("Session", SessionSchema);

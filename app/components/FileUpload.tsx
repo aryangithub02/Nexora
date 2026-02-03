@@ -44,7 +44,6 @@ export default function FileUpload({
 
           const endpoint = fileType === "video" ? "videoUploader" : "imageUploader";
 
-          // Using uploadFiles helper directly for granular control
           const res = await uploadFiles(endpoint, {
             files,
             onUploadProgress: ({ progress }) => {
@@ -58,7 +57,7 @@ export default function FileUpload({
           if (res && res.length > 0) {
             onSuccess(res[0]);
           } else {
-            // Should rarely happen if no error was thrown
+            
             console.warn("Upload finished but no result returned");
           }
         } catch (err: any) {

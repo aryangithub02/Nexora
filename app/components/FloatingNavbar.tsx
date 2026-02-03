@@ -24,13 +24,12 @@ export default function FloatingNavbar() {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
-  // Live Radar State
   const { liveUsers } = useLiveRadar();
   const [isRadarOpen, setIsRadarOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // ... existing scroll logic ...
+      
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
@@ -50,7 +49,6 @@ export default function FloatingNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Global Heartbeat
   useEffect(() => {
     if (status !== 'authenticated') return;
     if (pathname === '/') return;
@@ -84,12 +82,10 @@ export default function FloatingNavbar() {
   const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
   const isAuthPage = authPaths.some(path => pathname.startsWith(path));
 
-  // If we are on Desktop Home and not an auth page, hide completely
-  // If we are on Mobile Home, show only the logo
   if (isHome && !isAuthPage) {
     return (
       <>
-        {/* Mobile Header Section - Transparent Header */}
+        {}
         <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 px-4 flex items-center bg-transparent">
           <div className="relative w-16 h-16 -ml-2">
             <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
@@ -99,14 +95,7 @@ export default function FloatingNavbar() {
     );
   }
 
-  // If not an auth page and on desktop, we might want to hide the navbar too based on "unnecessary" request
-  // But let's start with the Home page as explicitly requested.
-  // "dont show this navbar on desktop homepage only while auth and log in and 2-factor auth"
-  // This implies if not isAuthPage, hide it on desktop.
-
-  const shouldHideNavbar = !isAuthPage && !isHome; // For other pages? 
-  // User said: "dont show this navbar on desktop homepage"
-  // Let's hide it everywhere on desktop EXCEPT auth pages.
+  const shouldHideNavbar = !isAuthPage && !isHome; 
 
   if (!isAuthPage && !isHome) {
     return (
@@ -118,13 +107,12 @@ export default function FloatingNavbar() {
     );
   }
 
-
   return (
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade 
         ${isCollapsed ? "h-[52px]" : "h-[64px]"}
-        `} // Show always
+        `} 
         style={{
           background: isHome ? "transparent" : "var(--glass)",
           backdropFilter: isHome ? "none" : "blur(12px)",
@@ -134,22 +122,21 @@ export default function FloatingNavbar() {
         }}
       >
         <div className="h-full max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Left: Logo Sigil */}
+          {}
           <Link href="/" className="hidden md:flex items-center gap-2">
             <div className={`relative transition-all duration-300 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"}`}>
               <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
             </div>
           </Link>
 
-
-          {/* Mobile Home Title (Logo Only) */}
+          {}
           <div className="md:hidden">
             <div className="relative w-8 h-8">
               <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
             </div>
           </div>
 
-          {/* Center: Search Bar (Hidden on Mobile) */}
+          {}
           <div
             className={`hidden md:block transition-all duration-300 ease-out ${isSearchFocused ? "w-[480px]" : "w-[320px]"} ${isCollapsed ? "scale-95" : "scale-100"}`}
           >
@@ -168,36 +155,34 @@ export default function FloatingNavbar() {
             </div>
           </div>
 
-          {/* Right: Action Icons */}
+          {}
           <div className="flex items-center gap-4">
             {status === "authenticated" && (
               <>
-                {/* Notifications */}
+                {}
                 <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"} hidden md:block`} />
 
-                {/* Live Radar (Mobile & Desktop) -> Now Desktop Only */}
+                {}
                 <button
                   onClick={() => setIsRadarOpen(true)}
                   className={`hidden md:block relative p-2 rounded-full hover:bg-white/5 transition-all duration-300 group ${isCollapsed ? "scale-90" : "scale-100"}`}
                   aria-label="Live Radar"
                 >
                   {liveUsers.length > 0 ? (
-                    // Active State: Breathing Mint Dot
+                    
                     <div className="relative flex items-center justify-center">
                       <span className="absolute inline-flex h-full w-full rounded-full bg-[#2DE2A6] opacity-30 animate-ping duration-[3000ms]" />
                       <Circle className="w-5 h-5 text-[#2DE2A6] fill-[#2DE2A6]" strokeWidth={2.5} />
-                      {/* Ripple Effect (Simulated) */}
+                      {}
                       <span className="absolute -inset-1 rounded-full border border-[#2DE2A6]/40 animate-pulse" />
                     </div>
                   ) : (
-                    // Idle State: Small Muted Circle
+                    
                     <Circle className="w-5 h-5 text-[#5C6270]" strokeWidth={2} />
                   )}
                 </button>
 
-
-
-                {/* Upload (Mobile & Desktop) */}
+                {}
                 <button
                   onClick={handleUploadClick}
                   className={`relative p-2 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90" : "scale-100"}`}
@@ -206,7 +191,7 @@ export default function FloatingNavbar() {
                   <Plus className={`text-white transition-all ${isCollapsed ? "w-5 h-5" : "w-6 h-6"}`} strokeWidth={2.5} />
                 </button>
 
-                {/* Avatar (Hidden on Mobile) */}
+                {}
                 <div className="hidden md:block relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
@@ -223,7 +208,7 @@ export default function FloatingNavbar() {
                       getInitial(session?.user?.email)
                     )}
                   </button>
-                  {/* ... User Menu ... (Keep existing code) */}
+                  {}
                   {showUserMenu && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
@@ -260,15 +245,15 @@ export default function FloatingNavbar() {
         </div>
       </nav >
 
-      {/* Spacer (Only show on auth pages where navbar is solid/full) */}
+      {}
       {isAuthPage && (
         <div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`} />
       )}
 
-      {/* Notification Panel */}
+      {}
       <NotificationPanel />
 
-      {/* Live Radar Panel */}
+      {}
       <NetworkSheet isOpen={isRadarOpen} onClose={() => setIsRadarOpen(false)} liveUsers={liveUsers} />
     </>
   );

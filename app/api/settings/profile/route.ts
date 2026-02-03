@@ -14,14 +14,13 @@ export async function GET(req: Request) {
 
         await connectToDatabase();
 
-        // Check for specific userId query param, otherwise default to current user
         const { searchParams } = new URL(req.url);
         const userId = searchParams.get("userId") || session.user.id;
 
         const profile = await Profile.findOne({ userId });
 
         if (!profile) {
-            return NextResponse.json({ profile: null }, { status: 200 }); // Not an error, just no profile yet
+            return NextResponse.json({ profile: null }, { status: 200 }); 
         }
 
         return NextResponse.json({ profile }, { status: 200 });
@@ -48,13 +47,11 @@ export async function POST(req: Request) {
 
         await connectToDatabase();
 
-        // Check if username is taken by ANOTHER user
         const existingProfile = await Profile.findOne({ username });
         if (existingProfile && existingProfile.userId.toString() !== session.user.id) {
             return NextResponse.json({ error: "Username is already taken" }, { status: 400 });
         }
 
-        // Upsert profile
         const profile = await Profile.findOneAndUpdate(
             { userId: session.user.id },
             {

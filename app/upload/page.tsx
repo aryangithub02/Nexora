@@ -20,7 +20,6 @@ export default function UploadPage() {
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // State for thumbnail handling
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
@@ -36,7 +35,6 @@ export default function UploadPage() {
     setUploadedFile(file);
     setProgress(0);
 
-    // Start generating thumbnail immediately after video upload
     if (file.url) {
       setIsGeneratingThumbnail(true);
       try {
@@ -55,8 +53,7 @@ export default function UploadPage() {
         }
       } catch (err) {
         console.error("Failed to generate/upload thumbnail:", err);
-        // Fallback to video URL is handled in save if empty, or we can set it here
-        // But we prefer explicit failed state or just use videoUrl later
+
       } finally {
         setIsGeneratingThumbnail(false);
       }
@@ -88,7 +85,6 @@ export default function UploadPage() {
       const res = await apiClient.createVideo(videoData);
       console.log("API Response:", res);
 
-      // Redirect to home page after successful save
       router.push("/");
     } catch (err: any) {
       console.error("Error in handleSaveVideo:", err);
@@ -97,7 +93,6 @@ export default function UploadPage() {
     }
   };
 
-  // Redirect if not authenticated
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0F1117]">
@@ -139,7 +134,7 @@ export default function UploadPage() {
             </>
           ) : (
             <>
-              {/* Video Preview */}
+              {}
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-[#E5E7EB] mb-2" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
@@ -159,7 +154,7 @@ export default function UploadPage() {
                       />
                     </div>
 
-                    {/* Thumbnail Overlay Hint */}
+                    {}
                     {isGeneratingThumbnail && (
                       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/10 z-10">
                         <Loader2 className="w-3 h-3 text-[#2DE2A6] animate-spin" />
@@ -169,7 +164,7 @@ export default function UploadPage() {
                   </div>
                 </div>
 
-                {/* Thumbnail Preview Row */}
+                {}
                 <div className="flex items-center gap-4 py-2">
                   <div className="w-16 h-24 bg-[#0F1117] rounded-lg border border-[#5C6270]/30 overflow-hidden relative group cursor-pointer">
                     {thumbnailUrl ? (
@@ -184,7 +179,7 @@ export default function UploadPage() {
                       </div>
                     )}
 
-                    {/* Overlay for manual upload */}
+                    {}
                     <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
                       <input
                         type="file"
@@ -217,7 +212,7 @@ export default function UploadPage() {
                   </div>
                 </div>
 
-                {/* Title Input */}
+                {}
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium text-[#E5E7EB] mb-1" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
                     Title
@@ -233,7 +228,7 @@ export default function UploadPage() {
                   />
                 </div>
 
-                {/* Description Input */}
+                {}
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium text-[#E5E7EB] mb-1" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
                     Description
@@ -249,7 +244,7 @@ export default function UploadPage() {
                   />
                 </div>
 
-                {/* Upload Info */}
+                {}
                 <div className="p-4 bg-[#0F1117] rounded-lg space-y-2 border border-[#5C6270]/20">
                   <div className="flex justify-between text-sm">
                     <span className="text-[#9AA0AA]">File Name:</span>
@@ -261,7 +256,7 @@ export default function UploadPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
+                {}
                 <div className="flex gap-4">
                   <button
                     onClick={() => {

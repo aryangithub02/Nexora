@@ -18,7 +18,7 @@ interface UserProfile {
     bannerUrl?: string;
     followersCount: number;
     followingCount: number;
-    isFollowing: boolean; // Kept for legacy/simple checks
+    isFollowing: boolean; 
     followState: 'following' | 'requested' | 'not_following';
     isOwnProfile: boolean;
     isOnline: boolean;
@@ -44,14 +44,14 @@ const VideoCard = ({ video, isHovered, onMouseEnter, onMouseLeave, setVideoRef }
 }) => {
     return (
         <Link href={`/reel/${video._id}`} className="block relative aspect-[9/16] group rounded-xl overflow-hidden bg-black/40 border border-white/5 transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl hover:border-white/20 hover:z-10">
-            {/* Thumbnail */}
+            {}
             <img
                 src={video.thumbnailUrl}
                 alt={video.title}
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
             />
 
-            {/* Video Preview */}
+            {}
             <video
                 ref={(el) => setVideoRef(video._id, el)}
                 src={video.videoUrl}
@@ -61,23 +61,23 @@ const VideoCard = ({ video, isHovered, onMouseEnter, onMouseLeave, setVideoRef }
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
             />
 
-            {/* Overlay Gradient */}
+            {}
             <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-60'}`} />
 
-            {/* Content info */}
+            {}
             <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                 <h3 className="text-white text-xs font-bold line-clamp-1 mb-0.5 text-shadow-sm">{video.title}</h3>
                 <div className="flex items-center gap-2 text-[10px] text-white/70">
                     <span className="flex items-center gap-1">
                         <Play size={10} className="fill-white/70" />
-                        {Math.floor(Math.random() * 1000) + 100} {/* Placeholder views */}
+                        {Math.floor(Math.random() * 1000) + 100} {}
                     </span>
                     <span>•</span>
                     <span>{formatDistanceToNow(new Date(video.createdAt), { addSuffix: true })}</span>
                 </div>
             </div>
 
-            {/* Hover Play Icon */}
+            {}
             {!isHovered && (
                 <div className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Play className="w-3 h-3 text-white fill-white" />
@@ -99,7 +99,6 @@ export default function ProfilePage() {
     const [followLoading, setFollowLoading] = useState(false);
     const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
 
-    // Quick-preview refs
     const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
     useEffect(() => {
@@ -109,19 +108,17 @@ export default function ProfilePage() {
         }
     }, [userId, session?.user]);
 
-    // Cleanup video refs
     useEffect(() => {
         return () => {
             videoRefs.current.forEach(video => {
                 video.pause();
-                video.removeAttribute('src'); // aggressive cleanup
+                video.removeAttribute('src'); 
                 video.load();
             });
             videoRefs.current.clear();
         };
     }, []);
 
-    // Handle hover preview
     useEffect(() => {
         const videoEl = hoveredVideo ? videoRefs.current.get(hoveredVideo) : null;
 
@@ -129,14 +126,14 @@ export default function ProfilePage() {
             const playPromise = videoEl.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    // Auto-play was prevented
+                    
                     console.log("Preview swipe prevented");
                 });
             }
         }
 
         return () => {
-            // Pause all others
+            
             videoRefs.current.forEach((v, id) => {
                 if (id !== hoveredVideo) {
                     v.pause();
@@ -145,7 +142,6 @@ export default function ProfilePage() {
             });
         };
     }, [hoveredVideo]);
-
 
     const fetchProfile = async () => {
         try {
@@ -180,13 +176,12 @@ export default function ProfilePage() {
         const currentState = profile.followState;
         let newState: 'following' | 'requested' | 'not_following' = 'not_following';
 
-        // Determine next state (optimistic)
         if (currentState === 'following') {
-            newState = 'not_following'; // Unfollow
+            newState = 'not_following'; 
         } else if (currentState === 'requested') {
-            newState = 'not_following'; // Cancel request
+            newState = 'not_following'; 
         } else {
-            // Follow or Request
+            
             if (profile.isPrivate) {
                 newState = 'requested';
             } else {
@@ -194,7 +189,6 @@ export default function ProfilePage() {
             }
         }
 
-        // Optimistic update
         setProfile(prev => prev ? ({
             ...prev,
             followState: newState,
@@ -213,18 +207,18 @@ export default function ProfilePage() {
             });
 
             if (!res.ok) {
-                // Revert
+                
                 setProfile(prev => prev ? ({
                     ...prev,
                     followState: currentState,
                     isFollowing: currentState === 'following',
-                    followersCount: prev.followersCount // Simplistic revert, ideally calc diff
+                    followersCount: prev.followersCount 
                 }) : null);
-                // Ideally fetch profile to sync
+                
                 fetchProfile();
             } else {
                 const data = await res.json();
-                // Sync server state if provided
+                
                 if (data.status) {
                     setProfile(prev => prev ? ({
                         ...prev,
@@ -235,7 +229,7 @@ export default function ProfilePage() {
             }
         } catch (error) {
             console.error("Follow action failed", error);
-            // Revert
+            
             fetchProfile();
         } finally {
             setFollowLoading(false);
@@ -268,9 +262,9 @@ export default function ProfilePage() {
             <LeftSpine onAvatarClick={() => { }} />
 
             <div className="pl-0 md:pl-20 min-h-screen pb-24">
-                {/* Banner & Header */}
+                {}
                 <div className="relative h-56 w-full overflow-hidden">
-                    {/* Banner Image */}
+                    {}
                     {bannerImage ? (
                         <>
                             <img
@@ -284,7 +278,7 @@ export default function ProfilePage() {
                         <div className="w-full h-full bg-gradient-to-br from-[#4F8CFF]/20 to-[#2DE2A6]/20" />
                     )}
 
-                    {/* Back Button */}
+                    {}
                     <button
                         onClick={() => router.back()}
                         className="absolute top-4 left-4 p-2 rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-all z-10"
@@ -292,14 +286,14 @@ export default function ProfilePage() {
                         <ArrowLeft size={20} />
                     </button>
 
-                    {/* Decorative overlay */}
+                    {}
                     <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none" />
                 </div>
 
                 <div className="max-w-4xl mx-auto px-6 relative z-10 -mt-20">
-                    {/* Avatar & Info */}
+                    {}
                     <div className="flex flex-col items-center text-center">
-                        {/* Avatar */}
+                        {}
                         <div className="relative mb-4 group cursor-pointer transition-transform duration-300 hover:scale-105">
                             <div className={`w-36 h-36 rounded-full p-[4px] ${profile.isOnline
                                 ? 'bg-gradient-to-br from-[#2DE2A6] to-[#4F8CFF] animate-pulse-slow'
@@ -324,7 +318,7 @@ export default function ProfilePage() {
                             )}
                         </div>
 
-                        {/* Identity Cluster */}
+                        {}
                         <div className="flex flex-col items-center mb-8 w-full max-w-lg">
                             <div className="flex items-center gap-2 mb-1">
                                 <h1 className="text-3xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
@@ -338,12 +332,12 @@ export default function ProfilePage() {
                                 </p>
                             )}
 
-                            {/* Bio */}
+                            {}
                             <p className="text-white/80 text-sm font-[family-name:var(--font-inter)] leading-relaxed max-w-md mx-auto mb-6 line-clamp-3">
                                 {profile.bio || "This user hasn't written a bio yet."}
                             </p>
 
-                            {/* Action Button */}
+                            {}
                             {!profile.isOwnProfile ? (
                                 <button
                                     onClick={handleFollowToggle}
@@ -364,7 +358,7 @@ export default function ProfilePage() {
                                         </>
                                     ) : profile.followState === 'requested' ? (
                                         <>
-                                            <Loader2 size={18} className="animate-pulse" /> {/* Or a clock icon */}
+                                            <Loader2 size={18} className="animate-pulse" /> {}
                                             <span>Requested</span>
                                         </>
                                     ) : (
@@ -385,7 +379,7 @@ export default function ProfilePage() {
                             )}
                         </div>
 
-                        {/* Stats Row */}
+                        {}
                         <div className="flex items-center justify-center gap-12 mb-10 border-t border-b border-white/5 py-4 w-full max-w-md bg-white/5 rounded-2xl backdrop-blur-sm">
                             <div className="text-center group cursor-pointer">
                                 <p className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)] group-hover:text-[#4F8CFF] transition-colors">
@@ -407,7 +401,7 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        {/* Content Area */}
+                        {}
                         <div className="w-full">
                             <div className="flex items-center justify-center gap-2 mb-6 opacity-60">
                                 <Film size={16} className="text-white" />

@@ -19,7 +19,7 @@ export default function SetupTwoFactor() {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            router.push("/login"); // Middlewar will handle this anyway
+            router.push("/login"); 
         }
     }, [status, router]);
 
@@ -53,8 +53,6 @@ export default function SetupTwoFactor() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
 
-            // Trigger session update because 2FA is now enabled
-            // We pass a special status or just trigger update which forces JWT refresh
             await update({ status: "2fa_setup_complete" });
 
             router.push("/");
@@ -85,7 +83,7 @@ export default function SetupTwoFactor() {
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
             <div className="max-w-md w-full bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
 
-                {/* Background Glow */}
+                {}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 

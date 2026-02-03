@@ -45,7 +45,6 @@ export default function RegisterPage() {
         return;
       }
 
-      // Auto sign in after registration
       const signInResult = await signIn("credentials", {
         email,
         password,
@@ -53,10 +52,10 @@ export default function RegisterPage() {
       });
 
       if (signInResult?.error) {
-        // Registration successful but sign in failed, redirect to login
+        
         router.push("/login");
       } else {
-        // Successfully registered and signed in
+        
         router.push("/");
         router.refresh();
       }

@@ -2,14 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-/**
- * Global Volume Context
- * Manages the volume state across all ReelCards to ensure consistent audio levels.
- * When the user adjusts the volume on one reel, it applies to all reels.
- */
-
 interface VolumeContextType {
-    volume: number;       // 0 to 1
+    volume: number;       
     isMuted: boolean;
     setVolume: (val: number) => void;
     toggleMute: () => void;
@@ -18,11 +12,10 @@ interface VolumeContextType {
 const VolumeContext = createContext<VolumeContextType | undefined>(undefined);
 
 export function VolumeProvider({ children }: { children: React.ReactNode }) {
-    // Default perceived volume (0.2 -> ~4% actual power)
+    
     const [volume, setVolumeState] = useState(0.2);
     const [isMuted, setIsMuted] = useState(false);
 
-    // Initial load from local storage
     useEffect(() => {
         try {
             const savedVol = localStorage.getItem("global_volume");

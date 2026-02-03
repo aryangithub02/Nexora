@@ -8,25 +8,23 @@ export function useVideoCache(reelId: string, initialUrl?: string, isVisible: bo
     const [isCached, setIsCached] = useState(false);
 
     useEffect(() => {
-        // Initialize Cache
+        
         VideoCache.init();
     }, []);
 
     useEffect(() => {
         if (!reelId) return;
 
-        // Layer 1: Check Memory/IDB
         const cachedUrl = VideoCache.get(reelId);
         if (cachedUrl) {
             setSrc(cachedUrl);
             setIsCached(true);
         } else {
-            // Cache Miss: Fallback to initialUrl
+            
             if (initialUrl) {
                 setSrc(initialUrl);
             }
 
-            // Populate cache if visible
             if (initialUrl && isVisible) {
                 VideoCache.save(reelId, initialUrl);
             }

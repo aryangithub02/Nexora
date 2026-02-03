@@ -11,7 +11,7 @@ export interface IComment {
     likes?: mongoose.Types.ObjectId[];
     isDeleted?: boolean;
     deletedBy?: mongoose.Types.ObjectId;
-    // Populated fields
+    
     user?: {
         _id: mongoose.Types.ObjectId;
         email: string;
@@ -33,10 +33,8 @@ const commentSchema = new Schema<IComment>(
     { timestamps: true }
 );
 
-// Index for fetching comments on a video (newest first)
 commentSchema.index({ videoId: 1, createdAt: -1 });
 
-// Index for user's comments
 commentSchema.index({ userId: 1, createdAt: -1 });
 
 const Comment = models.Comment || model<IComment>("Comment", commentSchema);

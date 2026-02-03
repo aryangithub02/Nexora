@@ -4,20 +4,19 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useSession } from "next-auth/react";
 import { Bell } from "lucide-react";
 
-
 interface Notification {
     _id: string;
     recipient: string;
     actor: {
         _id: string;
         username?: string;
-        avatarUrl?: string; // Optional if populated
+        avatarUrl?: string; 
         email?: string;
     };
     type: "like" | "comment" | "follow" | "mention" | "follow_request" | "follow_accept";
     entityId?: string;
     entityType?: "Reel" | "Comment" | "User";
-    contextMediaUrl?: string; // Thumbnail for reels
+    contextMediaUrl?: string; 
     read: boolean;
     createdAt: string;
 }
@@ -43,7 +42,6 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     const togglePanel = () => setIsOpen((prev) => !prev);
 
-    // Toast Timer
     useEffect(() => {
         if (newNotificationToast) {
             const timer = setTimeout(() => setNewNotificationToast(false), 5000);
@@ -60,13 +58,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                 const fetchedNotes = data.notifications || [];
                 setNotifications(fetchedNotes);
 
-                // Check for new notification
                 if (fetchedNotes.length > 0) {
                     const latestId = fetchedNotes[0]._id;
                     if (lastNotificationIdRef.current && lastNotificationIdRef.current !== latestId) {
-                        // We have a new notification!
+                        
                         setNewNotificationToast(true);
-                        // Optional: Play a sound?
+                        
                     }
                     lastNotificationIdRef.current = latestId;
                 } else {
@@ -78,12 +75,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         }
     }, [session]);
 
-    // ... (rest of functions: markAsRead, dismissNotification) ...
-
     const markAsRead = async (ids: string[]) => {
         if (ids.length === 0) return;
 
-        // Optimistic update
         setNotifications((prev) =>
             prev.map((n) => (ids.includes(n._id) ? { ...n, read: true } : n))
         );
@@ -94,14 +88,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ notificationIds: ids }),
             });
-            // Re-fetch to ensure sync? Not strictly necessary if optimistic works
+            
         } catch (error) {
             console.error("Failed to mark notifications as read", error);
         }
     };
 
     const dismissNotification = async (id: string) => {
-        // Optimistic update - remove from list
+        
         setNotifications((prev) => prev.filter((n) => n._id !== id));
 
         try {
@@ -112,12 +106,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             });
         } catch (error) {
             console.error("Failed to dismiss notification", error);
-            // Revert on error - refetch
+            
             fetchNotifications();
         }
     };
 
-    // Initial fetch & Polling
     useEffect(() => {
         if (session) {
             fetchNotifications();
@@ -142,7 +135,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         >
             {children}
 
-            {/* Global Notification Toast */}
+            {}
             {newNotificationToast && (
                 <div
                     onClick={togglePanel}

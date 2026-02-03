@@ -13,7 +13,6 @@ export default function VerifyTwoFactor() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // Redirect if not authenticated or if 2FA is already satisfied
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/login");
@@ -28,7 +27,6 @@ export default function VerifyTwoFactor() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Client-side validation
         if (!isCodeValid) {
             setError(isBackup
                 ? "Backup code must be exactly 8 characters."
@@ -40,8 +38,7 @@ export default function VerifyTwoFactor() {
         setError("");
 
         try {
-            // Attempt to update the session with the provided OTP/Backup code
-            // The logic in [...nextauth].ts -> jwt callback will verify this
+
             const newSession = await update({ otp: code });
 
             if ((newSession?.user as any)?.requires2FA === false) {
@@ -72,7 +69,7 @@ export default function VerifyTwoFactor() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-black p-4">
             <div className="w-full max-w-md relative group">
-                {/* Glow Effect */}
+                {}
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
                 <div className="relative bg-[#0a0a0a] rounded-xl border border-white/10 p-8 shadow-2xl">
@@ -105,7 +102,7 @@ export default function VerifyTwoFactor() {
                                     value={code}
                                     onChange={(e) => {
                                         const value = e.target.value.trim();
-                                        // For OTP, only allow digits; for backup, allow alphanumeric
+                                        
                                         if (isBackup) {
                                             setCode(value.toUpperCase().slice(0, 8));
                                         } else {
@@ -145,7 +142,7 @@ export default function VerifyTwoFactor() {
                             )}
                         </button>
 
-                        {/* Character count indicator */}
+                        {}
                         <p className="text-center text-xs text-white">
                             {code.length} / {expectedLength} characters
                         </p>

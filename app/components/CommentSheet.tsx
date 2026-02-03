@@ -23,7 +23,7 @@ interface Comment {
     likes?: string[];
     likeCount?: number;
     isLiked?: boolean;
-    children?: Comment[]; // For threaded view
+    children?: Comment[]; 
 }
 
 interface CommentSheetProps {
@@ -44,7 +44,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
     const [inputFocused, setInputFocused] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [replyingTo, setReplyingTo] = useState<{ id: string; username: string } | null>(null);
-    const [undoMap, setUndoMap] = useState<Record<string, number>>({}); // commentId -> expiryTime
+    const [undoMap, setUndoMap] = useState<Record<string, number>>({}); 
     const [expandedHidden, setExpandedHidden] = useState<Set<string>>(new Set());
     const { data: session } = useSession();
     const currentUserId = (session?.user as any)?.id;
@@ -53,17 +53,14 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
     const inputRef = useRef<HTMLInputElement>(null);
     const commentsContainerRef = useRef<HTMLDivElement>(null);
 
-    // Thread comments
     const threads = useMemo(() => {
         const map = new Map<string, Comment>();
         const roots: Comment[] = [];
 
-        // Clone and map
         comments.forEach(c => {
             map.set(c._id, { ...c, children: [] });
         });
 
-        // Build tree
         comments.forEach(c => {
             const node = map.get(c._id)!;
             if (c.parentId && map.has(c.parentId)) {
@@ -73,17 +70,13 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
             }
         });
 
-        // Sort: newest roots first, oldest replies first (chronological conversation)
-        // Actually, if I want replies to be chronological:
         map.forEach(node => {
             node.children?.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         });
 
-        // Roots: newest first (default from API usually)
         return roots;
     }, [comments]);
 
-    // Fetch comments when sheet opens
     useEffect(() => {
         if (isOpen && videoId) {
             fetchComments();
@@ -112,13 +105,12 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
 
         setIsSending(true);
 
-        // Optimistic update - add comment immediately at top
         const tempId = `temp-${Date.now()}`;
         const optimisticComment: Comment = {
             _id: tempId,
             text: newComment.trim(),
             createdAt: new Date().toISOString(),
-            isNew: true, // Triggers shimmer animation
+            isNew: true, 
         };
 
         setComments(prev => [optimisticComment, ...prev]);
@@ -138,19 +130,19 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
 
             if (res.ok) {
                 const data = await res.json();
-                // Replace optimistic comment with real one
+                
                 setComments(prev =>
                     prev.map(c => c._id === tempId ? { ...data.comment, isNew: true } : c)
                 );
                 setTotalCount(data.totalCount);
             } else {
-                // Revert on error
+                
                 setComments(prev => prev.filter(c => c._id !== tempId));
                 setTotalCount(prev => prev - 1);
             }
         } catch (error) {
             console.error("Failed to post comment:", error);
-            // Revert on error
+            
             setComments(prev => prev.filter(c => c._id !== tempId));
             setTotalCount(prev => prev - 1);
         } finally {
@@ -160,7 +152,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
     };
 
     const handleLike = async (commentId: string, currentIsLiked: boolean) => {
-        // Optimistic
+        
         setComments(prev => prev.map(c => {
             if (c._id === commentId) {
                 return {
@@ -180,23 +172,20 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
             });
         } catch (error) {
             console.error("Failed to toggle like:", error);
-            // Revert omitted for brevity
+            
         }
     };
 
-
-
     const handleDeleteInitiate = (commentId: string, isOwnComment: boolean) => {
         if (isOwnComment) {
-            // Start 5s timer
+            
             const expiry = Date.now() + 5000;
             setUndoMap(prev => ({ ...prev, [commentId]: expiry }));
 
-            // Auto-commit after 5s
             setTimeout(() => {
                 setUndoMap(prev => {
                     if (prev[commentId] === expiry) {
-                        // Still active, commit delete
+                        
                         commitDelete(commentId);
                         const { [commentId]: _, ...rest } = prev;
                         return rest;
@@ -205,7 +194,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                 });
             }, 5000);
         } else {
-            // Creator deleting others - immediate
+            
             commitDelete(commentId);
         }
     };
@@ -218,13 +207,12 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
     };
 
     const commitDelete = async (commentId: string) => {
-        // Optimistic hide/update
+        
         setComments(prev => prev.map(c =>
             c._id === commentId ? { ...c, isDeleted: true, text: "[deleted]" } : c
         ));
         setTotalCount(prev => Math.max(0, prev - 1));
 
-        // Call API
         try {
             await fetch("/api/comments", {
                 method: "DELETE",
@@ -269,14 +257,12 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
         return "U";
     };
 
-    // Recursive Comment Item
     const CommentItem = ({ comment, videoOwnerId, onReply, onLike, isReply = false }: { comment: Comment, videoOwnerId?: string, onReply: any, onLike: any, isReply?: boolean }) => {
         const isCreator = videoOwnerId && comment.user?._id === videoOwnerId;
         const isOwnComment = currentUserId && comment.user?._id === currentUserId;
         const canDelete = isOwnComment || isVideoOwner;
         const isUndoable = !!undoMap[comment._id];
 
-        // Handle undo state
         if (isUndoable) {
             return (
                 <div className={`mb-4 ${isReply ? 'ml-10' : ''}`}>
@@ -290,7 +276,6 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
             );
         }
 
-        // Handle deleted state
         if (comment.isDeleted) {
             return (
                 <div className={`mb-4 ${isReply ? 'ml-10' : ''} opacity-50`}>
@@ -311,7 +296,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                 <div
                     className={`flex gap-3 ${comment.isNew ? 'animate-mint-shimmer' : ''}`}
                 >
-                    {/* Avatar */}
+                    {}
                     <div className="flex-shrink-0 relative">
                         {comment.user?.avatarUrl ? (
                             <img
@@ -330,7 +315,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
 
                     </div>
 
-                    {/* Content */}
+                    {}
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                             <span
@@ -355,7 +340,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                             {comment.text}
                         </p>
 
-                        {/* Actions */}
+                        {}
                         <div className="flex items-center gap-4 mt-2">
                             <button
                                 onClick={() => onReply(comment._id, comment.user?.username || "User")}
@@ -385,7 +370,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                     </div>
                 </div>
 
-                {/* Recursive Children */}
+                {}
                 {comment.children && comment.children.length > 0 && (
                     <div className="flex flex-col">
                         {comment.children.map(child => (
@@ -408,7 +393,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
 
     return (
         <>
-            {/* Backdrop - Dimmed and blurred */}
+            {}
             <div
                 className={`fixed inset-0 z-[100] ${isClosing ? 'animate-backdrop-fade-out' : 'animate-backdrop-fade'}`}
                 style={{
@@ -419,7 +404,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                 onClick={handleClose}
             />
 
-            {/* Half-height Sheet - Centered on desktop */}
+            {}
             <div
                 className={`fixed z-[101] ${isClosing ? 'animate-sheet-down' : 'animate-sheet-up'} bottom-0 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:max-w-[480px]`}
                 style={{
@@ -431,12 +416,12 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                     boxShadow: "0 -8px 40px rgba(0, 0, 0, 0.5)",
                 }}
             >
-                {/* Handle Bar */}
+                {}
                 <div className="flex justify-center pt-3 pb-2">
                     <div className="w-12 h-1 rounded-full bg-white/20" />
                 </div>
 
-                {/* Header */}
+                {}
                 <div className="flex items-center justify-between px-5 py-3 border-b border-white/5">
                     <h3
                         className="text-white font-semibold text-lg"
@@ -455,7 +440,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                     </button>
                 </div>
 
-                {/* Comments List */}
+                {}
                 <div
                     ref={commentsContainerRef}
                     className="flex-1 overflow-y-auto px-5 py-4 scrollbar-hide"
@@ -493,7 +478,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
                         background: "linear-gradient(180deg, rgba(23, 27, 34, 0.9) 0%, rgba(15, 17, 23, 1) 100%)",
                     }}
                 >
-                    {/* Permission Check */}
+                    {}
                     {(() => {
                         const canComment =
                             isVideoOwner ||
@@ -515,7 +500,7 @@ export default function CommentSheet({ videoId, videoOwnerId, isOpen, onClose, c
 
                         return (
                             <>
-                                {/* Reply Pill - Connector Line */}
+                                {}
                                 {replyingTo && (
                                     <div className="absolute -top-8 left-10 flex items-center animate-slide-up">
                                         <div className="w-px h-8 bg-white/20 mr-3" />

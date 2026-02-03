@@ -38,7 +38,6 @@ export default function SavedPage() {
     const [hoveredReel, setHoveredReel] = useState<string | null>(null);
     const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
-    // Fetch bookmarks
     useEffect(() => {
         const fetchBookmarks = async () => {
             setLoading(true);
@@ -60,7 +59,6 @@ export default function SavedPage() {
         }
     }, [session, activeSort]);
 
-    // Handle video preview on hover - subtle fade in
     useEffect(() => {
         if (hoveredReel) {
             const video = videoRefs.current.get(hoveredReel);
@@ -68,7 +66,7 @@ export default function SavedPage() {
                 video.play().catch(() => { });
             }
         }
-        // Pause all other videos
+        
         videoRefs.current.forEach((video, id) => {
             if (id !== hoveredReel) {
                 video.pause();
@@ -77,9 +75,8 @@ export default function SavedPage() {
         });
     }, [hoveredReel]);
 
-    // Handle opening a saved reel - increment revisit silently
     const handleOpenReel = async (videoId: string) => {
-        // Silently increment revisit count in background
+        
         try {
             await fetch('/api/bookmarks', {
                 method: 'POST',
@@ -87,11 +84,10 @@ export default function SavedPage() {
                 body: JSON.stringify({ videoId })
             });
         } catch (error) {
-            // Silent fail - memory is private
+            
             console.error('Failed to record revisit:', error);
         }
 
-        // Navigate to feed with the reel highlighted
         router.push(`/?reelId=${videoId}&fromSaved=true`);
     };
 
@@ -99,17 +95,13 @@ export default function SavedPage() {
         return name?.charAt(0)?.toUpperCase() || '?';
     };
 
-    // Generate thumbnail from video URL using ImageKit's first-frame thumbnail
     const getVideoThumbnail = (videoUrl: string) => {
         if (!videoUrl) return '/placeholder.jpg';
 
-        // ImageKit video thumbnail: append /ik-thumbnail.jpg to get first frame
-        // Example: https://ik.imagekit.io/xxx/video.mp4 -> https://ik.imagekit.io/xxx/video.mp4/ik-thumbnail.jpg
         if (videoUrl.includes('imagekit.io')) {
             return `${videoUrl}/ik-thumbnail.jpg`;
         }
 
-        // Fallback for non-ImageKit videos
         return videoUrl;
     };
 
@@ -145,19 +137,19 @@ export default function SavedPage() {
         <main className="min-h-screen bg-[var(--bg-main)] overflow-hidden">
             <LeftSpine onAvatarClick={() => { }} />
 
-            {/* Subtle ambient glow - calmer than feed */}
+            {}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-[var(--accent)]/5 rounded-full blur-[150px]" />
                 <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[120px]" />
             </div>
 
             <div className="pl-20 pr-8 py-12 relative">
-                {/* Header - calm and minimal */}
+                {}
                 <div className="max-w-6xl mx-auto mb-10">
                     <div className="flex items-start justify-between">
-                        {/* Title area */}
+                        {}
                         <div className="flex items-center gap-4">
-                            {/* Soft bookmark glyph */}
+                            {}
                             <div className="w-10 h-10 flex items-center justify-center">
                                 <Bookmark className="w-6 h-6 text-[var(--accent)]/70 fill-[var(--accent)]/20" />
                             </div>
@@ -171,7 +163,7 @@ export default function SavedPage() {
                             </div>
                         </div>
 
-                        {/* Sorting controls - floating pills */}
+                        {}
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setActiveSort('memory')}
@@ -200,7 +192,7 @@ export default function SavedPage() {
                         </div>
                     </div>
 
-                    {/* Quiet counters - footprints of the mind */}
+                    {}
                     <div className="flex items-center gap-8 mt-6 ml-14">
                         <span className="text-[var(--text-muted)] text-sm font-[family-name:var(--font-jetbrains-mono)]">
                             {bookmarks.length} saved
@@ -211,7 +203,7 @@ export default function SavedPage() {
                     </div>
                 </div>
 
-                {/* Memory cards grid */}
+                {}
                 <div className="max-w-6xl mx-auto">
                     {loading ? (
                         <div className="flex justify-center py-32">
@@ -255,7 +247,7 @@ export default function SavedPage() {
                                         onMouseLeave={() => setHoveredReel(null)}
                                         onClick={() => handleOpenReel(video._id)}
                                     >
-                                        {/* Soft border glow on hover */}
+                                        {}
                                         <div
                                             className={`absolute inset-0 rounded-2xl transition-all duration-700 ease-out border border-white/5 ${isHovered
                                                 ? 'shadow-[0_0_30px_var(--accent)]'
@@ -264,7 +256,7 @@ export default function SavedPage() {
                                             style={{ borderColor: isHovered ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
                                         />
 
-                                        {/* Faded video preview background */}
+                                        {}
                                         <div className={`absolute inset-0 bg-[var(--bg-card)] transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-90'}`}>
                                             {isHovered ? (
                                                 <video
@@ -283,17 +275,17 @@ export default function SavedPage() {
                                                     alt=""
                                                     className="w-full h-full object-cover opacity-50"
                                                     onError={(e) => {
-                                                        // Fallback if thumbnail fails
+                                                        
                                                         (e.target as HTMLImageElement).src = '/placeholder.jpg';
                                                     }}
                                                 />
                                             )}
                                         </div>
 
-                                        {/* Gradient veil - bottom heavier for text */}
+                                        {}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
 
-                                        {/* Play glyph - centered, subtle */}
+                                        {}
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <div
                                                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${isHovered
@@ -309,16 +301,16 @@ export default function SavedPage() {
                                             </div>
                                         </div>
 
-                                        {/* Revisit trace - very subtle */}
+                                        {}
                                         {bookmark.revisitCount > 0 && (
                                             <div className="absolute top-3 right-3 text-[var(--accent)]/50 text-[10px] font-[family-name:var(--font-jetbrains-mono)]">
                                                 {bookmark.revisitCount}×
                                             </div>
                                         )}
 
-                                        {/* Bottom content - creator, caption, timestamp */}
+                                        {}
                                         <div className="absolute bottom-0 left-0 right-0 p-4">
-                                            {/* Creator avatar & name */}
+                                            {}
                                             {video.uploadedBy && (
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <div className="w-6 h-6 rounded-full p-[1px]" style={{ background: "var(--accent)" }}>
@@ -334,12 +326,12 @@ export default function SavedPage() {
                                                 </div>
                                             )}
 
-                                            {/* Caption snippet */}
+                                            {}
                                             <p className="text-[var(--text-main)]/60 text-xs line-clamp-2 mb-2 font-[family-name:var(--font-inter)] leading-relaxed">
                                                 {video.description || video.title}
                                             </p>
 
-                                            {/* Saved timestamp */}
+                                            {}
                                             <p className="text-[var(--text-muted)]/60 text-[10px] font-[family-name:var(--font-inter)]" suppressHydrationWarning>
                                                 {formatSavedTime(bookmark.createdAt)}
                                             </p>
@@ -351,7 +343,7 @@ export default function SavedPage() {
                     )}
                 </div>
 
-                {/* Breathing room at bottom */}
+                {}
                 <div className="h-24" />
             </div>
         </main>

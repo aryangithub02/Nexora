@@ -29,14 +29,12 @@ export async function POST(req: Request) {
 
         await connectToDatabase();
 
-        // Explicitly select password field as it might be excluded by default
         const user = await UserModel.findById((session.user as any).id).select("+password");
 
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Check if user has a password (might be OAuth only)
         if (!user.password) {
             return NextResponse.json({ error: "Account uses social login only. No password to change." }, { status: 400 });
         }
@@ -47,16 +45,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Incorrect old password" }, { status: 400 });
         }
 
-        // Update password
         user.password = await bcrypt.hash(newPassword, 10);
         user.passwordUpdatedAt = new Date();
 
-        // Invalidate all sessions (including current)
         user.tokenVersion = (user.tokenVersion || 0) + 1;
 
         await user.save();
-
-
 
         return NextResponse.json({ message: "Password changed successfully" });
 

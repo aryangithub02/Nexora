@@ -15,7 +15,6 @@ export async function GET() {
         await connectToDatabase();
         const session = await getServerSession(authOptions);
 
-        // 1. Get current user's following list (if logged in)
         let followingIds: any[] = [];
         let currentUserId = null;
 
@@ -25,10 +24,9 @@ export async function GET() {
             followingIds = following.map(f => f.followingId.toString());
         }
 
-        // 2. Aggregation with Privacy Check
         const videos = await Video.aggregate([
             { $sort: { createdAt: -1 } },
-            // Lookup User for Privacy
+            
             {
                 $lookup: {
                     from: "users",
@@ -43,15 +41,15 @@ export async function GET() {
                     preserveNullAndEmptyArrays: true
                 }
             },
-            // Filter Logic
+            
             {
                 $match: {
                     $or: [
-                        // 1. Public Account (default true)
+                        
                         { "uploaderUser.privacy.isPublic": { $ne: false } },
-                        // 2. Current User is Uploader
+                        
                         { "uploadedBy._id": currentUserId ? new mongoose.Types.ObjectId(currentUserId) : null },
-                        // 3. User Follows Uploader
+                        
                         {
                             "uploadedBy._id": {
                                 $in: followingIds.map(id => new mongoose.Types.ObjectId(id))
@@ -60,7 +58,7 @@ export async function GET() {
                     ]
                 }
             },
-            // Lookup Profile for Display (Existing logic)
+            
             {
                 $lookup: {
                     from: "profiles",
@@ -80,14 +78,14 @@ export async function GET() {
                     "uploadedBy.avatarUrl": "$uploaderProfile.avatarUrl",
                     "uploadedBy.username": "$uploaderProfile.username",
                     "uploadedBy.displayName": "$uploaderProfile.displayName",
-                    // Map privacy setting
+                    
                     "uploadedBy.commentPermission": "$uploaderUser.privacy.commentPermission"
                 }
             },
             {
                 $project: {
                     uploaderProfile: 0,
-                    uploaderUser: 0 // Remove sensitive user data
+                    uploaderUser: 0 
                 }
             }
         ]);
@@ -96,7 +94,6 @@ export async function GET() {
             return NextResponse.json([], { status: 200 });
         }
 
-        // Backfill logic for missing uploader IDs (Existing)
         const videosMissingId = videos.filter(v => v.uploadedBy?.email && !v.uploadedBy._id);
 
         if (videosMissingId.length > 0) {
@@ -121,7 +118,7 @@ export async function GET() {
         console.error("Feed error:", error);
         return NextResponse.json(
             { error: "Failed to fetch the videos" },
-            { status: 200 } // Keep 200 to avoid client crash, but ideally 500
+            { status: 200 } 
         );
     }
 }

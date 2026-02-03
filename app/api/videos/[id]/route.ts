@@ -4,7 +4,6 @@ import Video from "@/models/Video";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-
 export async function GET(
     request: NextRequest,
     context: { params: Promise<{ id: string }> }
@@ -13,7 +12,6 @@ export async function GET(
         await connectToDatabase();
         const { id } = await context.params;
 
-        // Same aggregation as list but for one video
         const videos = await Video.aggregate([
             { $match: { _id: new (require('mongoose').Types.ObjectId)(id) } },
             {
@@ -77,7 +75,6 @@ export async function DELETE(
 
         await connectToDatabase();
 
-        // Await the params
         const { id } = await context.params;
 
         const video = await Video.findById(id);
@@ -89,14 +86,8 @@ export async function DELETE(
             );
         }
 
-        // Check ownership
         if (video.uploadedBy?.toString() !== (session.user as any).id && video.uploadedBy?._id?.toString() !== (session.user as any).id) {
-            // Logic to handle different potential structures of uploadedBy, primarily matching the creation logic
-            // logic: (session.user as any).id
-            // video.uploadedBy might be an object with _id, or just an ID if not populated (though defined as object in schema)
-            // Schema says: uploadedBy: { _id: ObjectId ... }
 
-            // Let's be careful with the check.
             if (video.uploadedBy?._id?.toString() !== (session.user as any).id) {
                 return NextResponse.json(
                     { error: "Unauthorized" },
@@ -136,7 +127,6 @@ export async function PATCH(
 
         await connectToDatabase();
 
-        // Await the params to fix the "params is promise" error
         const { id } = await context.params;
         const body = await request.json();
         const { title, description } = body;
@@ -150,7 +140,6 @@ export async function PATCH(
             );
         }
 
-        // Check ownership
         if (video.uploadedBy?.toString() !== (session.user as any).id && video.uploadedBy?._id?.toString() !== (session.user as any).id) {
             if (video.uploadedBy?._id?.toString() !== (session.user as any).id) {
                 return NextResponse.json(
@@ -160,7 +149,6 @@ export async function PATCH(
             }
         }
 
-        // Update fields if provided
         if (title !== undefined) video.title = title;
         if (description !== undefined) video.description = description;
 

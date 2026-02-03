@@ -22,30 +22,19 @@ export async function POST(req: Request) {
 
         if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-        // Validate password
-        // (If OAuth user tries to delete, they might not have password. UI should handle this case or force set pass)
         if (user.password) {
             const isValid = await bcrypt.compare(password, user.password);
             if (!isValid) return NextResponse.json({ error: "Incorrect password" }, { status: 400 });
         } else {
-            // Handle OAuth deletion safety check? 
-            // For now, fail if no password set (security precaution).
+
             return NextResponse.json({ error: "Please set a password before deleting your account." }, { status: 400 });
         }
 
-        // Soft Delete
         user.isDeleted = true;
         user.deletedAt = new Date();
-        user.tokenVersion = (user.tokenVersion || 0) + 1; // Invalidate sessions
-
-        // Anonymize critical fields? 
-        // user.email = `deleted_${user._id}@deleted.local`; // Optional, maybe later for hard delete
+        user.tokenVersion = (user.tokenVersion || 0) + 1; 
 
         await user.save();
-
-
-
-        // TODO: Trigger async cleanup job (ImageKit, etc)
 
         return NextResponse.json({ message: "Account deleted." });
 

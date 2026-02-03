@@ -21,21 +21,16 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Define "active" as users who were active in the last 60 seconds
         const activeThreshold = new Date(Date.now() - 60 * 1000);
 
-        // Get users that the current user follows
         const following = await Follow.find({ followerId: currentUser._id }).select('followingId');
         const followingIds = following.map(f => f.followingId);
 
-        // 1. Priority: Active Following
         let activeUsers = await User.find({
             _id: { $in: followingIds },
             lastActive: { $gte: activeThreshold }
         }).select('_id email currentActivity lastActive').limit(20);
 
-        // 2. Fallback: Others Online (Global) if network is quiet
-        // If we have fewer than 10 active friends, fill the list with other active users
         if (activeUsers.length < 10) {
             const excludeIds = [...activeUsers.map(u => u._id), currentUser._id];
 
@@ -44,17 +39,15 @@ export async function GET(req: NextRequest) {
                 lastActive: { $gte: activeThreshold }
             })
                 .select('_id email currentActivity lastActive')
-                .sort({ lastActive: -1 }) // Most recently active
-                .limit(10 - activeUsers.length); // Fill the gap
+                .sort({ lastActive: -1 }) 
+                .limit(10 - activeUsers.length); 
 
             activeUsers = [...activeUsers, ...randomActive];
         }
 
-        // Get profiles for these users
         const userIds = activeUsers.map(u => u._id);
         const profiles = await Profile.find({ userId: { $in: userIds } }).select('userId displayName username avatarUrl');
 
-        // Combine user data with profile data
         const liveUsers = activeUsers.map(user => {
             const profile = profiles.find(p => p.userId?.toString() === user._id?.toString());
             return {

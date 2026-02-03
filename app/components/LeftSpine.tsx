@@ -22,7 +22,6 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
     const { data: session } = useSession();
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
-    // Fetch user profile for avatar
     useEffect(() => {
         const fetchProfile = async () => {
             if (!session?.user) return;
@@ -61,20 +60,20 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
 
     return (
         <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[72px] bg-[var(--glass)] backdrop-blur-md border-r border-[var(--border-soft)] flex-col items-center py-6 z-50">
-            {/* App Logo */}
+            {}
             <div className="mb-8 w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer">
                 <Link href="/" className="relative w-10 h-10 block">
                     <Image src="/logo.png" alt="Nexora" fill className="object-contain" priority />
                 </Link>
             </div>
 
-            {/* Top: Avatar Status Ring */}
+            {}
             {session?.user && (session.user as any).id ? (
                 <Link
                     href={`/profile/${(session.user as any).id}`}
                     className="mb-12 relative group cursor-pointer block"
                 >
-                    {/* Outer glow ring */}
+                    {}
                     <div className="absolute -inset-1 rounded-full bg-[var(--accent)] opacity-30 blur-md group-hover:opacity-50 transition-opacity" />
                     <div className="relative w-11 h-11 rounded-full p-[2px]" style={{ background: "var(--accent)" }}>
                         <div className="w-full h-full rounded-full bg-[var(--bg-main)] flex items-center justify-center overflow-hidden">
@@ -93,7 +92,7 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
                             )}
                         </div>
                     </div>
-                    {/* Status indicator with pulse */}
+                    {}
                     <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[var(--bg-main)]" style={{ backgroundColor: "var(--accent)" }}>
                         <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ backgroundColor: "var(--accent)" }} />
                     </div>
@@ -124,7 +123,7 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
                 </div>
             )}
 
-            {/* Nav Actions - The Heartbeat */}
+            {}
             <nav className="flex flex-col gap-6">
                 {NAV_ITEMS.slice(0, 4).map((item) => {
                     const isActive = pathname === item.href;
@@ -139,12 +138,12 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
                                 : 'hover:bg-[var(--bg-hover)]'
                                 }`}
                         >
-                            {/* Glow Ring for Active State */}
+                            {}
                             {isActive && (
                                 <>
-                                    {/* Outer glow */}
+                                    {}
                                     <div className="absolute inset-0 rounded-xl bg-[var(--accent)]/20 blur-lg animate-glow-ring" />
-                                    {/* Idle pulse every 12 seconds */}
+                                    {}
                                     <div className="absolute inset-0 rounded-xl animate-idle-pulse" />
                                 </>
                             )}
@@ -156,7 +155,7 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
                                     }`}
                             />
 
-                            {/* Tooltip on hover */}
+                            {}
                             <div className="absolute left-full ml-3 px-3 py-1.5 bg-[var(--bg-card)]/95 backdrop-blur-md rounded-lg border border-[var(--border-soft)] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
                                 <span
                                     className="text-xs text-white font-medium"
@@ -169,12 +168,12 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
                     );
                 })}
 
-                {/* Signals (Notifications) */}
+                {}
                 <NotificationBell />
 
-                {/* Settings (Last Item) */}
+                {}
                 {(() => {
-                    const item = NAV_ITEMS[4]; // Settings
+                    const item = NAV_ITEMS[4]; 
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
                     return (
@@ -210,7 +209,7 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
 
             </nav>
 
-            {/* Bottom breathing indicator - System heartbeat */}
+            {}
             <div className="mt-auto mb-4">
                 <div className="w-2 h-2 rounded-full bg-[var(--accent)]/50 animate-slow-breath" />
             </div>

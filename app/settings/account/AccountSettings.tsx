@@ -19,8 +19,6 @@ import {
     Check
 } from "lucide-react";
 
-
-
 import { Laptop, Smartphone, Monitor } from "lucide-react";
 
 interface ISession {
@@ -49,7 +47,7 @@ function SessionHistoryList() {
     const getIcon = (type: string) => {
         if (type.includes("Mobile")) return <Smartphone className="w-5 h-5 text-[#4F8CFF]" />;
         if (type.includes("Tablet")) return <Laptop className="w-5 h-5 text-[#2DE2A6]" />;
-        return <Monitor className="w-5 h-5 text-[#F4D03F]" />; // Desktop default
+        return <Monitor className="w-5 h-5 text-[#F4D03F]" />; 
     };
 
     if (loading) return <div className="p-6 text-center text-[#5C6270] text-xs">Loading sessions...</div>;
@@ -109,8 +107,6 @@ export default function AccountSettings() {
     const [showBackupModal, setShowBackupModal] = useState(false);
     const [loadingBackup, setLoadingBackup] = useState(false);
 
-
-
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
     const [deletePassword, setDeletePassword] = useState("");
@@ -129,7 +125,7 @@ export default function AccountSettings() {
     const [loadingPrivacy, setLoadingPrivacy] = useState(true);
 
     useEffect(() => {
-        fetch("/api/settings/privacy", { method: "PATCH", body: JSON.stringify({}) }) // Using empty patch to get current or use GET if implemented
+        fetch("/api/settings/privacy", { method: "PATCH", body: JSON.stringify({}) }) 
             .then(res => res.json())
             .then(data => {
                 if (data && !data.error) {
@@ -141,7 +137,7 @@ export default function AccountSettings() {
     }, []);
 
     const updatePrivacy = async (key: string, value: any) => {
-        // Optimistic update
+        
         setPrivacy(prev => ({ ...prev, [key]: value }));
         try {
             const res = await fetch("/api/settings/privacy", {
@@ -152,21 +148,14 @@ export default function AccountSettings() {
             if (!res.ok) throw new Error("Failed to update");
         } catch (error) {
             console.error("Privacy update failed", error);
-            // Revert?
+            
         }
     };
 
-
-
     useEffect(() => {
-        // Check if 2FA is enabled (could be part of session user or separate profile fetch)
-        // For now, we default to false or rely on user to know. 
-        // Ideally we fetch a 'user security status' endpoint.
+
     }, []);
 
-    // Handlers
-
-    // 1. Email
     const initiateEmailChange = async () => {
         if (!newEmail.includes("@")) return alert("Invalid email");
         setLoadingEmail(true);
@@ -179,7 +168,7 @@ export default function AccountSettings() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
             setEmailStep("verify");
-            alert(data.message); // In dev, this might be "Sent to console"
+            alert(data.message); 
         } catch (e: any) {
             alert(e.message);
         } finally {
@@ -202,7 +191,7 @@ export default function AccountSettings() {
             setEmailStep("input");
             setNewEmail("");
             setEmailOtp("");
-            // Force re-login or update session?
+            
             signOut();
         } catch (e: any) {
             alert(e.message);
@@ -211,7 +200,6 @@ export default function AccountSettings() {
         }
     };
 
-    // 2. Password
     const handlePasswordChange = async () => {
         if (newPassword !== confirmPassword) return alert("Passwords do not match");
         setLoadingPass(true);
@@ -228,7 +216,7 @@ export default function AccountSettings() {
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
-            // Optional: signOut()
+            
         } catch (e: any) {
             alert(e.message);
         } finally {
@@ -236,17 +224,16 @@ export default function AccountSettings() {
         }
     };
 
-    // 3. 2FA
     const toggle2FA = async () => {
         if (twoFactorEnabled) {
-            // Disable
+            
             if (!confirm("Disable 2FA? This reduces security.")) return;
             try {
                 await fetch("/api/account/2fa/disable", { method: "POST" });
                 setTwoFactorEnabled(false);
             } catch (e) { console.error(e); }
         } else {
-            // Enable -> Show Setup
+            
             setLoading2FA(true);
             try {
                 const res = await fetch("/api/account/2fa/setup", { method: "POST" });
@@ -282,7 +269,6 @@ export default function AccountSettings() {
         }
     };
 
-    // 4. Backup Codes
     const generateBackupCodes = async () => {
         setLoadingBackup(true);
         try {
@@ -296,9 +282,6 @@ export default function AccountSettings() {
         finally { setLoadingBackup(false); }
     };
 
-
-
-    // 6. Data
     const downloadData = async () => {
         setDownloading(true);
         try {
@@ -309,7 +292,6 @@ export default function AccountSettings() {
         finally { setDownloading(false); }
     };
 
-    // 7. Delete
     const deleteAccount = async () => {
         if (deleteConfirmText !== "DELETE") return;
         if (!deletePassword) return alert("Password required");
@@ -331,10 +313,9 @@ export default function AccountSettings() {
         }
     };
 
-
     return (
         <div className="space-y-12 relative z-10 pb-20">
-            {/* Header */}
+            {}
             <div>
                 <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Account
@@ -344,11 +325,11 @@ export default function AccountSettings() {
                 </p>
             </div>
 
-            {/* Email & Password */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Email & Password</h2>
 
-                {/* Email Panel */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -410,7 +391,7 @@ export default function AccountSettings() {
                     )}
                 </div>
 
-                {/* Password Panel */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -465,11 +446,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {/* Security Status */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Security Status</h2>
 
-                {/* 2FA */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -491,7 +472,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {/* Backup Codes */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -515,11 +496,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {/* Privacy & Visibility */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Privacy & Visibility</h2>
 
-                {/* Private Account */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-4">
@@ -538,8 +519,8 @@ export default function AccountSettings() {
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${!privacy.isPublic ? "left-7" : "left-1"}`} />
                         </button>
                     </div>
-                    {/* Follow Approval (Linked to Private for simplicity or separate?) */}
-                    {/* For now keeping them decoupled in UI but conceptually linked */}
+                    {}
+                    {}
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#2A2F3A]">
                         <div>
                             <p className="text-sm text-white font-medium">Require Follow Approval</p>
@@ -554,7 +535,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {/* Interactions */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
@@ -586,7 +567,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {/* Discovery */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
@@ -616,11 +597,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {/* Data Ownership */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Data Ownership</h2>
 
-                {/* Download */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -642,7 +623,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {/* Delete */}
+                {}
                 <div className="bg-[#0F1117] rounded-xl border border-[#FF6B6B]/20 p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -710,7 +691,7 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {/* Session History */}
+            {}
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Session History</h2>
 
@@ -719,9 +700,9 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {/* Modals */}
+            {}
 
-            {/* 2FA Modal */}
+            {}
             {show2FAModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
@@ -761,7 +742,7 @@ export default function AccountSettings() {
                 </div>
             )}
 
-            {/* Backup Codes Modal */}
+            {}
             {showBackupModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">

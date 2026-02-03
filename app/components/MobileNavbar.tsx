@@ -14,19 +14,15 @@ export default function MobileNavbar() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
-    // Sheets state
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isNetworkOpen, setIsNetworkOpen] = useState(false);
 
-    // Data state
     const [userAvatar, setUserAvatar] = useState<string | null>(null);
     const { liveUsers } = useLiveRadar();
 
-    // Long press logic
     const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
     const isLongPressTriggeredRef = useRef(false);
 
-    // Fetch User Profile (for avatar)
     useEffect(() => {
         if (status !== "authenticated") return;
         const fetchProfile = async () => {
@@ -45,14 +41,12 @@ export default function MobileNavbar() {
         fetchProfile();
     }, [status]);
 
-    // Check if we should hide the navbar content
     const authPaths = ["/login", "/register", "/upload", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
     const isAuthPage = authPaths.some(p => pathname.startsWith(p));
     const is2FALocked = (session?.user as any)?.requires2FA || (session?.user as any)?.requires2FASetup;
 
     if (isAuthPage || is2FALocked || (status as string) === "loading") return null;
 
-    // Handle touch interactions
     const handleTouchStart = (action: () => void, isLongPressAction = false) => {
         isLongPressTriggeredRef.current = false;
         if (isLongPressAction) {
@@ -119,15 +113,15 @@ export default function MobileNavbar() {
     return (
         <>
             <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden pointer-events-none">
-                {/* Gradient Fade */}
+                {}
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/90 to-transparent pointer-events-none" />
 
                 <div className="relative mx-4 mb-4 pointer-events-auto">
-                    {/* Glass Bar */}
+                    {}
                     <div className="bg-[var(--glass)] backdrop-blur-xl rounded-[24px] border border-[var(--border-soft)] shadow-[var(--shadow-soft)] px-2 py-3">
                         <div className="flex items-center justify-between px-2">
                             {navItems.map((item, index) => {
-                                const isCenter = index === 2; // Create button index
+                                const isCenter = index === 2; 
                                 const Icon = item.icon;
 
                                 return (
@@ -143,9 +137,9 @@ export default function MobileNavbar() {
                                         }}
                                     >
                                         {isCenter ? (
-                                            // The "Pushing Out" Center Button
+                                            
                                             <div className="relative group">
-                                                {/* Button */}
+                                                {}
                                                 <div className="w-14 h-14 rounded-full p-[1.5px] transform transition-transform active:scale-95" style={{ background: "var(--accent)", boxShadow: "0 8px 24px var(--accent-glow)" }}>
                                                     <div className="w-full h-full rounded-full bg-[var(--bg-card)] flex items-center justify-center relative overflow-hidden group-hover:bg-white/10 transition-colors">
                                                         <Plus className="w-7 h-7 text-[var(--text-main)]" strokeWidth={2.5} />
@@ -153,7 +147,7 @@ export default function MobileNavbar() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            // Standard Icons
+                                            
                                             <div className={`relative transition-all duration-300 ${item.isActive ? "scale-110 -translate-y-1" : "scale-100 opacity-80"
                                                 }`}>
                                                 {item.id === "profile" ? (
@@ -188,7 +182,7 @@ export default function MobileNavbar() {
                                                     />
                                                 )}
 
-                                                {/* Badge (Mint for Radar/Network) */}
+                                                {}
                                                 {item.id === 'network' && item.badgeCount && item.badgeCount > 0 && (
                                                     <span className="absolute -top-1 -right-0 w-2.5 h-2.5 rounded-full ring-2 ring-[var(--bg-card)] flex items-center justify-center" style={{ backgroundColor: "var(--accent)" }}>
                                                         <span className="w-full h-full rounded-full animate-ping opacity-75" style={{ backgroundColor: "var(--accent)" }} />
@@ -197,7 +191,7 @@ export default function MobileNavbar() {
                                             </div>
                                         )}
 
-                                        {/* Label (Hidden for center) */}
+                                        {}
                                         {!isCenter && (
                                             <span className={`text-[9px] mt-1 transition-all duration-300 font-medium ${item.isActive ? "text-[var(--accent)] opacity-100" : "text-[var(--text-disabled)] opacity-0 h-0 w-0 overflow-hidden"
                                                 }`}>

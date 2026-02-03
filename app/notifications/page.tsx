@@ -17,8 +17,6 @@ interface FollowRequest {
     createdAt: string;
 }
 
-// ... imports
-
 export default function NotificationsPage() {
     const { data: session } = useSession();
     const [requests, setRequests] = useState<FollowRequest[]>([]);
@@ -35,10 +33,10 @@ export default function NotificationsPage() {
     const fetchRequests = async () => {
         setLoading(true);
         try {
-            const res = await fetch("/api/follow/requests", { cache: 'no-store' }); // Ensure client doesn't cache
+            const res = await fetch("/api/follow/requests", { cache: 'no-store' }); 
             if (res.ok) {
                 const data = await res.json();
-                // Filter out already processed ones if we re-fetch (optional, but good for UX)
+                
                 const pending = data.requests.filter((r: FollowRequest) => !processedRequests.has(r._id));
                 setRequests(pending);
             }
@@ -48,11 +46,9 @@ export default function NotificationsPage() {
             setLoading(false);
         }
     };
-    // ... rest of code
 
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-    // Auto-hide toast
     useEffect(() => {
         if (toast) {
             const timer = setTimeout(() => setToast(null), 3000);
@@ -76,13 +72,12 @@ export default function NotificationsPage() {
             });
 
             if (res.ok) {
-                // Show Toast
+                
                 setToast({
                     message: action === 'approve' ? "Request Approved" : "Request Rejected",
                     type: 'success'
                 });
 
-                // Remove from list immediately
                 setRequests(prev => prev.filter(req => req._id !== requestId));
             } else {
                 console.error("Action failed", await res.text());
@@ -187,7 +182,7 @@ export default function NotificationsPage() {
                 </div>
             </div>
 
-            {/* Toast Notification */}
+            {}
             {toast && (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
                     <div className={`px-6 py-3 rounded-full backdrop-blur-md border shadow-2xl flex items-center gap-3 ${toast.type === 'success'

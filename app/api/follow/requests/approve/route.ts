@@ -35,7 +35,6 @@ export async function POST(req: Request) {
             status: 'pending'
         });
 
-        // Fallback: requestId might actually be a requesterId (due to previous bug in notification creation)
         if (!request) {
             console.log("Request not found by ID, trying as requesterId:", requestId);
             request = await FollowRequest.findOne({
@@ -52,9 +51,6 @@ export async function POST(req: Request) {
 
         console.log("Found request:", request._id, "Current Status:", request.status);
 
-        // Execute Approval Transaction
-
-        // 2. Create Follow
         try {
             await Follow.create({
                 followerId: request.requesterId,
@@ -62,12 +58,10 @@ export async function POST(req: Request) {
             });
             console.log("Follow relationship created");
 
-            // 3. Update Counts
             await User.findByIdAndUpdate(request.requesterId, { $inc: { followingCount: 1 } });
             await User.findByIdAndUpdate(currentUser._id, { $inc: { followersCount: 1 } });
             console.log("User counts updated");
 
-            // 4. Notify Requester
             await Notification.create({
                 recipient: request.requesterId,
                 actor: currentUser._id,
@@ -77,7 +71,6 @@ export async function POST(req: Request) {
             });
             console.log("Notification sent");
 
-            // 1. Delete Request (Moved to end to ensure follow creation succeeds first)
             await FollowRequest.findByIdAndDelete(requestId);
             console.log("Request deleted");
 
@@ -87,7 +80,7 @@ export async function POST(req: Request) {
                 await FollowRequest.findByIdAndDelete(requestId);
             } else {
                 console.error("Error creating follow/notification:", e);
-                throw e; // Propagate error if it's not a duplicate key
+                throw e; 
             }
         }
 

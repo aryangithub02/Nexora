@@ -31,7 +31,7 @@ export default function Navbar() {
     <nav className="bg-white shadow-md border-b border-gray-200">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo/Home */}
+          {}
           <div className="flex items-center space-x-8">
             <Link
               href="/"
@@ -42,9 +42,9 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Navigation Links */}
+          {}
           <div className="flex items-center space-x-6">
-            {/* Home Link - Always visible */}
+            {}
             <Link
               href="/"
               className={`px-3 py-2 rounded-md text-sm font-medium transition ${isActive("/")
@@ -55,7 +55,7 @@ export default function Navbar() {
               Home
             </Link>
 
-            {/* Upload Link - Only if logged in */}
+            {}
             {status === "authenticated" && (
               <Link
                 href="/upload"
@@ -68,7 +68,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            {/* Auth Section */}
+            {}
             {status === "loading" ? (
               <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
             ) : status === "authenticated" && session?.user?.email ? (
@@ -81,7 +81,7 @@ export default function Navbar() {
                   {getInitial(session.user.email)}
                 </button>
 
-                {/* Dropdown Menu */}
+                {}
                 {showDropdown && (
                   <>
                     <div

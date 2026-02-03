@@ -123,9 +123,8 @@ export const authOptions: NextAuthOptions = {
         return token;
       }
 
-      // Handle Session Update
       if (trigger === "update") {
-        // If verifying OTP
+        
         if (session?.otp) {
           try {
             await connectToDatabase();
@@ -138,7 +137,6 @@ export const authOptions: NextAuthOptions = {
             const otpCode = String(session.otp).trim();
             let isValid = false;
 
-            // Validate and try TOTP (must be exactly 6 digits)
             if (/^\d{6}$/.test(otpCode)) {
               try {
                 isValid = authenticator.verify({ token: otpCode, secret: dbUser.twoFactorSecret });
@@ -147,7 +145,6 @@ export const authOptions: NextAuthOptions = {
               }
             }
 
-            // Try Backup Code (must be exactly 8 alphanumeric characters)
             if (!isValid && /^[A-Za-z0-9]{8}$/.test(otpCode) && dbUser.backupCodes && dbUser.backupCodes.length > 0) {
               const normalizedCode = otpCode.toUpperCase();
               const backupCodeIndex = dbUser.backupCodes.findIndex(
@@ -169,11 +166,10 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        // If setup complete
         if (session?.status === "2fa_setup_complete") {
           token.requires2FASetup = false;
           token.twoFactorEnabled = true;
-          // Also assume they are verified since they just set it up
+          
           token.requires2FA = false;
           token.isTwoFactorVerified = true;
         }
@@ -181,28 +177,25 @@ export const authOptions: NextAuthOptions = {
         return token;
       }
 
-      // 2. Subsequent requests - Verify Token Version & Status
       try {
         await connectToDatabase();
         const dbUser = await UserModel.findById(token.id);
 
         if (!dbUser) {
-          return {}; // Invalidate
+          return {}; 
         }
 
         if (dbUser.isDeleted) {
-          return {}; // Invalidate
+          return {}; 
         }
 
         const currentTokenVersion = (token.tokenVersion as number) || 0;
         const dbTokenVersion = dbUser.tokenVersion || 0;
 
         if (currentTokenVersion < dbTokenVersion) {
-          return {}; // Invalidate
+          return {}; 
         }
 
-        // Fetch Profile only if missing data or strictly needed
-        // We trust the token's existing profile data to reduce DB load
         if (!token.username || !token.picture) {
           const profile = await Profile.findOne({ userId: dbUser._id }).select('avatarUrl displayName username');
           if (profile) {
@@ -211,22 +204,18 @@ export const authOptions: NextAuthOptions = {
             token.username = profile.username;
           }
         } else {
-          // Optional: Occasionally refresh? For now, performance first.
-          // If user updates profile, they should trigger session update client-side.
+
         }
 
         if (!token.name) {
           token.name = dbUser.name || token.name;
         }
 
-        // Sync 2FA State
         if (dbUser.twoFactorEnabled) {
           token.requires2FASetup = false;
-          // Note: We don't force re-verification here on every request if they were already verified in this session
-          // But if they somehow disabled it and re-enabled it elsewhere, they might need to verify?
-          // For now, trust the session state for 'isTwoFactorVerified' unless tokenVersion changed.
+
         } else {
-          // User must have disabled it (or never had it). Force setup.
+          
           token.requires2FASetup = true;
           token.requires2FA = false;
         }
@@ -256,7 +245,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, 
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

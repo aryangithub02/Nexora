@@ -27,11 +27,7 @@ export async function GET(req: Request) {
             status: 'pending'
         })
             .sort({ createdAt: -1 })
-            .populate('requesterId', 'username email'); // Basic user info
-
-        // We also need profile info (avatar, display name)
-        // Since populate might not get profile (it's a separate model), we fetch profiles manually or via aggregation
-        // Simple approach: fetch profiles for these users
+            .populate('requesterId', 'username email'); 
 
         const requesterIds = requests.map(r => r.requesterId._id);
         const profiles = await Profile.find({ userId: { $in: requesterIds } })
@@ -40,7 +36,7 @@ export async function GET(req: Request) {
         const profileMap = new Map(profiles.map(p => [p.userId.toString(), p]));
 
         const enrichedRequests = requests
-            .filter(req => req.requesterId) // Filter out null requesters (deleted users)
+            .filter(req => req.requesterId) 
             .map(req => {
                 const profile = profileMap.get(req.requesterId._id.toString());
                 return {

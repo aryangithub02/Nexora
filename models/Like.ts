@@ -15,10 +15,8 @@ const likeSchema = new Schema<ILike>(
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-// Unique compound index to prevent duplicate likes
 likeSchema.index({ userId: 1, videoId: 1 }, { unique: true });
 
-// Index for counting likes on a video
 likeSchema.index({ videoId: 1 });
 
 const Like = models.Like || model<ILike>("Like", likeSchema);

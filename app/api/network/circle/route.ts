@@ -20,7 +20,6 @@ export async function GET() {
         const currentUser = await User.findOne({ email: session.user.email });
         if (!currentUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-        // Get list of followed users
         const following = await Follow.find({ followerId: currentUser._id }).sort({ createdAt: -1 }).limit(50);
 
         if (!following || following.length === 0) {
@@ -29,7 +28,6 @@ export async function GET() {
 
         const followingIds = following.map((f: any) => f.followingId);
 
-        // Fetch User and Profile data for these users
         const circleUsers = await Promise.all(followingIds.map(async (userId: any) => {
             const user = await User.findById(userId).select('lastActive');
             const profile = await Profile.findOne({ userId }).select('displayName username avatarUrl');
@@ -45,7 +43,6 @@ export async function GET() {
             };
         }));
 
-        // Filter nulls and sort by lastActive (Recent first)
         const validUsers = circleUsers
             .filter((u): u is NonNullable<typeof u> => u !== null)
             .sort((a, b) => {

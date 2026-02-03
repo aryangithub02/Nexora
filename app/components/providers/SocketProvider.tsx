@@ -33,12 +33,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
-        // If undefined, it defaults to window.location.origin, which works for localhost and ngrok
         const socketInstance = io(undefined, {
             path: "/socket.io",
             addTrailingSlash: false,
             query: {
-                userId: (session.user as any).id, // Ensure your session has id
+                userId: (session.user as any).id, 
             },
         });
 

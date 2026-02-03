@@ -6,7 +6,6 @@ import Share from "@/models/Share";
 import Video from "@/models/Video";
 import mongoose from "mongoose";
 
-// GET - Get share count for a video
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
@@ -30,7 +29,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST - Record a share (outward projection)
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -54,13 +52,11 @@ export async function POST(request: NextRequest) {
         const userId = new mongoose.Types.ObjectId((session.user as any).id);
         const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
-        // Check if video exists
         const video = await Video.findById(videoObjectId);
         if (!video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
-        // Create share record
         await Share.create({
             userId,
             videoId: videoObjectId,
@@ -69,7 +65,6 @@ export async function POST(request: NextRequest) {
             externalPlatform,
         });
 
-        // Get updated share count
         const shareCount = await Share.countDocuments({ videoId: videoObjectId });
 
         return NextResponse.json({

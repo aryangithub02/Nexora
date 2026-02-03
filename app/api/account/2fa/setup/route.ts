@@ -18,22 +18,14 @@ export async function POST(req: Request) {
         const user = await UserModel.findById((session.user as any).id);
         if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-        // Generate Secret
-        // Generate Secret
         const secret = authenticator.generateSecret();
-        // Note: The 'totp.verify' line from the instruction is typically used in a separate endpoint for 2FA verification,
-        // not during the setup phase where the secret is generated.
-        // For example, in a verification endpoint, you might have:
-        // const { code } = await req.json();
-        // const isValid = totp.verify({ token: code, secret: user.twoFactorSecret });
+
         const serviceName = "Nexora";
 
         const otpauth = authenticator.keyuri(user.email, serviceName, secret);
 
-        // Generate QR Code
         const qrCodeUrl = await qrcode.toDataURL(otpauth);
 
-        // Save secret but do NOT enable yet
         user.twoFactorSecret = secret;
         await user.save();
 

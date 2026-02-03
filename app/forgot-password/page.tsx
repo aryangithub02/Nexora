@@ -50,11 +50,11 @@ export default function ForgotPasswordPage() {
                 {message && (
                     <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm break-all">
                         <p>{message}</p>
-                        {/* Ensure the link inside message is clickable if we want to show it directly */}
+                        {}
                     </div>
                 )}
 
-                {/* For testing: Show the link directly if provided by API */}
+                {}
                 {message && (
                     <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 break-all">
                         <strong>Dev Link:</strong> <br />

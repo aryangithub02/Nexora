@@ -31,7 +31,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Cannot follow yourself" }, { status: 400 });
         }
 
-        // Blocking Check
         const { default: Blocked } = await import("@/models/Blocked");
         const isBlocked = await Blocked.exists({
             $or: [
@@ -44,13 +43,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Action not allowed" }, { status: 403 });
         }
 
-        // Check target user's privacy settings
         const targetUser = await User.findById(targetId);
         if (!targetUser) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Check if already following
         const existingFollow = await Follow.findOne({
             followerId: currentUser._id,
             followingId: targetId
@@ -60,14 +57,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ status: "following" }, { status: 200 });
         }
 
-        // Check privacy settings
         const requireApproval = targetUser.privacy?.requireFollowApproval ||
             (targetUser.privacy?.isPublic === false && targetUser.privacy?.requireFollowApproval !== false);
 
         if (requireApproval) {
             const { default: FollowRequest } = await import("@/models/FollowRequest");
 
-            // Check for ANY existing request (pending, accepted, rejected)
             const existingRequest = await FollowRequest.findOne({
                 requesterId: currentUser._id,
                 recipientId: targetId
@@ -78,14 +73,11 @@ export async function POST(req: Request) {
                     return NextResponse.json({ status: "requested" }, { status: 200 });
                 }
 
-                // If rejected or accepted (though accepted usually leads to Follow, maybe they unfollowed and want to request again)
-                // We reset to pending
                 existingRequest.status = 'pending';
-                // Update createdAt to now so it shows at top
-                existingRequest.createdAt = new Date(); // Need to ensure schema allows this or rely on timestamps
+                
+                existingRequest.createdAt = new Date(); 
                 await existingRequest.save();
 
-                // Create notification for the re-request
                 await Notification.create({
                     recipient: targetId,
                     actor: currentUser._id,
@@ -97,7 +89,6 @@ export async function POST(req: Request) {
                 return NextResponse.json({ status: "requested" }, { status: 200 });
             }
 
-            // Create new request
             const newRequest = await FollowRequest.create({
                 requesterId: currentUser._id,
                 recipientId: targetId,
@@ -115,15 +106,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ status: "requested" }, { status: 200 });
         }
 
-        // Standard Follow
         try {
             await Follow.create({ followerId: currentUser._id, followingId: targetId });
 
-            // Update counts
             await User.findByIdAndUpdate(currentUser._id, { $inc: { followingCount: 1 } });
             await User.findByIdAndUpdate(targetId, { $inc: { followersCount: 1 } });
 
-            // Create Notification
             await Notification.create({
                 recipient: targetId,
                 actor: currentUser._id,
@@ -167,7 +155,6 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Try to delete active follow
         const deletedFollow = await Follow.findOneAndDelete({
             followerId: currentUser._id,
             followingId: targetId
@@ -179,7 +166,6 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ message: "Unfollowed successfully", status: "not_following" }, { status: 200 });
         }
 
-        // Try to delete pending request
         const { default: FollowRequest } = await import("@/models/FollowRequest");
         const deletedRequest = await FollowRequest.findOneAndDelete({
             requesterId: currentUser._id,
@@ -203,7 +189,7 @@ export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || !session.user?.email) {
-            return NextResponse.json({ isFollowing: false }); // Or 401, but boolean is easier for UI
+            return NextResponse.json({ isFollowing: false }); 
         }
 
         const { searchParams } = new URL(req.url);

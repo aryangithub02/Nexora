@@ -39,7 +39,6 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
     const [appearance, setAppearance] = useState<AppearanceState>(defaultAppearance);
     const [mounted, setMounted] = useState(false);
 
-    // Load from localStorage on mount
     useEffect(() => {
         try {
             const stored = localStorage.getItem("appearance");
@@ -52,21 +51,17 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
         setMounted(true);
     }, []);
 
-    // Apply to DOM whenever appearance changes
     useEffect(() => {
         if (!mounted) return;
 
         const root = document.documentElement;
 
-        // Apply data attributes
         root.dataset.theme = appearance.theme;
         root.dataset.motion = appearance.motion;
         root.dataset.text = appearance.textScale;
 
-        // Apply CSS variable for accent
         root.style.setProperty("--accent", accentColors[appearance.accent]);
 
-        // Persist to localStorage
         try {
             localStorage.setItem("appearance", JSON.stringify(appearance));
         } catch (e) {
@@ -78,11 +73,6 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
     const updateAppearance = (updates: Partial<AppearanceState>) => {
         setAppearance((prev) => ({ ...prev, ...updates }));
     };
-
-    // Prevent hydration mismatch by returning children immediately
-    // The effect will kick in on client side to apply styles.
-    // Alternatively, we could block rendering until mounted to avoid flash of unstyled content
-    // but for appearance settings, usually a quick shift is acceptable or handled by CSS defaults.
 
     return (
         <AppearanceContext.Provider value={{ ...appearance, updateAppearance }}>

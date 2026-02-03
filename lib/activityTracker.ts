@@ -2,7 +2,6 @@ import UserInteraction from "@/models/UserInteraction";
 import User from "@/models/User";
 import mongoose from "mongoose";
 
-// Track when a user watches a video
 export async function trackVideoWatch(
     userId: mongoose.Types.ObjectId,
     videoId: mongoose.Types.ObjectId,
@@ -16,7 +15,6 @@ export async function trackVideoWatch(
             duration
         });
 
-        // Update user's current activity
         await User.findByIdAndUpdate(userId, {
             lastActive: new Date(),
             currentActivity: {
@@ -30,7 +28,6 @@ export async function trackVideoWatch(
     }
 }
 
-// Track when a user views a profile
 export async function trackProfileView(
     userId: mongoose.Types.ObjectId,
     targetUserId: mongoose.Types.ObjectId
@@ -46,7 +43,6 @@ export async function trackProfileView(
     }
 }
 
-// Update user presence to idle
 export async function updateUserIdle(userId: mongoose.Types.ObjectId) {
     try {
         await User.findByIdAndUpdate(userId, {

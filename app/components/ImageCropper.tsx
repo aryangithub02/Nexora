@@ -50,7 +50,6 @@ function getCroppedImg(imageSrc: string, pixelCrop: any) {
     });
 }
 
-// Basic Modal Implementation since we might not have a UI library installed
 const Modal = ({ isOpen, onClose, title, children }: any) => {
     if (!isOpen) return null;
     return (
@@ -68,13 +67,12 @@ const Modal = ({ isOpen, onClose, title, children }: any) => {
     )
 }
 
-
 interface ImageCropperProps {
     imageSrc: string;
     isOpen: boolean;
     onClose: () => void;
     onCheck: (url: string) => void;
-    aspectRatio: number; // 1 for avatar, 3 for banner
+    aspectRatio: number; 
     circularCrop?: boolean;
 }
 
@@ -106,7 +104,6 @@ export default function ImageCropper({
             setUploadProgress(p);
         }
     });
-
 
     const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -142,7 +139,7 @@ export default function ImageCropper({
             </div>
 
             <div className="p-6 space-y-6">
-                {/* Zoom Control */}
+                {}
                 <div className="flex items-center gap-4">
                     <ZoomOut size={16} className="text-gray-400" />
                     <input
@@ -157,7 +154,7 @@ export default function ImageCropper({
                     <ZoomIn size={16} className="text-gray-400" />
                 </div>
 
-                {/* Actions */}
+                {}
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}

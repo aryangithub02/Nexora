@@ -6,7 +6,6 @@ import User from "@/models/User";
 import Follow from "@/models/Follow";
 import Profile from "@/models/Profile";
 
-// Get followers or following list
 export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -23,7 +22,7 @@ export async function GET(req: NextRequest) {
         }
 
         const { searchParams } = new URL(req.url);
-        const type = searchParams.get('type') || 'following'; // 'followers' | 'following' | 'discover'
+        const type = searchParams.get('type') || 'following'; 
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '20');
         const skip = (page - 1) * limit;
@@ -32,7 +31,7 @@ export async function GET(req: NextRequest) {
         let total = 0;
 
         if (type === 'following') {
-            // Get users the current user follows
+            
             const follows = await Follow.find({ followerId: currentUser._id })
                 .skip(skip)
                 .limit(limit)
@@ -65,7 +64,7 @@ export async function GET(req: NextRequest) {
             });
 
         } else if (type === 'followers') {
-            // Get users who follow the current user
+            
             const follows = await Follow.find({ followingId: currentUser._id })
                 .skip(skip)
                 .limit(limit)
@@ -80,7 +79,6 @@ export async function GET(req: NextRequest) {
             const profiles = await Profile.find({ userId: { $in: userIds } })
                 .select('userId displayName username bio avatarUrl');
 
-            // Check if current user follows them back
             const followBacks = await Follow.find({
                 followerId: currentUser._id,
                 followingId: { $in: userIds }
@@ -106,7 +104,7 @@ export async function GET(req: NextRequest) {
             });
 
         } else if (type === 'discover') {
-            // Get users the current user doesn't follow
+            
             const following = await Follow.find({ followerId: currentUser._id }).select('followingId');
             const followingIds = following.map(f => f.followingId);
 
@@ -116,7 +114,7 @@ export async function GET(req: NextRequest) {
                 .select('_id email followersCount followingCount lastActive')
                 .skip(skip)
                 .limit(limit)
-                .sort({ followersCount: -1 }); // Sort by popularity
+                .sort({ followersCount: -1 }); 
 
             total = await User.countDocuments({
                 _id: { $nin: [...followingIds, currentUser._id] }
