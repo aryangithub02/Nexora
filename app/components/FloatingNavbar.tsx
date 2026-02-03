@@ -89,15 +89,12 @@ export default function FloatingNavbar() {
   if (isHome && !isAuthPage) {
     return (
       <>
-        {/* Only show logo on Mobile Top Bar */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-50 p-4">
-          <div className="relative w-8 h-8">
+        {/* Only show logo on Mobile Top Bar - Fixed with Glass Background */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-[2px]">
+          <div className="relative w-12 h-12">
             <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
           </div>
         </div>
-        {/* No spacer needed if it's transparent/floating logo only, or a small one? 
-            Actually, the user just said 'only show a logo on left top bar'.
-        */}
       </>
     );
   }
@@ -113,8 +110,8 @@ export default function FloatingNavbar() {
 
   if (!isAuthPage && !isHome) {
     return (
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 p-4">
-        <div className="relative w-8 h-8">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-[2px]">
+        <div className="relative w-12 h-12">
           <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
         </div>
       </div>
