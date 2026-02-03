@@ -81,6 +81,46 @@ export default function FloatingNavbar() {
   };
 
   const isHome = pathname === "/";
+  const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
+  const isAuthPage = authPaths.some(path => pathname.startsWith(path));
+
+  // If we are on Desktop Home and not an auth page, hide completely
+  // If we are on Mobile Home, show only the logo
+  if (isHome && !isAuthPage) {
+    return (
+      <>
+        {/* Only show logo on Mobile Top Bar */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-50 p-4">
+          <div className="relative w-8 h-8">
+            <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
+          </div>
+        </div>
+        {/* No spacer needed if it's transparent/floating logo only, or a small one? 
+            Actually, the user just said 'only show a logo on left top bar'.
+        */}
+      </>
+    );
+  }
+
+  // If not an auth page and on desktop, we might want to hide the navbar too based on "unnecessary" request
+  // But let's start with the Home page as explicitly requested.
+  // "dont show this navbar on desktop homepage only while auth and log in and 2-factor auth"
+  // This implies if not isAuthPage, hide it on desktop.
+
+  const shouldHideNavbar = !isAuthPage && !isHome; // For other pages? 
+  // User said: "dont show this navbar on desktop homepage"
+  // Let's hide it everywhere on desktop EXCEPT auth pages.
+
+  if (!isAuthPage && !isHome) {
+    return (
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 p-4">
+        <div className="relative w-8 h-8">
+          <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -223,9 +263,10 @@ export default function FloatingNavbar() {
         </div>
       </nav >
 
-      {/* Spacer */}
-      < div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`
-      } />
+      {/* Spacer (Only show on auth pages where navbar is solid/full) */}
+      {isAuthPage && (
+        <div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`} />
+      )}
 
       {/* Notification Panel */}
       <NotificationPanel />

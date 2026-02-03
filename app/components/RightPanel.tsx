@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { LogOut, Settings, Edit } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 interface RightPanelProps {
     profileMode?: boolean;
@@ -38,7 +39,14 @@ interface UserProfile {
 
 export default function RightPanel({ profileMode = false, toggleProfileMode }: RightPanelProps) {
     const { data: session } = useSession();
+    const pathname = usePathname();
     const [liveUsers, setLiveUsers] = useState<LiveUser[]>([]);
+
+    const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
+    const isAuthPage = authPaths.some(p => pathname?.startsWith(p));
+    const is2FALocked = (session?.user as any)?.requires2FA || (session?.user as any)?.requires2FASetup;
+
+    if (isAuthPage || is2FALocked) return null;
     const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
     const [hoveredUser, setHoveredUser] = useState<string | null>(null);
     const [followingInProgress, setFollowingInProgress] = useState<Set<string>>(new Set());

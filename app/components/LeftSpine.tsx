@@ -39,6 +39,13 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
         fetchProfile();
     }, [session]);
 
+    const isHome = pathname === "/";
+    const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
+    const isAuthPage = authPaths.some(p => pathname.startsWith(p));
+    const is2FALocked = (session?.user as any)?.requires2FA || (session?.user as any)?.requires2FASetup;
+
+    if (isAuthPage || is2FALocked) return null;
+
     const NAV_ITEMS = [
         { label: "Home", href: "/", icon: Home },
         { label: "Discover", href: "/discover", icon: Compass },

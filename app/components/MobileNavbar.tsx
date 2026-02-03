@@ -46,10 +46,11 @@ export default function MobileNavbar() {
     }, [status]);
 
     // Check if we should hide the navbar content
-    const hiddenPaths = ["/login", "/register", "/upload"];
-    const shouldHide = hiddenPaths.some(p => pathname.startsWith(p));
+    const authPaths = ["/login", "/register", "/upload", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
+    const isAuthPage = authPaths.some(p => pathname.startsWith(p));
+    const is2FALocked = (session?.user as any)?.requires2FA || (session?.user as any)?.requires2FASetup;
 
-    if (shouldHide || (status as string) === "loading") return null;
+    if (isAuthPage || is2FALocked || (status as string) === "loading") return null;
 
     // Handle touch interactions
     const handleTouchStart = (action: () => void, isLongPressAction = false) => {
