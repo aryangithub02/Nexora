@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import UserModel from "@/models/User";
 import { connectToDatabase } from "@/lib/db";
-import { generateSecret } from "otplib";
+import { authenticator } from "@otplib/preset-default";
 import qrcode from "qrcode";
 
 export async function POST(req: Request) {
@@ -20,17 +20,15 @@ export async function POST(req: Request) {
 
         // Generate Secret
         // Generate Secret
-        const secret = generateSecret();
+        const secret = authenticator.generateSecret();
         // Note: The 'totp.verify' line from the instruction is typically used in a separate endpoint for 2FA verification,
         // not during the setup phase where the secret is generated.
         // For example, in a verification endpoint, you might have:
         // const { code } = await req.json();
         // const isValid = totp.verify({ token: code, secret: user.twoFactorSecret });
-        const serviceName = "SocialMediaApp";
+        const serviceName = "Nexora";
 
-        // Manual otpauth URL generation to avoid signature guessing
-        const label = `${serviceName}:${user.email}`;
-        const otpauth = `otpauth://totp/${label}?secret=${secret}&issuer=${serviceName}&algorithm=SHA1&digits=6&period=30`;
+        const otpauth = authenticator.keyuri(user.email, serviceName, secret);
 
         // Generate QR Code
         const qrCodeUrl = await qrcode.toDataURL(otpauth);

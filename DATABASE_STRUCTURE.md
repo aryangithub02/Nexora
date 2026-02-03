@@ -1,6 +1,6 @@
 # Database Structure & Data Modeling
 
-This document outlines the MongoDB schema design and relationships for the Social Media Application. The database is built using **Mongoose** for object modeling.
+This document outlines the MongoDB schema design and relationships for the Social Media Application. The database is built using **Mongoose** package for object modeling.
 
 ## 1. Overview
 

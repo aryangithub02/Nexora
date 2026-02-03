@@ -26,6 +26,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Nexora",
   description: "The future of social connection",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

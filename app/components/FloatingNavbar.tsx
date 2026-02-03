@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Plus, Search, LogOut, Circle, Zap } from "lucide-react";
@@ -86,8 +87,7 @@ export default function FloatingNavbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade 
         ${isCollapsed ? "h-[52px]" : "h-[64px]"}
-        ${isHome ? "md:hidden" : ""} 
-        `} // Hide on Desktop Home, Show on Mobile Home
+        `} // Show always
         style={{
           background: isHome ? "transparent" : "var(--glass)",
           backdropFilter: isHome ? "none" : "blur(12px)",
@@ -97,20 +97,18 @@ export default function FloatingNavbar() {
         }}
       >
         <div className="h-full max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Left: Logo Sigil (Hidden on Home) */}
-          {!isHome && (
-            <Link href="/" className="hidden md:flex items-center gap-2">
-              <div className={`transition-all duration-300 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"}`}>
-                <img src="/logo.png" alt="Nexora Logo" className="w-full h-full object-contain" />
-              </div>
-            </Link>
-          )}
+          {/* Left: Logo Sigil */}
+          <Link href="/" className="hidden md:flex items-center gap-2">
+            <div className={`relative transition-all duration-300 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"}`}>
+              <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
+            </div>
+          </Link>
 
 
           {/* Mobile Home Title (Logo Only) */}
           <div className="md:hidden">
-            <div className="w-8 h-8">
-              <img src="/logo.png" alt="Nexora Logo" className="w-full h-full object-contain" />
+            <div className="relative w-8 h-8">
+              <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
             </div>
           </div>
 
@@ -226,7 +224,7 @@ export default function FloatingNavbar() {
       </nav >
 
       {/* Spacer */}
-      < div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"} ${isHome ? "md:hidden" : ""}`
+      < div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`
       } />
 
       {/* Notification Panel */}
