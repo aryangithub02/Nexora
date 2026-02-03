@@ -241,7 +241,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
       lastTapRef.current = now;
 
       if (tapGap < 300 && tapGap > 0) {
-        
+
         e.preventDefault();
 
         let x, y;
@@ -266,7 +266,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
         }
 
         if (!isLiked) {
-          
+
           setIsLiked(true);
           setLikeCount(prev => prev + 1);
 
@@ -279,13 +279,13 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               body: JSON.stringify({ videoId: video._id?.toString() }),
             });
           } catch (error) {
-            
+
             setIsLiked(false);
             setLikeCount(prev => prev - 1);
             console.error("Failed to like:", error);
           }
         } else {
-          
+
           triggerLikeAnimation(x, y);
         }
       }
@@ -311,7 +311,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           body: JSON.stringify({ videoId: video._id?.toString() }),
         });
       } catch (error) {
-        
+
         setIsLiked(previousState);
         setLikeCount(prev => previousState ? prev + 1 : prev - 1);
         console.error("Failed to toggle like:", error);
@@ -339,7 +339,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           body: JSON.stringify({ videoId: video._id?.toString() }),
         });
       } catch (error) {
-        
+
         setIsBookmarked(previousState);
         console.error("Failed to toggle bookmark:", error);
       }
@@ -367,7 +367,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
         }
       } catch (error) {
         console.error("Follow error:", error);
-        
+
         setIsFollowing(previousState);
       } finally {
         setLoadingFollow(false);
@@ -414,7 +414,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
           setIsEditing(false);
 
-          window.location.reload(); 
+          window.location.reload();
         } else {
           alert("Failed to update video");
         }
@@ -427,7 +427,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     };
 
     const handleOpenCaptionSheet = () => {
-      
+
       if (videoRef.current) {
         previousVolumeRef.current = videoRef.current.volume;
         videoRef.current.volume = 0.3;
@@ -436,7 +436,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     };
 
     const handleCloseCaptionSheet = () => {
-      
+
       if (videoRef.current) {
         videoRef.current.volume = previousVolumeRef.current;
       }
@@ -445,7 +445,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
     useEffect(() => {
       if (isActive && videoRef.current) {
-        
+
         videoRef.current.currentTime = 0;
 
         let targetVolume = volume * volume;
@@ -462,12 +462,12 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              
+
               setIsPlaying(true);
               setShowPlayButton(false);
 
               if (autoVolumeProtection && !isMuted) {
-                const fadeDuration = 300; 
+                const fadeDuration = 300;
                 const steps = 10;
                 const stepTime = fadeDuration / steps;
                 const volumeStep = targetVolume / steps;
@@ -475,7 +475,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
                 const fadeInterval = setInterval(() => {
                   currentStep++;
-                  if (!videoRef.current) { 
+                  if (!videoRef.current) {
                     clearInterval(fadeInterval);
                     return;
                   }
@@ -485,14 +485,14 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
                   if (currentStep >= steps) {
                     clearInterval(fadeInterval);
-                    
+
                     videoRef.current.volume = targetVolume;
                   }
                 }, stepTime);
               }
             })
             .catch((error) => {
-              
+
               if (error.name === "AbortError") return;
 
               setIsPlaying(false);
@@ -526,7 +526,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
     }, []);
 
     const handlePlayPause = () => {
-      resetRailTimer(); 
+      resetRailTimer();
       if (videoRef.current) {
         if (isPlaying) {
           videoRef.current.pause();
@@ -636,13 +636,13 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           onClick={handleDoubleTap}
           onTouchStart={handleDoubleTap}
         >
-          {}
-          {}
-          {}
-          {}
-          {}
+          { }
+          { }
+          { }
+          { }
+          { }
 
-          {}
+          { }
           <div
             className="reel-header hidden md:flex h-[40px] w-full items-center gap-2 px-3 flex-shrink-0 backdrop-blur-md"
             style={{
@@ -650,7 +650,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               borderBottom: "1px solid var(--border-soft)",
             }}
           >
-            {}
+            { }
             <Link
               href={`/profile/${video.uploadedBy?._id}`}
               className="flex-shrink-0"
@@ -673,7 +673,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </div>
             </Link>
 
-            {}
+            { }
             <Link
               href={`/profile/${video.uploadedBy?._id}`}
               className="min-w-0 flex-1"
@@ -684,7 +684,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </span>
             </Link>
 
-            {}
+            { }
             {video.uploadedBy?._id && session?.user && (session.user as any).id !== video.uploadedBy._id.toString() && (
               <button
                 className={`ml-auto px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300 flex-shrink-0 ${isFollowing
@@ -698,7 +698,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </button>
             )}
 
-            {}
+            { }
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -710,13 +710,13 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
             </button>
           </div>
 
-          {}
+          { }
           {isEditing && (
             <div
               className="absolute inset-0 z-[70] bg-[#0F1117] flex flex-col animate-in slide-in-from-bottom duration-300"
               onClick={(e) => e.stopPropagation()}
             >
-              {}
+              { }
               <div className="flex items-center justify-between p-4 border-b border-white/10">
                 <h3 className="text-white font-medium">Edit Reel</h3>
                 <button
@@ -727,7 +727,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </button>
               </div>
 
-              {}
+              { }
               <div className="flex-1 p-4 space-y-4 overflow-y-auto">
                 <div className="space-y-2">
                   <label className="text-xs font-medium text-[#9AA0AA] uppercase tracking-wider">Title</label>
@@ -752,7 +752,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </div>
               </div>
 
-              {}
+              { }
               <div className="p-4 border-t border-white/10 bg-[#0F1117]">
                 <button
                   onClick={handleUpdateVideo}
@@ -765,7 +765,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
             </div>
           )}
 
-          {}
+          { }
           {isOptionsMenuOpen && (
             <div
               className="absolute inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-200"
@@ -789,7 +789,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </div>
 
                 <div className="p-2 space-y-1">
-                  {}
+                  { }
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -802,7 +802,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                     <span>{isBookmarked ? "Unsave Reel" : "Save Reel"}</span>
                   </button>
 
-                  {}
+                  { }
                   {session?.user && video.uploadedBy?._id && (session.user as any).id === video.uploadedBy._id.toString() && (
                     <>
                       <button
@@ -835,7 +835,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
             </div>
           )}
 
-          {}
+          { }
           <div
             className={`reel-stage relative w-full h-[90%] md:h-auto md:flex-1 overflow-hidden ${isShareMenuOpen ? 'animate-reel-shrink' : ''}`}
             style={{
@@ -843,28 +843,28 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
             }}
           >
 
-            {}
-            {}
+            { }
+            { }
             <div className={`absolute inset-0 z-10 transition-opacity duration-700 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               <img
                 src={video.thumbnailUrl}
                 alt={video.title}
                 className="w-full h-full md:object-cover object-contain bg-black"
                 loading={priority ? "eager" : "lazy"}
-                
+
                 fetchPriority={priority ? "high" : "auto"}
               />
-              {}
+              { }
               <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60 opacity-60" />
             </div>
 
-            {}
+            { }
             <video
               ref={videoRef}
               src={activeSrc}
-              poster={video.thumbnailUrl} 
+              poster={video.thumbnailUrl}
               className="w-full h-full relative z-0 md:object-cover object-contain bg-black"
-              
+
               playsInline
               muted={isMuted}
               loop
@@ -879,7 +879,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 setShowPlayButton(true);
               }}
               onLoadedMetadata={() => {
-                
+
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -887,17 +887,17 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               }}
             />
 
-            {}
+            { }
             <div
               className={`absolute top-[36px] right-2 md:top-2 md:right-4 z-40 flex items-center gap-2 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 transition-all duration-300 ${showVolumeSlider ? "pr-3 pl-3 bg-black/80 border-white/20" : "pr-1.5 pl-1.5"
                 }`}
             >
-              {}
+              { }
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if (showVolumeSlider) {
-                    toggleMute(); 
+                    toggleMute();
                     resetVolumeTimer();
                   } else {
                     resetVolumeTimer();
@@ -912,9 +912,9 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 )}
               </button>
 
-              {}
+              { }
               <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${showVolumeSlider ? "w-[120px] opacity-100 ml-1" : "w-0 opacity-0 ml-0"}`}>
-                {}
+                { }
                 <input
                   type="range"
                   min="0"
@@ -926,9 +926,9 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                     e.stopPropagation();
                     resetVolumeTimer();
                     const newVol = parseFloat(e.target.value);
-                    setVolume(newVol); 
+                    setVolume(newVol);
                     if (videoRef.current) {
-                      
+
                       videoRef.current.volume = newVol * newVol;
                       videoRef.current.muted = newVol === 0;
                     }
@@ -939,12 +939,12 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                   className="flex-1 h-1 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white hover:[&::-webkit-slider-thumb]:scale-110 [&::-webkit-slider-thumb]:transition-transform"
                 />
 
-                {}
+                { }
                 <Volume2 className="w-3.5 h-3.5 text-white/50 flex-shrink-0" strokeWidth={2} />
               </div>
             </div>
 
-            {}
+            { }
             {showHeartAnimation && (
               <div
                 className="absolute pointer-events-none z-30 animate-heart-bloom"
@@ -964,12 +964,12 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </div>
             )}
 
-            {}
+            { }
             {heartParticles.map((particle, index) => (
               <HeartParticle key={index} x={particle.x} y={particle.y} delay={particle.delay} />
             ))}
 
-            {}
+            { }
             <div
               className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none z-20 ${showPlayButton && !isPlaying ? "opacity-100" : "opacity-0"
                 }`}
@@ -988,8 +988,8 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </button>
             </div>
 
-            {}
-            {}
+            { }
+            { }
             <div
               className={`hidden md:block absolute bottom-0 left-0 right-0 z-30 caption-veil cursor-pointer transition-opacity duration-300 ${isCaptionSheetOpen ? 'opacity-50' : 'opacity-100'}`}
               style={{ height: "35%" }}
@@ -999,7 +999,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               }}
             >
               <div className="absolute bottom-4 left-3 right-16 pb-[env(safe-area-inset-bottom)] pointer-events-auto">
-                {}
+                { }
                 <h2
                   className="font-bold text-base mb-1.5 line-clamp-1 text-white"
                   style={{
@@ -1010,7 +1010,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                   {video.title}
                 </h2>
 
-                {}
+                { }
                 <p
                   className="text-sm line-clamp-2 leading-relaxed text-white/85"
                   style={{
@@ -1026,10 +1026,10 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               </div>
             </div>
 
-            {}
-            {}
-            {}
-            {}
+            { }
+            { }
+            { }
+            { }
             <div
               className={`absolute right-3 top-1/2 -translate-y-1/2 z-20 control-rail rounded-[20px] py-4 px-1 flex flex-col items-center backdrop-blur-xl transition-all duration-500 ${isRailActive ? 'opacity-100 translate-x-0' : 'opacity-40 translate-x-1.5'
                 }`}
@@ -1043,9 +1043,9 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
               onTouchStart={resetRailTimer}
               onClick={resetRailTimer}
             >
-              {}
+              { }
               <div className="flex flex-col items-center gap-3">
-                {}
+                { }
                 <div className="flex flex-col items-center gap-0.5">
                   <button
                     onClick={(e) => {
@@ -1071,7 +1071,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                   </span>
                 </div>
 
-                {}
+                { }
                 <div className="flex flex-col items-center gap-0.5">
                   <button
                     onClick={(e) => {
@@ -1092,12 +1092,12 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </div>
               </div>
 
-              {}
+              { }
               <div className="h-4" />
 
-              {}
+              { }
               <div className="flex flex-col items-center gap-3">
-                {}
+                { }
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -1116,7 +1116,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                   )}
                 </button>
 
-                {}
+                { }
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -1134,47 +1134,14 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
 
             </div>
 
-            {}
-            <div className="absolute bottom-0 left-0 right-0 p-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-30 transition-opacity duration-300 opacity-0 group-hover:opacity-100 hidden md:flex items-center gap-3">
+            { }
 
-              {}
-              <div className="flex-1 h-1 relative flex items-center group/slider hover:h-1.5 transition-all">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  value={progress}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    const newProgress = parseFloat(e.target.value);
-                    setProgress(newProgress);
-                    if (videoRef.current && videoRef.current.duration) {
-                      const newTime = (newProgress / 100) * videoRef.current.duration;
-                      videoRef.current.currentTime = newTime;
-                    }
-                  }}
-                  className="w-full h-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0 group-hover/slider:[&::-webkit-slider-thumb]:w-2.5 group-hover/slider:[&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:transition-all"
-                  style={{
-                    background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${progress}%, rgba(255,255,255,0.3) ${progress}%, rgba(255,255,255,0.3) 100%)`
-                  }}
-                />
-              </div>
 
-              {}
-              <div className="flex-shrink-0">
-                <span className="text-[10px] text-white/90 font-medium tracking-wider" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </span>
-              </div>
-            </div>
-
-            {}
-            {}
+            { }
+            { }
             <div className="absolute bottom-0 left-0 right-0 p-4 pt-12 bg-gradient-to-t from-black/90 via-black/40 to-transparent md:hidden flex flex-col gap-3 z-20">
               <div className="flex items-center gap-3">
-                {}
+                { }
                 <Link href={`/profile/${video.uploadedBy?._id}`} onClick={(e) => e.stopPropagation()}>
                   <div className="w-10 h-10 rounded-full p-[1.5px]" style={{ background: "var(--accent)" }}>
                     <div className="w-full h-full rounded-full bg-black overflow-hidden">
@@ -1193,7 +1160,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                   </div>
                 </Link>
 
-                {}
+                { }
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
                     <Link href={`/profile/${video.uploadedBy?._id}`} onClick={(e) => e.stopPropagation()}>
@@ -1215,7 +1182,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </div>
               </div>
 
-              {}
+              { }
               <div className="flex flex-col gap-1">
                 <h2 className="text-white font-bold text-sm line-clamp-1">{video.title}</h2>
                 <p className="text-white/90 text-xs leading-relaxed line-clamp-2" onClick={handleOpenCaptionSheet}>
@@ -1223,51 +1190,19 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
                 </p>
               </div>
 
-              {}
-              <div className="w-full mt-2 flex items-center gap-3">
-                {}
-                <div className="flex-1 h-4 relative flex items-center group">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    value={progress}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      const newProgress = parseFloat(e.target.value);
-                      setProgress(newProgress);
-                      if (videoRef.current && videoRef.current.duration) {
-                        const newTime = (newProgress / 100) * videoRef.current.duration;
-                        videoRef.current.currentTime = newTime;
-                      }
-                    }}
-                    className="w-full h-1 appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:transition-all"
-                    style={{
-                      background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${progress}%, rgba(255,255,255,0.3) ${progress}%, rgba(255,255,255,0.3) 100%)`
-                    }}
-                  />
-                </div>
+              { }
 
-                {}
-                <div className="flex-shrink-0">
-                  <span className="text-[10px] text-white/70 font-medium tracking-wider" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 
-          {}
+          { }
 
-          {}
+          { }
           <div className="h-[10%] w-full bg-[var(--bg-main)] md:hidden" />
 
         </div>
 
-        {}
+        { }
         <CommentSheet
           videoId={video._id?.toString() || ""}
           videoOwnerId={video.uploadedBy?._id?.toString()}
@@ -1277,7 +1212,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           isFollowing={isFollowing}
         />
 
-        {}
+        { }
         <ShareMenu
           videoId={video._id?.toString() || ""}
           isOpen={isShareMenuOpen}
@@ -1288,7 +1223,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
           }}
         />
 
-        {}
+        { }
         {isCaptionSheetOpen && (
           <CaptionSheet
             video={video}
