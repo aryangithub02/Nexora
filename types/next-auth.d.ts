@@ -5,6 +5,7 @@ declare module "next-auth" {
     interface Session {
         user: {
             id: string;
+            username?: string;
             requires2FA?: boolean;
             requires2FASetup?: boolean;
         } & DefaultSession["user"];
@@ -21,6 +22,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
     interface JWT {
         id?: string;
+        username?: string;
         tokenVersion?: number;
         requires2FA?: boolean;
         isTwoFactorVerified?: boolean;
