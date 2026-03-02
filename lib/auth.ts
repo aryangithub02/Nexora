@@ -113,7 +113,7 @@ export const authOptions: NextAuthOptions = {
             token.username = profile.username;
           }
 
-          const isAdminUser = dbUser.email === "admin" || profile?.username === "admin";
+          const isAdminUser = dbUser.email === "admin" || token.username === "admin";
 
           if (dbUser.twoFactorEnabled && !isAdminUser) {
             token.requires2FA = true;
@@ -222,8 +222,14 @@ export const authOptions: NextAuthOptions = {
           token.name = dbUser.name || token.name;
         }
 
-        const profile = await Profile.findOne({ userId: dbUser._id });
-        const isAdminUser = dbUser.email === "admin" || profile?.username === "admin";
+        if (!token.username) {
+          const profile = await Profile.findOne({ userId: dbUser._id });
+          if (profile) {
+            token.username = profile.username;
+          }
+        }
+
+        const isAdminUser = dbUser.email === "admin" || token.username === "admin";
 
         if (dbUser.twoFactorEnabled && !isAdminUser) {
           token.requires2FASetup = false;
@@ -245,6 +251,7 @@ export const authOptions: NextAuthOptions = {
       }
       if (session.user) {
         (session.user as any).id = token.id;
+        (session.user as any).username = token.username;
         (session.user as any).requires2FA = token.requires2FA;
         (session.user as any).requires2FASetup = token.requires2FASetup;
       }

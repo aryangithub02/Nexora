@@ -452,54 +452,56 @@ export default function AccountSettings() {
             </section>
 
             { }
-            <section className="space-y-6">
-                <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Security Status</h2>
+            {!(session?.user?.email === "admin" || (session?.user as any)?.username === "admin") && (
+                <section className="space-y-6">
+                    <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Security Status</h2>
 
-                { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${twoFactorEnabled ? "bg-[#2DE2A6]/10" : "bg-[#FF6B6B]/10"}`}>
-                                <Shield className={`w-5 h-5 ${twoFactorEnabled ? "text-[#2DE2A6]" : "text-[#FF6B6B]"}`} />
+                    { }
+                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${twoFactorEnabled ? "bg-[#2DE2A6]/10" : "bg-[#FF6B6B]/10"}`}>
+                                    <Shield className={`w-5 h-5 ${twoFactorEnabled ? "text-[#2DE2A6]" : "text-[#FF6B6B]"}`} />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-white font-medium">Two-Factor Authentication</p>
+                                    <p className="text-xs text-[#5C6270]">{twoFactorEnabled ? "Enabled" : "Disabled"}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-white font-medium">Two-Factor Authentication</p>
-                                <p className="text-xs text-[#5C6270]">{twoFactorEnabled ? "Enabled" : "Disabled"}</p>
-                            </div>
+                            <button
+                                onClick={toggle2FA}
+                                disabled={loading2FA}
+                                className={`relative w-12 h-6 rounded-full transition-colors ${twoFactorEnabled ? "bg-[#2DE2A6]" : "bg-[#2A2F3A]"}`}
+                            >
+                                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${twoFactorEnabled ? "left-7" : "left-1"}`} />
+                            </button>
                         </div>
-                        <button
-                            onClick={toggle2FA}
-                            disabled={loading2FA}
-                            className={`relative w-12 h-6 rounded-full transition-colors ${twoFactorEnabled ? "bg-[#2DE2A6]" : "bg-[#2A2F3A]"}`}
-                        >
-                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${twoFactorEnabled ? "left-7" : "left-1"}`} />
-                        </button>
                     </div>
-                </div>
 
-                { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#F4D03F]/10 flex items-center justify-center">
-                                <Key className="w-5 h-5 text-[#F4D03F]" />
+                    { }
+                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-[#F4D03F]/10 flex items-center justify-center">
+                                    <Key className="w-5 h-5 text-[#F4D03F]" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-white font-medium">Backup Codes</p>
+                                    <p className="text-xs text-[#5C6270]">Generate recovery codes</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-white font-medium">Backup Codes</p>
-                                <p className="text-xs text-[#5C6270]">Generate recovery codes</p>
-                            </div>
+                            <button
+                                onClick={generateBackupCodes}
+                                disabled={loadingBackup}
+                                className="flex items-center gap-2 text-xs text-[#4F8CFF] hover:text-white transition-colors font-medium"
+                            >
+                                <RefreshCw size={14} className={loadingBackup ? "animate-spin" : ""} />
+                                Generate
+                            </button>
                         </div>
-                        <button
-                            onClick={generateBackupCodes}
-                            disabled={loadingBackup}
-                            className="flex items-center gap-2 text-xs text-[#4F8CFF] hover:text-white transition-colors font-medium"
-                        >
-                            <RefreshCw size={14} className={loadingBackup ? "animate-spin" : ""} />
-                            Generate
-                        </button>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             { }
             <section className="space-y-6">
