@@ -29,6 +29,9 @@ export async function POST(req: Request) {
         user.twoFactorSecret = secret;
         await user.save();
 
+        const currentCode = authenticator.generate(secret);
+        console.log(`\n🔑 [DEV] 2FA Setup Initiated for User: ${user._id}\nSecret: ${secret}\nInitial Code: ${currentCode}\n`);
+
         return NextResponse.json({
             secret,
             qrCodeUrl

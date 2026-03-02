@@ -16,7 +16,9 @@ import {
     Key,
     RefreshCw,
     X,
-    Check
+    Check,
+    CheckCircle2,
+    Copy
 } from "lucide-react";
 
 import { Laptop, Smartphone, Monitor } from "lucide-react";
@@ -47,7 +49,7 @@ function SessionHistoryList() {
     const getIcon = (type: string) => {
         if (type.includes("Mobile")) return <Smartphone className="w-5 h-5 text-[#4F8CFF]" />;
         if (type.includes("Tablet")) return <Laptop className="w-5 h-5 text-[#2DE2A6]" />;
-        return <Monitor className="w-5 h-5 text-[#F4D03F]" />; 
+        return <Monitor className="w-5 h-5 text-[#F4D03F]" />;
     };
 
     if (loading) return <div className="p-6 text-center text-[#5C6270] text-xs">Loading sessions...</div>;
@@ -100,8 +102,10 @@ export default function AccountSettings() {
     const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
     const [show2FAModal, setShow2FAModal] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState("");
+    const [secret, setSecret] = useState("");
     const [twoFactorCode, setTwoFactorCode] = useState("");
     const [loading2FA, setLoading2FA] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     const [backupCodes, setBackupCodes] = useState<string[]>([]);
     const [showBackupModal, setShowBackupModal] = useState(false);
@@ -125,7 +129,7 @@ export default function AccountSettings() {
     const [loadingPrivacy, setLoadingPrivacy] = useState(true);
 
     useEffect(() => {
-        fetch("/api/settings/privacy", { method: "PATCH", body: JSON.stringify({}) }) 
+        fetch("/api/settings/privacy", { method: "PATCH", body: JSON.stringify({}) })
             .then(res => res.json())
             .then(data => {
                 if (data && !data.error) {
@@ -137,7 +141,7 @@ export default function AccountSettings() {
     }, []);
 
     const updatePrivacy = async (key: string, value: any) => {
-        
+
         setPrivacy(prev => ({ ...prev, [key]: value }));
         try {
             const res = await fetch("/api/settings/privacy", {
@@ -148,7 +152,7 @@ export default function AccountSettings() {
             if (!res.ok) throw new Error("Failed to update");
         } catch (error) {
             console.error("Privacy update failed", error);
-            
+
         }
     };
 
@@ -168,7 +172,7 @@ export default function AccountSettings() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
             setEmailStep("verify");
-            alert(data.message); 
+            alert(data.message);
         } catch (e: any) {
             alert(e.message);
         } finally {
@@ -191,7 +195,7 @@ export default function AccountSettings() {
             setEmailStep("input");
             setNewEmail("");
             setEmailOtp("");
-            
+
             signOut();
         } catch (e: any) {
             alert(e.message);
@@ -216,7 +220,7 @@ export default function AccountSettings() {
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
-            
+
         } catch (e: any) {
             alert(e.message);
         } finally {
@@ -226,20 +230,21 @@ export default function AccountSettings() {
 
     const toggle2FA = async () => {
         if (twoFactorEnabled) {
-            
+
             if (!confirm("Disable 2FA? This reduces security.")) return;
             try {
                 await fetch("/api/account/2fa/disable", { method: "POST" });
                 setTwoFactorEnabled(false);
             } catch (e) { console.error(e); }
         } else {
-            
+
             setLoading2FA(true);
             try {
                 const res = await fetch("/api/account/2fa/setup", { method: "POST" });
                 const data = await res.json();
                 if (data.qrCodeUrl) {
                     setQrCodeUrl(data.qrCodeUrl);
+                    setSecret(data.secret);
                     setShow2FAModal(true);
                 }
             } catch (e) {
@@ -315,7 +320,7 @@ export default function AccountSettings() {
 
     return (
         <div className="space-y-12 relative z-10 pb-20">
-            {}
+            { }
             <div>
                 <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Account
@@ -325,11 +330,11 @@ export default function AccountSettings() {
                 </p>
             </div>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Email & Password</h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -391,7 +396,7 @@ export default function AccountSettings() {
                     )}
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -446,11 +451,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Security Status</h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -472,7 +477,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -496,11 +501,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Privacy & Visibility</h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-4">
@@ -519,8 +524,8 @@ export default function AccountSettings() {
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${!privacy.isPublic ? "left-7" : "left-1"}`} />
                         </button>
                     </div>
-                    {}
-                    {}
+                    { }
+                    { }
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#2A2F3A]">
                         <div>
                             <p className="text-sm text-white font-medium">Require Follow Approval</p>
@@ -535,7 +540,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
@@ -567,7 +572,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center justify-between">
                         <div>
@@ -597,11 +602,11 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Data Ownership</h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -623,7 +628,7 @@ export default function AccountSettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#FF6B6B]/20 p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -691,7 +696,7 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Session History</h2>
 
@@ -700,9 +705,9 @@ export default function AccountSettings() {
                 </div>
             </section>
 
-            {}
+            { }
 
-            {}
+            { }
             {show2FAModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
@@ -714,25 +719,52 @@ export default function AccountSettings() {
                             <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48" />
                         </div>
                         <div className="space-y-4">
+                            <div className="space-y-2">
+                                <p className="text-xs text-center text-gray-500 uppercase tracking-widest font-semibold">Setup Key (Manual)</p>
+                                <div
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(secret);
+                                        setCopied(true);
+                                        setTimeout(() => setCopied(false), 2000);
+                                    }}
+                                    className="relative group cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all flex items-center justify-between overflow-hidden"
+                                >
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] text-gray-500 font-mono uppercase">Key</span>
+                                        <code className="text-pink-400 font-mono tracking-[0.2em] text-sm break-all">
+                                            {secret}
+                                        </code>
+                                    </div>
+                                    <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
+                                        {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-pink-400" />}
+                                    </div>
+                                    {copied && (
+                                        <div className="absolute top-0 right-0 bg-green-500 text-white text-[8px] px-2 py-0.5 rounded-bl-lg font-bold">
+                                            COPIED
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <input
                                 type="text"
                                 value={twoFactorCode}
-                                onChange={e => setTwoFactorCode(e.target.value)}
-                                placeholder="Enter 6-digit code"
-                                className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 text-[#ec4899] text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
+                                onChange={e => setTwoFactorCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                placeholder="0 0 0  0 0 0"
+                                className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 !text-white placeholder:text-[#5C6270] text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
 
                                 maxLength={6}
                             />
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setShow2FAModal(false)}
-                                    className="flex-1 py-3 bg-[#1E232F] text-white font-medium rounded-lg hover:bg-[#2A2F3A]"
+                                    className="flex-1 py-3 bg-[#1E232F] text-white font-medium rounded-lg hover:bg-[#2A2F3A] transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirm2FASetup}
-                                    className="flex-1 py-3 bg-[#2DE2A6] text-[#0F1117] font-bold rounded-lg hover:bg-[#26c08d]"
+                                    className="flex-1 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded-lg shadow-lg transform transition active:scale-95"
                                 >
                                     Verify & Enable
                                 </button>
@@ -742,7 +774,7 @@ export default function AccountSettings() {
                 </div>
             )}
 
-            {}
+            { }
             {showBackupModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
                     <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">

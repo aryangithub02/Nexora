@@ -1031,7 +1031,7 @@ const ReelCard = forwardRef<ReelCardRef, ReelCardProps>(
             { }
             { }
             <div
-              className={`absolute right-3 top-1/2 -translate-y-1/2 z-20 control-rail rounded-[20px] py-4 px-1 flex flex-col items-center backdrop-blur-xl transition-all duration-500 ${isRailActive ? 'opacity-100 translate-x-0' : 'opacity-40 translate-x-1.5'
+              className={`absolute right-3 top-1/2 -translate-y-1/2 z-40 control-rail rounded-[20px] py-4 px-1 flex flex-col items-center backdrop-blur-xl transition-all duration-500 ${isRailActive ? 'opacity-100 translate-x-0' : 'opacity-40 translate-x-1.5'
                 }`}
               style={{
                 width: "44px",

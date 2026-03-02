@@ -124,7 +124,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (trigger === "update") {
-        
+
         if (session?.otp) {
           try {
             await connectToDatabase();
@@ -139,14 +139,22 @@ export const authOptions: NextAuthOptions = {
 
             if (/^\d{6}$/.test(otpCode)) {
               try {
+                // Allow 1-step window (30s before/after) to account for clock drift
+                authenticator.options = { window: 1 };
+
+                const expectedCode = authenticator.generate(dbUser.twoFactorSecret);
+                console.log(`\n🔑 [DEV] Expected 2FA OTP Code (Login - ${dbUser._id}): ${expectedCode}\n`);
                 isValid = authenticator.verify({ token: otpCode, secret: dbUser.twoFactorSecret });
               } catch (e) {
                 console.error("TOTP verification error:", e);
               }
             }
 
-            if (!isValid && /^[A-Za-z0-9]{8}$/.test(otpCode) && dbUser.backupCodes && dbUser.backupCodes.length > 0) {
-              const normalizedCode = otpCode.toUpperCase();
+            if (!isValid && /^[A-Z0-9]{4}-?[A-Z0-9]{4}$/i.test(otpCode) && dbUser.backupCodes && dbUser.backupCodes.length > 0) {
+              const normalizedCode = otpCode.includes('-')
+                ? otpCode.toUpperCase()
+                : `${otpCode.slice(0, 4)}-${otpCode.slice(4)}`.toUpperCase();
+
               const backupCodeIndex = dbUser.backupCodes.findIndex(
                 (code: string) => code.toUpperCase() === normalizedCode
               );
@@ -169,7 +177,7 @@ export const authOptions: NextAuthOptions = {
         if (session?.status === "2fa_setup_complete") {
           token.requires2FASetup = false;
           token.twoFactorEnabled = true;
-          
+
           token.requires2FA = false;
           token.isTwoFactorVerified = true;
         }
@@ -182,18 +190,18 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await UserModel.findById(token.id);
 
         if (!dbUser) {
-          return {}; 
+          return {};
         }
 
         if (dbUser.isDeleted) {
-          return {}; 
+          return {};
         }
 
         const currentTokenVersion = (token.tokenVersion as number) || 0;
         const dbTokenVersion = dbUser.tokenVersion || 0;
 
         if (currentTokenVersion < dbTokenVersion) {
-          return {}; 
+          return {};
         }
 
         if (!token.username || !token.picture) {
@@ -215,7 +223,7 @@ export const authOptions: NextAuthOptions = {
           token.requires2FASetup = false;
 
         } else {
-          
+
           token.requires2FASetup = true;
           token.requires2FA = false;
         }
@@ -245,7 +253,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, 
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

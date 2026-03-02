@@ -19,16 +19,15 @@ export async function POST(req: Request) {
         if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
         const codes = [];
-        const hashedCodes = [];
 
         for (let i = 0; i < 10; i++) {
-            const code = crypto.randomBytes(5).toString('hex').toUpperCase(); 
+            const part1 = crypto.randomBytes(2).toString('hex').toUpperCase();
+            const part2 = crypto.randomBytes(2).toString('hex').toUpperCase();
+            const code = `${part1}-${part2}`;
             codes.push(code);
-            const hash = await bcrypt.hash(code, 10);
-            hashedCodes.push(hash);
         }
 
-        user.backupCodes = hashedCodes;
+        user.backupCodes = codes;
         await user.save();
 
         return NextResponse.json({ codes });

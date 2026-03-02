@@ -149,8 +149,9 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
 
   useEffect(() => {
     const calculateSafeHeight = () => {
-      const TOP_BAR_HEIGHT = 64;
-      const BOTTOM_BAR_HEIGHT = 72;
+      const isMobile = window.innerWidth < 768;
+      const TOP_BAR_HEIGHT = isMobile ? 64 : 0;
+      const BOTTOM_BAR_HEIGHT = isMobile ? 72 : 0;
       const safeHeight = window.innerHeight - TOP_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
       document.documentElement.style.setProperty("--safe-height", `${safeHeight}px`);
     };
@@ -187,21 +188,21 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
               className={`reel-wrapper w-full h-[var(--safe-height,100dvh)] md:h-auto flex items-center justify-center snap-start md:snap-center md:mb-6 transition-all duration-1000 ${isHighlighted ? 'scale-[1.02]' : ''
                 }`}
             >
-              <div className={`w-full h-full md:w-[340px] md:max-h-[70vh] md:aspect-[9/16] relative transition-all duration-500 group ${isHighlighted ? 'md:ring-1 md:ring-[var(--accent)]/50 md:shadow-[0_0_30px_color-mix(in_srgb,var(--accent),transparent_85%)] md:rounded-3xl' : ''
+              <div className={`w-full h-full md:w-[420px] md:max-h-[85vh] md:aspect-[9/16] relative transition-all duration-500 group ${isHighlighted ? 'md:ring-1 md:ring-[var(--accent)]/50 md:shadow-[0_0_50px_color-mix(in_srgb,var(--accent),transparent_80%)] md:rounded-3xl' : ''
                 }`}>
                 { }
                 <div className="hidden md:block absolute -inset-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
 
                 { }
-                <div className="hidden md:block absolute -bottom-12 left-4 right-4 h-12 bg-[var(--accent)]/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="hidden md:block absolute -bottom-16 left-8 right-8 h-16 bg-[var(--accent)]/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
                 { }
                 {isMemoryGlow && (
                   <div
-                    className="absolute -inset-3 rounded-[36px] -z-10"
+                    className="absolute -inset-6 rounded-[48px] -z-10"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(45, 226, 166, 0.3), rgba(79, 140, 255, 0.2))',
-                      filter: 'blur(20px)',
+                      background: 'linear-gradient(135deg, rgba(45, 226, 166, 0.4), rgba(79, 140, 255, 0.3))',
+                      filter: 'blur(30px)',
                       animation: 'memoryPulse 2s ease-out forwards'
                     }}
                   />
@@ -209,10 +210,10 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
 
                 { }
                 {isHighlighted && !isMemoryGlow && (
-                  <div className="absolute -inset-4 rounded-[40px] bg-[var(--accent)]/15 blur-xl -z-10" />
+                  <div className="absolute -inset-6 rounded-[48px] bg-[var(--accent)]/20 blur-2xl -z-10" />
                 )}
 
-                <div className="w-full h-full md:rounded-2xl md:overflow-hidden md:shadow-[0_25px_50px_-12px_color-mix(in_srgb,var(--accent),transparent_70%)] relative">
+                <div className="w-full h-full md:rounded-2xl md:overflow-hidden md:shadow-[0_35px_100px_-20px_color-mix(in_srgb,var(--accent),transparent_60%)] relative">
                   { }
                   {Math.abs(index - activeIndex) <= 1 ? (
                     <ReelCard

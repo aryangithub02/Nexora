@@ -21,7 +21,7 @@ export default function VerifyTwoFactor() {
         }
     }, [status, session, router]);
 
-    const expectedLength = isBackup ? 8 : 6;
+    const expectedLength = isBackup ? 9 : 6;
     const isCodeValid = code.length === expectedLength;
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ export default function VerifyTwoFactor() {
 
         if (!isCodeValid) {
             setError(isBackup
-                ? "Backup code must be exactly 8 characters."
+                ? "Backup code must be in XXXX-XXXX format."
                 : "Code must be exactly 6 digits.");
             return;
         }
@@ -69,7 +69,7 @@ export default function VerifyTwoFactor() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-black p-4">
             <div className="w-full max-w-md relative group">
-                {}
+                { }
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
                 <div className="relative bg-[#0a0a0a] rounded-xl border border-white/10 p-8 shadow-2xl">
@@ -84,7 +84,7 @@ export default function VerifyTwoFactor() {
                     </h2>
                     <p className="text-center text-gray-400 mb-8">
                         {isBackup
-                            ? "Enter one of your 8-character backup codes."
+                            ? "Enter one of your 9-character backup codes."
                             : "Enter the 6-digit code from your authenticator app."}
                     </p>
 
@@ -102,19 +102,24 @@ export default function VerifyTwoFactor() {
                                     value={code}
                                     onChange={(e) => {
                                         const value = e.target.value.trim();
-                                        
+
                                         if (isBackup) {
-                                            setCode(value.toUpperCase().slice(0, 8));
+                                            const rawVal = value.replace(/-/g, '').toUpperCase().slice(0, 8);
+                                            if (rawVal.length > 4) {
+                                                setCode(`${rawVal.slice(0, 4)}-${rawVal.slice(4)}`);
+                                            } else {
+                                                setCode(rawVal);
+                                            }
                                         } else {
                                             setCode(value.replace(/\D/g, '').slice(0, 6));
                                         }
                                     }}
-                                    className="block w-full pl-10 pr-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent text-pink-500 placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
+                                    className="block w-full pl-10 pr-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent !text-white placeholder-gray-500 transition-all font-mono tracking-widest text-center text-lg"
 
-                                    placeholder={isBackup ? "XXXXXXXX" : "000000"}
+                                    placeholder={isBackup ? "XXXX-XXXX" : "000000"}
                                     maxLength={expectedLength}
                                     minLength={expectedLength}
-                                    pattern={isBackup ? "[A-Za-z0-9]{8}" : "[0-9]{6}"}
+                                    pattern={isBackup ? "[A-Z0-9]{4}-[A-Z0-9]{4}" : "[0-9]{6}"}
                                     required
                                     autoFocus
                                     autoComplete="off"
@@ -142,7 +147,7 @@ export default function VerifyTwoFactor() {
                             )}
                         </button>
 
-                        {}
+                        { }
                         <p className="text-center text-xs text-white">
                             {code.length} / {expectedLength} characters
                         </p>

@@ -85,7 +85,7 @@ export default function FloatingNavbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade md:hidden
         ${isCollapsed ? "h-[52px]" : "h-[64px]"}
         `}
         style={{

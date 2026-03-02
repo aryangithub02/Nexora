@@ -94,15 +94,15 @@ export default function NetworkPage() {
 
             if (res.ok) {
                 if (activeTab === 'discover') {
-                    
+
                     setUsers(prev => prev.filter(u => u._id !== userId));
                 } else if (activeTab === 'followers') {
-                    
+
                     setUsers(prev => prev.map(u =>
                         u._id === userId ? { ...u, isFollowingBack: !isCurrentlyFollowing } : u
                     ));
                 } else if (activeTab === 'following' && isCurrentlyFollowing) {
-                    
+
                     setUsers(prev => prev.filter(u => u._id !== userId));
                     setStats(prev => ({ ...prev, following: prev.following - 1 }));
                 }
@@ -150,9 +150,9 @@ export default function NetworkPage() {
         <main className="min-h-screen bg-[var(--bg-main)]">
             <LeftSpine onAvatarClick={() => { }} />
 
-            <div className="pl-20 pr-8 py-8">
+            <div className="md:pl-[320px] pl-4 pr-8 py-8">
                 <div className="max-w-3xl mx-auto">
-                    {}
+                    { }
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2 font-[family-name:var(--font-space-grotesk)]">
                             Your Network
@@ -162,7 +162,7 @@ export default function NetworkPage() {
                         </p>
                     </div>
 
-                    {}
+                    { }
                     <div className="grid grid-cols-2 gap-4 mb-8">
                         <div className="bg-[var(--bg-card)]/50 rounded-2xl p-6 border border-[var(--border-soft)]">
                             <p className="text-4xl font-bold text-[var(--text-main)] font-[family-name:var(--font-space-grotesk)]">
@@ -178,7 +178,7 @@ export default function NetworkPage() {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     <div className="flex gap-2 mb-6">
                         {tabs.map(tab => (
                             <button
@@ -201,7 +201,7 @@ export default function NetworkPage() {
                         ))}
                     </div>
 
-                    {}
+                    { }
                     <div className="relative mb-6">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
                         <input
@@ -213,7 +213,7 @@ export default function NetworkPage() {
                         />
                     </div>
 
-                    {}
+                    { }
                     <div className="space-y-3">
                         {loading ? (
                             <div className="flex justify-center py-12">
@@ -235,12 +235,12 @@ export default function NetworkPage() {
                                     key={user._id}
                                     className="flex items-center gap-4 p-4 bg-[var(--bg-card)]/50 rounded-2xl border border-[var(--border-soft)] hover:border-[var(--accent)]/20 transition-all group"
                                 >
-                                    {}
+                                    { }
                                     <Link
                                         href={`/profile/${user._id}`}
                                         className="flex-1 flex gap-4 min-w-0 group-hover:opacity-100"
                                     >
-                                        {}
+                                        { }
                                         <div className="relative flex-shrink-0">
                                             <div className="w-14 h-14 rounded-full p-[2px]" style={{ background: "var(--accent)" }}>
                                                 <div className="w-full h-full rounded-full bg-[var(--bg-main)] overflow-hidden flex items-center justify-center">
@@ -263,7 +263,7 @@ export default function NetworkPage() {
                                             )}
                                         </div>
 
-                                        {}
+                                        { }
                                         <div className="flex-1 min-w-0 flex flex-col justify-center">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="text-[var(--text-main)] font-semibold truncate font-[family-name:var(--font-space-grotesk)] group-hover:text-[var(--accent)] transition-colors">
@@ -287,7 +287,7 @@ export default function NetworkPage() {
                                         </div>
                                     </Link>
 
-                                    {}
+                                    { }
                                     <div>
                                         {activeTab === 'following' ? (
                                             <button

@@ -19,7 +19,7 @@ export default function SetupTwoFactor() {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            router.push("/login"); 
+            router.push("/login");
         }
     }, [status, router]);
 
@@ -83,7 +83,7 @@ export default function SetupTwoFactor() {
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
             <div className="max-w-md w-full bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
 
-                {}
+                { }
                 <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
@@ -139,16 +139,28 @@ export default function SetupTwoFactor() {
                                 )}
                             </div>
 
-                            <div className="space-y-2">
-                                <p className="text-xs text-center text-gray-500 uppercase tracking-wider">Or enter code manually</p>
-                                <div
-                                    onClick={copySecret}
-                                    className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/10 transition-colors group"
-                                >
-                                    <code className="font-mono text-pink-400 tracking-wider text-lg">
-                                        {secret}
-                                    </code>
-                                    {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-500 group-hover:text-white" />}
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <p className="text-xs text-center text-gray-500 uppercase tracking-widest font-semibold">Setup Key (Manual)</p>
+                                    <div
+                                        onClick={copySecret}
+                                        className="relative group cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all flex items-center justify-between overflow-hidden"
+                                    >
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-gray-500 font-mono uppercase">Key</span>
+                                            <code className="text-pink-400 font-mono tracking-[0.2em] text-sm break-all">
+                                                {secret}
+                                            </code>
+                                        </div>
+                                        <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
+                                            {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-pink-400" />}
+                                        </div>
+                                        {copied && (
+                                            <div className="absolute top-0 right-0 bg-green-500 text-white text-[8px] px-2 py-0.5 rounded-bl-lg font-bold">
+                                                COPIED
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
@@ -158,9 +170,9 @@ export default function SetupTwoFactor() {
                                     <input
                                         type="text"
                                         value={code}
-                                        onChange={(e) => setCode(e.target.value.trim())}
+                                        onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                         placeholder="000 000"
-                                        className="w-full bg-[#0a0a0a] border border-white/20 rounded-lg px-4 py-3 text-center text-xl tracking-[0.5em] font-mono text-pink-500 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all outline-none"
+                                        className="w-full bg-[#0a0a0a] border border-white/20 rounded-lg px-4 py-3 text-center text-xl tracking-[0.5em] font-mono !text-white focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all outline-none"
 
                                         maxLength={6}
                                         autoFocus

@@ -66,7 +66,7 @@ export default function SavedPage() {
                 video.play().catch(() => { });
             }
         }
-        
+
         videoRefs.current.forEach((video, id) => {
             if (id !== hoveredReel) {
                 video.pause();
@@ -76,7 +76,7 @@ export default function SavedPage() {
     }, [hoveredReel]);
 
     const handleOpenReel = async (videoId: string) => {
-        
+
         try {
             await fetch('/api/bookmarks', {
                 method: 'POST',
@@ -84,7 +84,7 @@ export default function SavedPage() {
                 body: JSON.stringify({ videoId })
             });
         } catch (error) {
-            
+
             console.error('Failed to record revisit:', error);
         }
 
@@ -137,19 +137,19 @@ export default function SavedPage() {
         <main className="min-h-screen bg-[var(--bg-main)] overflow-hidden">
             <LeftSpine onAvatarClick={() => { }} />
 
-            {}
+            { }
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-[var(--accent)]/5 rounded-full blur-[150px]" />
                 <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[120px]" />
             </div>
 
-            <div className="pl-20 pr-8 py-12 relative">
-                {}
+            <div className="md:pl-[320px] pl-4 pr-8 py-12 relative">
+                { }
                 <div className="max-w-6xl mx-auto mb-10">
                     <div className="flex items-start justify-between">
-                        {}
+                        { }
                         <div className="flex items-center gap-4">
-                            {}
+                            { }
                             <div className="w-10 h-10 flex items-center justify-center">
                                 <Bookmark className="w-6 h-6 text-[var(--accent)]/70 fill-[var(--accent)]/20" />
                             </div>
@@ -163,7 +163,7 @@ export default function SavedPage() {
                             </div>
                         </div>
 
-                        {}
+                        { }
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setActiveSort('memory')}
@@ -192,7 +192,7 @@ export default function SavedPage() {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     <div className="flex items-center gap-8 mt-6 ml-14">
                         <span className="text-[var(--text-muted)] text-sm font-[family-name:var(--font-jetbrains-mono)]">
                             {bookmarks.length} saved
@@ -203,7 +203,7 @@ export default function SavedPage() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="max-w-6xl mx-auto">
                     {loading ? (
                         <div className="flex justify-center py-32">
@@ -247,7 +247,7 @@ export default function SavedPage() {
                                         onMouseLeave={() => setHoveredReel(null)}
                                         onClick={() => handleOpenReel(video._id)}
                                     >
-                                        {}
+                                        { }
                                         <div
                                             className={`absolute inset-0 rounded-2xl transition-all duration-700 ease-out border border-white/5 ${isHovered
                                                 ? 'shadow-[0_0_30px_var(--accent)]'
@@ -256,7 +256,7 @@ export default function SavedPage() {
                                             style={{ borderColor: isHovered ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
                                         />
 
-                                        {}
+                                        { }
                                         <div className={`absolute inset-0 bg-[var(--bg-card)] transition-opacity duration-700 ${isHovered ? 'opacity-100' : 'opacity-90'}`}>
                                             {isHovered ? (
                                                 <video
@@ -275,17 +275,17 @@ export default function SavedPage() {
                                                     alt=""
                                                     className="w-full h-full object-cover opacity-50"
                                                     onError={(e) => {
-                                                        
+
                                                         (e.target as HTMLImageElement).src = '/placeholder.jpg';
                                                     }}
                                                 />
                                             )}
                                         </div>
 
-                                        {}
+                                        { }
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
 
-                                        {}
+                                        { }
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <div
                                                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${isHovered
@@ -301,16 +301,16 @@ export default function SavedPage() {
                                             </div>
                                         </div>
 
-                                        {}
+                                        { }
                                         {bookmark.revisitCount > 0 && (
                                             <div className="absolute top-3 right-3 text-[var(--accent)]/50 text-[10px] font-[family-name:var(--font-jetbrains-mono)]">
                                                 {bookmark.revisitCount}×
                                             </div>
                                         )}
 
-                                        {}
+                                        { }
                                         <div className="absolute bottom-0 left-0 right-0 p-4">
-                                            {}
+                                            { }
                                             {video.uploadedBy && (
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <div className="w-6 h-6 rounded-full p-[1px]" style={{ background: "var(--accent)" }}>
@@ -326,12 +326,12 @@ export default function SavedPage() {
                                                 </div>
                                             )}
 
-                                            {}
+                                            { }
                                             <p className="text-[var(--text-main)]/60 text-xs line-clamp-2 mb-2 font-[family-name:var(--font-inter)] leading-relaxed">
                                                 {video.description || video.title}
                                             </p>
 
-                                            {}
+                                            { }
                                             <p className="text-[var(--text-muted)]/60 text-[10px] font-[family-name:var(--font-inter)]" suppressHydrationWarning>
                                                 {formatSavedTime(bookmark.createdAt)}
                                             </p>
@@ -343,7 +343,7 @@ export default function SavedPage() {
                     )}
                 </div>
 
-                {}
+                { }
                 <div className="h-24" />
             </div>
         </main>

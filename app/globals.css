@@ -86,10 +86,6 @@ body {
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-input, textarea {
-  color: var(--text-main);
-}
-
 @media (max-width: 768px) {
   body {
     padding: 0;
@@ -667,3 +663,48 @@ html {
 .animate-ghost-pulse {
   animation: ghostPulse 8s ease-in-out infinite;
 }
+
+/* Theme Integrated Cyber Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 30%, transparent) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  box-shadow: 0 0 15px var(--accent);
+}
+
+/* Sidebar Specific Blend */
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.sidebar-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+
+/* Force hide buttons/arrows */
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+

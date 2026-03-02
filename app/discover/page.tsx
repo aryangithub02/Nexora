@@ -15,7 +15,7 @@ interface DiscoverUser {
     avatarUrl?: string;
     followersCount: number;
     followingCount: number;
-    lastActive?: string; 
+    lastActive?: string;
     isFollowing: boolean;
     previewVideoUrl?: string;
     previewThumbnailUrl?: string;
@@ -32,7 +32,7 @@ type FilterMode = 'trending' | 'rising' | 'nearby' | 'new';
 const filterModes: { id: FilterMode; label: string; icon: any; apiMode: string }[] = [
     { id: 'trending', label: 'Trending', icon: TrendingUp, apiMode: 'trending' },
     { id: 'rising', label: 'Rising', icon: TrendingUp, apiMode: 'rising' },
-    { id: 'nearby', label: 'Nearby', icon: MapPin, apiMode: 'active' }, 
+    { id: 'nearby', label: 'Nearby', icon: MapPin, apiMode: 'active' },
     { id: 'new', label: 'New Voices', icon: Sparkles, apiMode: 'new' },
 ];
 
@@ -52,7 +52,7 @@ export default function DiscoverPage() {
         const fetchDiscover = async () => {
             setLoading(true);
             try {
-                
+
                 const apiMode = filterModes.find(m => m.id === activeMode)?.apiMode || 'trending';
                 const res = await fetch(`/api/discover?mode=${apiMode}`);
                 if (res.ok) {
@@ -79,7 +79,7 @@ export default function DiscoverPage() {
                 video.play().catch(() => { });
             }
         }
-        
+
         videoRefs.current.forEach((video, id) => {
             if (id !== hoveredUser) {
                 video.pause();
@@ -89,21 +89,21 @@ export default function DiscoverPage() {
     }, [hoveredUser]);
 
     const handleFollow = async (userId: string, isCurrentlyFollowing: boolean) => {
-        
+
         const isFollowingAction = !isCurrentlyFollowing;
 
         setFollowingInProgress(prev => new Set(prev).add(userId));
 
         try {
             const res = await fetch('/api/follow', {
-                method: isFollowingAction ? 'POST' : 'DELETE', 
+                method: isFollowingAction ? 'POST' : 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ targetId: userId })
             });
 
             if (res.ok) {
                 if (isFollowingAction) {
-                    
+
                     setExitAnimations(prev => new Set(prev).add(userId));
 
                     setTimeout(() => {
@@ -111,7 +111,7 @@ export default function DiscoverPage() {
 
                     }, 500);
                 } else {
-                    
+
                     setUsers(prev => prev.map(u => u._id === userId ? { ...u, isFollowing: false } : u));
                 }
             }
@@ -131,7 +131,7 @@ export default function DiscoverPage() {
     };
 
     const formatFollowers = (count: number) => {
-        
+
         if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
         if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
         return count.toString();
@@ -140,8 +140,8 @@ export default function DiscoverPage() {
     const getPresenceStatus = (lastActive?: string) => {
         if (!lastActive) return 'offline';
         const diff = Date.now() - new Date(lastActive).getTime();
-        if (diff < 5 * 60 * 1000) return 'online'; 
-        if (diff < 24 * 60 * 60 * 1000) return 'active'; 
+        if (diff < 5 * 60 * 1000) return 'online';
+        if (diff < 24 * 60 * 60 * 1000) return 'active';
         return 'offline';
     };
 
@@ -150,7 +150,7 @@ export default function DiscoverPage() {
         let seamIndex = 0;
 
         users.forEach((user, index) => {
-            
+
             while (seamIndex < seams.length && seams[seamIndex].position === index) {
                 items.push(seams[seamIndex]);
                 seamIndex++;
@@ -180,14 +180,14 @@ export default function DiscoverPage() {
         <main className="min-h-screen bg-[var(--bg-main)] overflow-hidden">
             <LeftSpine onAvatarClick={() => { }} />
 
-            {}
+            { }
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--accent)]/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--accent)]/5 rounded-full blur-3xl" />
             </div>
 
-            <div className="pl-20 pr-8 py-8 relative">
-                {}
+            <div className="md:pl-[320px] pl-4 pr-8 py-8 relative">
+                { }
                 <div className="max-w-7xl mx-auto mb-8">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
                         <div>
@@ -199,7 +199,7 @@ export default function DiscoverPage() {
                             </p>
                         </div>
 
-                        {}
+                        { }
                         <div className="flex gap-1 bg-[var(--bg-card)]/80 backdrop-blur-md p-1.5 rounded-full border border-[var(--border-soft)] overflow-x-auto no-scrollbar">
                             {filterModes.map(mode => (
                                 <button
@@ -218,7 +218,7 @@ export default function DiscoverPage() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="max-w-7xl mx-auto">
                     {loading ? (
                         <div className="flex justify-center py-24">
@@ -239,7 +239,7 @@ export default function DiscoverPage() {
                     ) : (
                         <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
                             {displayItems.map((item, index) => {
-                                
+
                                 if ('type' in item && item.type === 'insight') {
                                     return (
                                         <div
@@ -259,7 +259,7 @@ export default function DiscoverPage() {
 
                                 const user = item as DiscoverUser;
                                 const isHovered = hoveredUser === user._id;
-                                const isHighlight = index > 0 && index % 5 === 0; 
+                                const isHighlight = index > 0 && index % 5 === 0;
                                 const presence = getPresenceStatus(user.lastActive);
                                 const isExiting = exitAnimations.has(user._id);
 
@@ -274,7 +274,7 @@ export default function DiscoverPage() {
                                         onMouseLeave={() => setHoveredUser(null)}
                                         onClick={() => router.push(`/profile/${user._id}`)}
                                     >
-                                        {}
+                                        { }
                                         <div
                                             className={`relative h-full rounded-[24px] overflow-hidden transition-all duration-500 border ${isHovered
                                                 ? 'bg-[var(--bg-card)] translate-y-[-4px]'
@@ -286,7 +286,7 @@ export default function DiscoverPage() {
                                             }}
                                         >
 
-                                            {}
+                                            { }
                                             {isHighlight && user.previewVideoUrl && (
                                                 <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-700">
                                                     <video
@@ -301,7 +301,7 @@ export default function DiscoverPage() {
                                                 </div>
                                             )}
 
-                                            {}
+                                            { }
                                             {user.previewVideoUrl && (
                                                 <div className={`absolute inset-0 transition-opacity duration-500 ${isHovered && !isHighlight ? 'opacity-20' : 'opacity-0'}`}>
                                                     <video
@@ -317,10 +317,10 @@ export default function DiscoverPage() {
                                                 </div>
                                             )}
 
-                                            {}
+                                            { }
                                             <div className="relative z-10 px-6 py-8 flex flex-col items-center text-center h-full">
 
-                                                {}
+                                                { }
                                                 <div className="relative mb-3">
                                                     <div className={`rounded-full p-[2px] transition-all duration-500`} style={{ background: isHovered ? "var(--accent)" : "var(--accent)" }}>
                                                         <div className={`rounded-full bg-[var(--bg-card)] overflow-hidden flex items-center justify-center ${isHighlight ? 'w-[72px] h-[72px]' : 'w-[64px] h-[64px]'}`}>
@@ -338,38 +338,38 @@ export default function DiscoverPage() {
                                                         </div>
                                                     </div>
 
-                                                    {}
+                                                    { }
                                                     {presence !== 'offline' && (
                                                         <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-[3px] border-[var(--bg-card)] ${presence === 'online' ? 'animate-pulse' : ''}`} style={{ backgroundColor: "var(--accent)" }} />
                                                     )}
                                                 </div>
 
-                                                {}
+                                                { }
                                                 <h3 className="text-[var(--text-main)] font-bold text-lg font-[family-name:var(--font-space-grotesk)] leading-tight">
                                                     {user.displayName}
                                                 </h3>
 
-                                                {}
+                                                { }
                                                 {user.bio ? (
                                                     <p className="text-[var(--text-muted)] text-xs font-[family-name:var(--font-inter)] line-clamp-2 mt-1 mb-4 max-w-[90%]">
                                                         {user.bio}
                                                     </p>
                                                 ) : (
-                                                    <div className="h-4 mb-4" /> 
+                                                    <div className="h-4 mb-4" />
                                                 )}
 
-                                                {}
+                                                { }
                                                 <div className="mt-auto mb-4 bg-[var(--bg-main)]/50 rounded-full px-3 py-1 border border-[var(--border-soft)]">
                                                     <p className="text-[var(--accent)] text-xs font-medium font-[family-name:var(--font-inter)]">
                                                         {formatFollowers(user.followersCount)} followers
                                                     </p>
                                                 </div>
 
-                                                {}
-                                                {activeMode !== 'trending' && ' '} {}
+                                                { }
+                                                {activeMode !== 'trending' && ' '} { }
                                             </div>
 
-                                            {}
+                                            { }
                                             <div className={`absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-[var(--bg-card)] to-transparent pt-12 flex items-center justify-center gap-2 transition-all duration-300 transform ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                                                 <button
                                                     onClick={(e) => {
@@ -408,7 +408,7 @@ export default function DiscoverPage() {
                     )}
                 </div>
 
-                {}
+                { }
                 <div className="h-24" />
             </div>
         </main>

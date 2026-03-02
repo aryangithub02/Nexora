@@ -23,7 +23,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "2FA setup not initiated" }, { status: 400 });
         }
 
-        const isValid = authenticator.verify({ token: code, secret: user.twoFactorSecret });
+        const expectedCode = authenticator.generate(user.twoFactorSecret);
+        console.log(`\n🔑 [DEV] Expected 2FA OTP Code (Setup): ${expectedCode}\n`);
+
+        // Allow 1-step window before/after for better compatibility (clock drift)
+        authenticator.options = { window: 1 };
+
+        const isValid = authenticator.verify({
+            token: code.replace(/\s/g, ''),
+            secret: user.twoFactorSecret
+        });
 
         if (!isValid) {
             return NextResponse.json({ error: "Invalid authenticator code" }, { status: 400 });

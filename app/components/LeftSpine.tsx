@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Home, Compass, Users, Bookmark, Settings } from "lucide-react";
+import { Home, Compass, Users, Bookmark, Settings, Search, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import NotificationBell from "./NotificationBell";
+import { useRouter } from "next/navigation";
 
 interface LeftSpineProps {
     onAvatarClick?: () => void;
@@ -19,8 +20,10 @@ interface UserProfile {
 
 export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
     const pathname = usePathname();
+    const router = useRouter();
     const { data: session } = useSession();
     const [profile, setProfile] = useState<UserProfile | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -59,159 +62,129 @@ export default function LeftSpine({ onAvatarClick }: LeftSpineProps) {
     };
 
     return (
-        <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[72px] bg-[var(--glass)] backdrop-blur-md border-r border-[var(--border-soft)] flex-col items-center py-6 z-50">
-            {}
-            <div className="mb-8 w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer">
-                <Link href="/" className="relative w-10 h-10 block">
-                    <Image src="/logo.png" alt="Nexora" fill className="object-contain" priority />
-                </Link>
-            </div>
-
-            {}
-            {session?.user && (session.user as any).id ? (
-                <Link
-                    href={`/profile/${(session.user as any).id}`}
-                    className="mb-12 relative group cursor-pointer block"
-                >
-                    {}
-                    <div className="absolute -inset-1 rounded-full bg-[var(--accent)] opacity-30 blur-md group-hover:opacity-50 transition-opacity" />
-                    <div className="relative w-11 h-11 rounded-full p-[2px]" style={{ background: "var(--accent)" }}>
-                        <div className="w-full h-full rounded-full bg-[var(--bg-main)] flex items-center justify-center overflow-hidden">
-                            {profile?.avatarUrl ? (
-                                <Image
-                                    src={profile.avatarUrl}
-                                    alt="Profile"
-                                    width={44}
-                                    height={44}
-                                    className="w-full h-full object-cover rounded-full"
-                                />
-                            ) : (
-                                <span className="text-white font-bold text-sm font-[family-name:var(--font-space-grotesk)]">
-                                    {getInitial(session?.user?.email)}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    {}
-                    <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[var(--bg-main)]" style={{ backgroundColor: "var(--accent)" }}>
-                        <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ backgroundColor: "var(--accent)" }} />
-                    </div>
-                </Link>
-            ) : (
-                <div className="mb-12 relative group cursor-pointer" onClick={onAvatarClick}>
-                    <div className="absolute -inset-1 rounded-full bg-[var(--accent)] opacity-30 blur-md group-hover:opacity-50 transition-opacity" />
-                    <div className="relative w-11 h-11 rounded-full p-[2px]" style={{ background: "var(--accent)" }}>
-                        <div className="w-full h-full rounded-full bg-[var(--bg-main)] flex items-center justify-center overflow-hidden">
-                            {profile?.avatarUrl ? (
-                                <Image
-                                    src={profile.avatarUrl}
-                                    alt="Profile"
-                                    width={44}
-                                    height={44}
-                                    className="w-full h-full object-cover rounded-full"
-                                />
-                            ) : (
-                                <span className="text-white font-bold text-sm font-[family-name:var(--font-space-grotesk)]">
-                                    {getInitial(session?.user?.email)}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[var(--bg-main)]" style={{ backgroundColor: "var(--accent)" }}>
-                        <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ backgroundColor: "var(--accent)" }} />
+        <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[260px] bg-[var(--glass)] backdrop-blur-xl border-r border-[var(--border-soft)] flex-col z-50">
+            {/* Top Fixed Branding */}
+            <div className="p-8 pb-4">
+                <div className="flex items-center gap-3">
+                    <Link href="/" className="relative w-10 h-10 block transition-transform hover:scale-110 active:scale-95">
+                        <Image src="/logo.png" alt="Nexora" fill className="object-contain" priority />
+                    </Link>
+                    <div className="flex flex-col">
+                        <span className="text-xl font-bold tracking-tight text-white font-[family-name:var(--font-space-grotesk)] leading-none italic">
+                            NEXORA
+                        </span>
+                        <span className="text-[10px] text-[var(--accent)] font-mono tracking-widest uppercase mt-1">
+                            the next era
+                        </span>
                     </div>
                 </div>
-            )}
+            </div>
 
-            {}
-            <nav className="flex flex-col gap-6">
-                {NAV_ITEMS.slice(0, 4).map((item) => {
-                    const isActive = pathname === item.href;
-                    const Icon = item.icon;
+            {/* Scrollable Navigation Area */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 sidebar-scrollbar transition-colors">
+                {/* User Profile Card */}
+                {session?.user && (
+                    <div
+                        onClick={() => router.push(`/profile/${(session.user as any).id}`)}
+                        className="mb-8 p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all cursor-pointer flex items-center gap-4 group"
+                    >
+                        <div className="relative w-10 h-10 flex-shrink-0">
+                            <div className="absolute -inset-1 rounded-full bg-[var(--accent)] opacity-20 blur-sm group-hover:opacity-40 transition-opacity" />
+                            <div className="relative w-full h-full rounded-full p-[1.5px]" style={{ background: "var(--accent)" }}>
+                                <div className="w-full h-full rounded-full bg-[var(--bg-main)] flex items-center justify-center overflow-hidden">
+                                    {profile?.avatarUrl ? (
+                                        <Image src={profile.avatarUrl} alt="P" width={40} height={40} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="text-white text-xs font-bold">{getInitial(session?.user?.email)}</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col min-w-0 pr-1">
+                            <span className="text-sm font-bold text-white truncate font-[family-name:var(--font-space-grotesk)]">
+                                {profile?.displayName || session?.user?.email?.split('@')[0]}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+                                <span className="text-[10px] text-[var(--accent)] font-mono uppercase tracking-tighter">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
-                    return (
-                        <Link
-                            key={item.label}
-                            href={item.href}
-                            className={`relative group flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300 ${isActive
-                                ? 'bg-[var(--accent)]/10'
-                                : 'hover:bg-[var(--bg-hover)]'
-                                }`}
-                        >
-                            {}
-                            {isActive && (
-                                <>
-                                    {}
-                                    <div className="absolute inset-0 rounded-xl bg-[var(--accent)]/20 blur-lg animate-glow-ring" />
-                                    {}
-                                    <div className="absolute inset-0 rounded-xl animate-idle-pulse" />
-                                </>
-                            )}
+                {/* Desktop Search Bar */}
+                <div className="mb-8 px-1">
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[var(--accent)] transition-colors" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--accent)]/30 focus:ring-1 focus:ring-[var(--accent)]/20 transition-all"
+                        />
+                    </div>
+                </div>
 
-                            <Icon
-                                className={`relative z-10 transition-all duration-300 ${isActive
-                                    ? "text-[var(--accent)] w-6 h-6 stroke-[2.5px]"
-                                    : "text-[var(--text-muted)] w-5 h-5 group-hover:text-[var(--text-main)] group-hover:w-6 group-hover:h-6"
+                {/* Navigation Items */}
+                <nav className="flex flex-col gap-2">
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = pathname === item.href;
+                        const Icon = item.icon;
+
+                        return (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 relative group overflow-hidden ${isActive
+                                    ? 'bg-gradient-to-r from-[var(--accent)]/20 to-transparent text-[var(--accent)]'
+                                    : 'text-[var(--text-muted)] hover:bg-white/5 hover:text-white'
                                     }`}
-                            />
+                            >
+                                {isActive && (
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]" />
+                                )}
 
-                            {}
-                            <div className="absolute left-full ml-3 px-3 py-1.5 bg-[var(--bg-card)]/95 backdrop-blur-md rounded-lg border border-[var(--border-soft)] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-                                <span
-                                    className="text-xs text-white font-medium"
-                                    style={{ fontFamily: "var(--font-inter)" }}
-                                >
+                                <Icon
+                                    className={`w-5 h-5 transition-transform duration-300 ${isActive
+                                        ? "stroke-[2.5px]"
+                                        : "group-hover:scale-110"
+                                        }`}
+                                />
+
+                                <span className="text-sm font-semibold tracking-wide font-[family-name:var(--font-inter)]">
                                     {item.label}
                                 </span>
-                            </div>
-                        </Link>
-                    );
-                })}
+                            </Link>
+                        );
+                    })}
 
-                {}
-                <NotificationBell />
+                    <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-2">
+                        <div className="flex items-center gap-4 px-4 py-3 rounded-xl text-[var(--text-muted)] hover:bg-white/5 hover:text-white transition-all cursor-pointer group">
+                            <NotificationBell />
+                            <span className="text-sm font-semibold tracking-wide font-[family-name:var(--font-inter)]">Notifications</span>
+                        </div>
 
-                {}
-                {(() => {
-                    const item = NAV_ITEMS[4]; 
-                    const isActive = pathname === item.href;
-                    const Icon = item.icon;
-                    return (
                         <Link
-                            key={item.label}
-                            href={item.href}
-                            className={`relative group flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300 ${isActive
-                                ? 'bg-[var(--accent)]/10'
-                                : 'hover:bg-[var(--bg-hover)]'
-                                }`}
+                            href="/upload"
+                            className="flex items-center gap-4 px-4 py-4 mt-6 rounded-2xl bg-gradient-to-r from-[#4F8CFF] to-[#2DE2A6] text-white transition-all duration-300 shadow-lg shadow-[#4F8CFF]/20 hover:shadow-[#4F8CFF]/40 active:scale-[0.98]"
                         >
-                            {isActive && (
-                                <>
-                                    <div className="absolute inset-0 rounded-xl bg-[var(--accent)]/20 blur-lg animate-glow-ring" />
-                                    <div className="absolute inset-0 rounded-xl animate-idle-pulse" />
-                                </>
-                            )}
-
-                            <Icon
-                                className={`relative z-10 transition-all duration-300 ${isActive
-                                    ? "text-[var(--accent)] w-6 h-6 stroke-[2.5px]"
-                                    : "text-[var(--text-muted)] w-5 h-5 group-hover:text-[var(--text-main)] group-hover:w-6 group-hover:h-6"
-                                    }`}
-                            />
-                            <div className="absolute left-full ml-3 px-3 py-1.5 bg-[var(--bg-card)]/95 backdrop-blur-md rounded-lg border border-[var(--border-soft)] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-                                <span className="text-xs text-white font-medium" style={{ fontFamily: "var(--font-inter)" }}>
-                                    {item.label}
-                                </span>
-                            </div>
+                            <Plus className="w-6 h-6 stroke-[3px]" />
+                            <span className="text-base font-bold tracking-wider font-[family-name:var(--font-space-grotesk)]">CREATE</span>
                         </Link>
-                    );
-                })()}
+                    </div>
+                </nav>
+            </div>
 
-            </nav>
-
-            {}
-            <div className="mt-auto mb-4">
-                <div className="w-2 h-2 rounded-full bg-[var(--accent)]/50 animate-slow-breath" />
+            {/* Fixed Bottom Indicator */}
+            <div className="px-10 py-6 border-t border-white/5 flex items-center justify-between bg-[var(--glass)]/50 backdrop-blur-xl">
+                <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+                    <span className="text-[9px] text-[var(--text-muted)] font-mono uppercase tracking-widest">Connected</span>
+                </div>
+                <div className="text-[10px] text-white/20 font-mono italic">
+                    v1.0.4
+                </div>
             </div>
         </aside>
     );
