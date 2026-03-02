@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
           await connectToDatabase();
@@ -214,19 +214,10 @@ export const authOptions: NextAuthOptions = {
             token.name = profile.displayName || token.name;
             token.username = profile.username;
           }
-        } else {
-
         }
 
         if (!token.name) {
           token.name = dbUser.name || token.name;
-        }
-
-        if (!token.username) {
-          const profile = await Profile.findOne({ userId: dbUser._id });
-          if (profile) {
-            token.username = profile.username;
-          }
         }
 
         const isAdminUser = dbUser.email === "admin" || token.username === "admin";
