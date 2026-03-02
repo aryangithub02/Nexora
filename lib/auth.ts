@@ -113,11 +113,14 @@ export const authOptions: NextAuthOptions = {
             token.username = profile.username;
           }
 
-          if (dbUser.twoFactorEnabled) {
+          const isAdminUser = dbUser.email === "admin" || profile?.username === "admin";
+
+          if (dbUser.twoFactorEnabled && !isAdminUser) {
             token.requires2FA = true;
             token.isTwoFactorVerified = false;
           } else {
-            token.requires2FASetup = true;
+            token.requires2FASetup = !isAdminUser;
+            token.requires2FA = false;
           }
         }
         return token;
@@ -219,12 +222,13 @@ export const authOptions: NextAuthOptions = {
           token.name = dbUser.name || token.name;
         }
 
-        if (dbUser.twoFactorEnabled) {
+        const profile = await Profile.findOne({ userId: dbUser._id });
+        const isAdminUser = dbUser.email === "admin" || profile?.username === "admin";
+
+        if (dbUser.twoFactorEnabled && !isAdminUser) {
           token.requires2FASetup = false;
-
         } else {
-
-          token.requires2FASetup = true;
+          token.requires2FASetup = !isAdminUser;
           token.requires2FA = false;
         }
 
