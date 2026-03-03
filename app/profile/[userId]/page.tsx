@@ -261,10 +261,9 @@ export default function ProfilePage() {
         <main className="min-h-screen bg-[#0F1117]">
             <LeftSpine onAvatarClick={() => { }} />
 
-            <div className="md:pl-[320px] p-4 min-h-screen pb-24">
-                { }
-                <div className="relative h-56 w-full overflow-hidden">
-                    { }
+            <div className="md:pl-[280px] px-0 md:px-4 pt-safe-top pb-safe-nav min-h-screen">
+                {/* Banner */}
+                <div className="relative h-44 md:h-56 w-full overflow-hidden">
                     {bannerImage ? (
                         <>
                             <img
@@ -289,9 +288,8 @@ export default function ProfilePage() {
                     { }
                     <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none" />
                 </div>
-
-                <div className="max-w-4xl mx-auto px-6 relative z-10 -mt-20">
-                    { }
+                <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10 -mt-20">
+                    {/* Profile info */}
                     <div className="flex flex-col items-center text-center">
                         { }
                         <div className="relative mb-4 group cursor-pointer transition-transform duration-300 hover:scale-105">

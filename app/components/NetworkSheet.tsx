@@ -30,7 +30,7 @@ interface NetworkSheetProps {
     isOpen: boolean;
     onClose: () => void;
     liveUsers: LiveUser[];
-    variant?: "drawer" | "sheet"; 
+    variant?: "drawer" | "sheet";
 }
 
 export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "drawer" }: NetworkSheetProps) {
@@ -83,24 +83,24 @@ export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "dr
 
     return (
         <div className={`fixed inset-0 z-[100] transition-all duration-300 ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
-            {}
+            { }
             <div
                 className={`absolute inset-0 bg-black/40 backdrop-blur-[4px] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
                 onClick={onClose}
             />
 
-            {}
+            { }
             <div
                 className={`${containerClasses} bg-[#0F1117]/95 backdrop-blur-2xl shadow-[-8px_0_32px_rgba(0,0,0,0.5)] flex flex-col transition-transform duration-300 cubic-bezier(0.16, 1, 0.3, 1)`}
             >
-                {}
+                { }
                 {variant === "sheet" && (
                     <div className="flex justify-center pt-3 pb-1">
                         <div className="w-12 h-1.5 rounded-full bg-white/20" />
                     </div>
                 )}
 
-                {}
+                { }
                 <div className="p-6 pb-2 shrink-0">
                     <div className="flex items-start justify-between mb-6">
                         <div>
@@ -119,7 +119,7 @@ export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "dr
                         </button>
                     </div>
 
-                    {}
+                    { }
                     <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
                         {(['radar', 'circle', 'suggested'] as const).map(tab => (
                             <button
@@ -139,9 +139,9 @@ export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "dr
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                    {}
+                    { }
                     {activeTab === 'radar' && (
                         <>
                             {liveUsers.length === 0 ? (
@@ -189,7 +189,7 @@ export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "dr
                         </>
                     )}
 
-                    {}
+                    { }
                     {activeTab === 'circle' && (
                         <>
                             {loadingCircle ? (
@@ -238,7 +238,7 @@ export default function NetworkSheet({ isOpen, onClose, liveUsers, variant = "dr
                         </>
                     )}
 
-                    {}
+                    { }
                     {activeTab === 'suggested' && (
                         <div className="flex flex-col items-center justify-center h-[50vh] text-center opacity-40">
                             <h3 className="text-white font-medium mb-1">Requests</h3>

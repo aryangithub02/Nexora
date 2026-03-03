@@ -16,7 +16,6 @@ export default function MobileNavbar() {
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isNetworkOpen, setIsNetworkOpen] = useState(false);
-
     const [userAvatar, setUserAvatar] = useState<string | null>(null);
     const { liveUsers } = useLiveRadar();
 
@@ -113,21 +112,25 @@ export default function MobileNavbar() {
     return (
         <>
             <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden pointer-events-none">
-                {}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/90 to-transparent pointer-events-none" />
+                {/* Edge-to-edge fade */}
+                <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/80 to-transparent pointer-events-none" />
 
-                <div className="relative mx-4 mb-4 pointer-events-auto">
-                    {}
-                    <div className="bg-[var(--glass)] backdrop-blur-xl rounded-[24px] border border-[var(--border-soft)] shadow-[var(--shadow-soft)] px-2 py-3">
-                        <div className="flex items-center justify-between px-2">
+                {/* Nav pill */}
+                <div
+                    className="relative mx-3 pointer-events-auto"
+                    style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 8px) + 8px)" }}
+                >
+                    <div className="bg-[var(--glass)] backdrop-blur-2xl rounded-[28px] border border-[var(--border-soft)] shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)] px-2 py-2.5">
+                        <div className="flex items-end justify-around">
                             {navItems.map((item, index) => {
-                                const isCenter = index === 2; 
+                                const isCenter = index === 2;
                                 const Icon = item.icon;
 
                                 return (
                                     <div
                                         key={item.id}
-                                        className={`relative flex flex-col items-center justify-center ${isCenter ? 'w-14 -mt-8' : 'w-12 pt-1'}`}
+                                        className={`relative flex flex-col items-center justify-end cursor-pointer select-none ${isCenter ? 'w-14 mb-1' : 'w-14 h-12'
+                                            }`}
                                         onTouchStart={() => handleTouchStart(item.onLongPress || (() => { }), !!item.onLongPress)}
                                         onTouchEnd={() => handleTouchEnd(item.onClick)}
                                         onMouseDown={() => handleTouchStart(item.onLongPress || (() => { }), !!item.onLongPress)}
@@ -137,22 +140,31 @@ export default function MobileNavbar() {
                                         }}
                                     >
                                         {isCenter ? (
-                                            
-                                            <div className="relative group">
-                                                {}
-                                                <div className="w-14 h-14 rounded-full p-[1.5px] transform transition-transform active:scale-95" style={{ background: "var(--accent)", boxShadow: "0 8px 24px var(--accent-glow)" }}>
-                                                    <div className="w-full h-full rounded-full bg-[var(--bg-card)] flex items-center justify-center relative overflow-hidden group-hover:bg-white/10 transition-colors">
-                                                        <Plus className="w-7 h-7 text-[var(--text-main)]" strokeWidth={2.5} />
-                                                    </div>
+                                            /* Centre Create button — floats above the pill row */
+                                            <div className="relative -mb-3">
+                                                <div
+                                                    className="w-14 h-14 rounded-full flex items-center justify-center transform transition-transform active:scale-90 shadow-[0_4px_20px_rgba(78,242,178,0.4)]"
+                                                    style={{ background: "linear-gradient(135deg, #4F8CFF, #4ef2b2)" }}
+                                                >
+                                                    <Plus className="w-7 h-7 text-[#0b0e13]" strokeWidth={2.8} />
                                                 </div>
                                             </div>
                                         ) : (
-                                            
-                                            <div className={`relative transition-all duration-300 ${item.isActive ? "scale-110 -translate-y-1" : "scale-100 opacity-80"
-                                                }`}>
+                                            /* Regular nav items */
+                                            <div className={`relative flex flex-col items-center gap-1 transition-all duration-300 ${item.isActive ? "scale-105" : "scale-100 opacity-70"}`}>
+                                                {/* Active indicator dot */}
+                                                {item.isActive && (
+                                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent)]" />
+                                                )}
+
                                                 {item.id === "profile" ? (
-                                                    <div className={`w-7 h-7 rounded-full p-[1.5px] ${item.isActive ? "" : "bg-transparent"
-                                                        }`} style={{ background: item.isActive ? "var(--accent)" : "transparent" }}>
+                                                    <div
+                                                        className="w-7 h-7 rounded-full overflow-hidden transition-all duration-300"
+                                                        style={{
+                                                            padding: item.isActive ? "1.5px" : "0",
+                                                            background: item.isActive ? "var(--accent)" : "transparent"
+                                                        }}
+                                                    >
                                                         <div className="w-full h-full rounded-full bg-[var(--bg-card)] overflow-hidden">
                                                             {(userAvatar || (session?.user as any)?.image) ? (
                                                                 <Image
@@ -170,33 +182,37 @@ export default function MobileNavbar() {
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    Icon && <Icon
-                                                        className={`w-6 h-6 transition-all duration-300 ${item.isActive
-                                                            ? "text-[var(--accent)]"
-                                                            : "text-[var(--text-disabled)]"
-                                                            }`}
-                                                        style={{
-                                                            filter: item.isActive ? "drop-shadow(0 0 8px var(--accent))" : "none"
-                                                        }}
-                                                        strokeWidth={item.isActive ? 2.5 : 2}
-                                                    />
+                                                    <div className="relative">
+                                                        {Icon && <Icon
+                                                            className={`w-6 h-6 transition-all duration-300 ${item.isActive
+                                                                ? "text-[var(--accent)]"
+                                                                : "text-[var(--text-disabled)]"
+                                                                }`}
+                                                            style={{
+                                                                filter: item.isActive ? "drop-shadow(0 0 6px var(--accent))" : "none"
+                                                            }}
+                                                            strokeWidth={item.isActive ? 2.5 : 1.8}
+                                                        />}
+
+                                                        {/* Network live badge — use explicit boolean to avoid rendering "0" */}
+                                                        {item.id === 'network' && (item.badgeCount ?? 0) > 0 && (
+                                                            <span
+                                                                className="absolute -top-1 -right-1 w-2 h-2 rounded-full ring-2 ring-[var(--bg-card)]"
+                                                                style={{ backgroundColor: "var(--accent)" }}
+                                                            >
+                                                                <span className="w-full h-full rounded-full animate-ping opacity-75 block" style={{ backgroundColor: "var(--accent)" }} />
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 )}
 
-                                                {}
-                                                {item.id === 'network' && item.badgeCount && item.badgeCount > 0 && (
-                                                    <span className="absolute -top-1 -right-0 w-2.5 h-2.5 rounded-full ring-2 ring-[var(--bg-card)] flex items-center justify-center" style={{ backgroundColor: "var(--accent)" }}>
-                                                        <span className="w-full h-full rounded-full animate-ping opacity-75" style={{ backgroundColor: "var(--accent)" }} />
+                                                {/* Label — only render when active to avoid layout leakage */}
+                                                {item.isActive && (
+                                                    <span className="text-[9px] font-semibold tracking-wide font-[family-name:var(--font-inter)] leading-none text-[var(--accent)] whitespace-nowrap">
+                                                        {item.label}
                                                     </span>
                                                 )}
                                             </div>
-                                        )}
-
-                                        {}
-                                        {!isCenter && (
-                                            <span className={`text-[9px] mt-1 transition-all duration-300 font-medium ${item.isActive ? "text-[var(--accent)] opacity-100" : "text-[var(--text-disabled)] opacity-0 h-0 w-0 overflow-hidden"
-                                                }`}>
-                                                {item.label}
-                                            </span>
                                         )}
                                     </div>
                                 );

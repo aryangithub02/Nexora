@@ -1,199 +1,227 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Plus, Search, LogOut, Circle, Zap } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
 import NotificationBell from "./NotificationBell";
 import NotificationPanel from "./NotificationPanel";
 import NetworkSheet from "./NetworkSheet";
-
 import { useLiveRadar } from "@/hooks/useLiveRadar";
+
+interface UserProfile {
+  avatarUrl?: string;
+  displayName?: string;
+}
 
 export default function FloatingNavbar() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const lastScrollY = useRef(0);
-  const ticking = useRef(false);
-
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const { liveUsers } = useLiveRadar();
   const [isRadarOpen, setIsRadarOpen] = useState(false);
 
+  // Fetch user profile for avatar
   useEffect(() => {
-    const handleScroll = () => {
-
-      if (!ticking.current) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-          if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-            setIsCollapsed(true);
-          } else if (currentScrollY < lastScrollY.current) {
-            setIsCollapsed(false);
-          }
-          lastScrollY.current = currentScrollY;
-          ticking.current = false;
-        });
-        ticking.current = true;
+    if (status !== "authenticated") return;
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/settings/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setProfile(data.profile);
+        }
+      } catch (e) {
+        console.error("Navbar profile fetch error", e);
       }
     };
+    fetchProfile();
+  }, [status]);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+  // Blur/glass effect after scrolling a bit
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Activity heartbeat
   useEffect(() => {
-    if (status !== 'authenticated') return;
-    if (pathname === '/') return;
-
-    const sendHeartbeat = async () => {
+    if (status !== "authenticated") return;
+    if (pathname === "/") return;
+    const ping = async () => {
       try {
-        await fetch('/api/radar/activity', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ activity: { type: 'idle' } })
+        await fetch("/api/radar/activity", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ activity: { type: "idle" } }),
         });
-      } catch (e) {
-        console.error("Heartbeat error", e);
-      }
+      } catch { }
     };
-    sendHeartbeat();
-    const interval = setInterval(sendHeartbeat, 20000);
+    ping();
+    const interval = setInterval(ping, 20000);
     return () => clearInterval(interval);
   }, [status, pathname]);
 
-  const handleUploadClick = () => {
-    router.push("/upload");
-  };
-
-  const getInitial = (email: string | null | undefined) => {
-    if (!email) return "?";
-    return email.charAt(0).toUpperCase();
-  };
 
   const isHome = pathname === "/";
   const authPaths = ["/login", "/register", "/auth/verify-2fa", "/auth/setup-2fa", "/forgot-password", "/reset-password"];
-  const isAuthPage = authPaths.some(path => pathname.startsWith(path));
+  const isAuthPage = authPaths.some((p) => pathname.startsWith(p));
+  const is2FALocked = (session?.user as any)?.requires2FA || (session?.user as any)?.requires2FASetup;
+
+  if (isAuthPage || is2FALocked) return null;
+
+  const getInitial = (email: string | null | undefined) =>
+    email ? email.charAt(0).toUpperCase() : "?";
+
+  const displayName = profile?.displayName || session?.user?.email?.split("@")[0] || "User";
+  const avatarSrc = profile?.avatarUrl || (session?.user as any)?.image;
 
   return (
     <>
+      {/* ─────────── MOBILE TOP BAR (hidden on md+) ─────────── */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out animate-navbar-fade md:hidden
-        ${isCollapsed ? "h-[52px]" : "h-[64px]"}
-        `}
+        className="fixed top-0 left-0 right-0 z-50 md:hidden transition-all duration-300"
         style={{
-          background: isHome ? "transparent" : "var(--glass)",
-          backdropFilter: isHome ? "none" : "blur(12px)",
-          WebkitBackdropFilter: isHome ? "none" : "blur(12px)",
-          borderBottom: isHome ? "none" : "1px solid var(--border-soft)",
-          boxShadow: isHome ? "none" : "var(--shadow-soft)",
+          background: scrolled ? "var(--glass)" : isHome ? "transparent" : "var(--glass)",
+          backdropFilter: scrolled || !isHome ? "blur(20px)" : "none",
+          WebkitBackdropFilter: scrolled || !isHome ? "blur(20px)" : "none",
+          borderBottom: scrolled || !isHome ? "1px solid var(--border-soft)" : "none",
+          boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.35)" : "none",
+          paddingTop: "env(safe-area-inset-top, 0px)",
         }}
       >
-        <div className="h-full max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 transition-transform active:scale-95">
-            <div className={`relative transition-all duration-300 ${!isHome ? (isCollapsed ? "w-8 h-8" : "w-10 h-10") : "w-12 h-12 md:w-10 md:h-10"}`}>
-              <Image src="/logo.png" alt="Nexora Logo" fill className="object-contain" priority />
+        <div className="relative z-50 h-[60px] flex items-center justify-between px-4 gap-3">
+
+          {/* ── LEFT: Logo + Brand ─────────────────────── */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 min-w-0 flex-shrink-0 active:opacity-70 transition-opacity"
+          >
+            <div className="relative w-8 h-8 flex-shrink-0">
+              <Image src="/logo.png" alt="Nexora" fill className="object-contain" priority />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span
+                className="text-[17px] font-bold italic tracking-tight text-white leading-none"
+                style={{ fontFamily: "var(--font-space-grotesk)" }}
+              >
+                NEXORA
+              </span>
+              <span className="text-[8.5px] text-[var(--accent)] font-mono tracking-[0.18em] uppercase mt-[2px] opacity-80">
+                the next era
+              </span>
             </div>
           </Link>
 
+          {/* ── RIGHT: Bell + Avatar ───────────────────── */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
 
-
-          { }
-          <div
-            className={`hidden md:block transition-all duration-300 ease-out ${isSearchFocused ? "w-[480px]" : "w-[320px]"} ${isCollapsed ? "scale-95" : "scale-100"}`}
-          >
-            <div className="relative">
-              <Search className={`absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-200 ${isSearchFocused ? "text-[#4F8CFF]" : "text-[#9AA0AA]"} ${isCollapsed ? "w-4 h-4" : "w-5 h-5"}`} />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
-                className={`w-full ${isCollapsed ? "h-9 pl-11 pr-4 text-sm" : "h-11 pl-12 pr-4"} rounded-full bg-[#0F1117] border border-[#5C6270]/30 text-[#E5E7EB] placeholder-[#5C6270] focus:outline-none focus:border-[#4F8CFF]/50 focus:ring-2 focus:ring-[#4F8CFF]/20 transition-all duration-200`}
-                style={{ fontFamily: "var(--font-inter)" }}
-              />
-            </div>
-          </div>
-
-          { }
-          <div className="flex items-center gap-4">
             {status === "authenticated" && (
               <>
-                { }
-                <NotificationBell className={`${isCollapsed ? "scale-90" : "scale-100"} ${isHome ? "hidden md:block" : ""}`} />
+                {/* Notification Bell */}
+                <div className="w-9 h-9 flex items-center justify-center">
+                  <NotificationBell />
+                </div>
 
-                { }
-                <button
-                  onClick={() => setIsRadarOpen(true)}
-                  className={`hidden md:block relative p-2 rounded-full hover:bg-white/5 transition-all duration-300 group ${isCollapsed ? "scale-90" : "scale-100"}`}
-                  aria-label="Live Radar"
-                >
-                  {liveUsers.length > 0 ? (
-
-                    <div className="relative flex items-center justify-center">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-[#2DE2A6] opacity-30 animate-ping duration-[3000ms]" />
-                      <Circle className="w-5 h-5 text-[#2DE2A6] fill-[#2DE2A6]" strokeWidth={2.5} />
-                      { }
-                      <span className="absolute -inset-1 rounded-full border border-[#2DE2A6]/40 animate-pulse" />
-                    </div>
-                  ) : (
-
-                    <Circle className="w-5 h-5 text-[#5C6270]" strokeWidth={2} />
-                  )}
-                </button>
-
-                { }
-                <button
-                  onClick={handleUploadClick}
-                  className={`relative p-2 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90" : "scale-100"} ${isHome ? "hidden md:block" : ""}`}
-                  aria-label="Upload"
-                >
-                  <Plus className={`text-white transition-all ${isCollapsed ? "w-5 h-5" : "w-6 h-6"}`} strokeWidth={2.5} />
-                </button>
-
-                { }
-                <div className={`relative ${isHome ? "hidden md:block" : ""}`}>
+                {/* User Avatar + Dropdown */}
+                <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className={`flex items-center justify-center rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] text-white font-semibold hover:shadow-lg hover:shadow-[#4F8CFF]/20 transition-all duration-200 overflow-hidden ${isCollapsed ? "w-9 h-9 text-sm scale-90" : "w-10 h-10 text-base"}`}
-                    style={{ fontFamily: "var(--font-space-grotesk)" }}
+                    className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 transition-all active:scale-90 ring-2 ring-transparent hover:ring-[var(--accent)]/40"
+                    aria-label="User menu"
                   >
-                    {session?.user?.image ? (
-                      <img
-                        src={session.user.image}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
+                    {avatarSrc ? (
+                      <img src={avatarSrc} alt={displayName} className="w-full h-full object-cover" />
                     ) : (
-                      getInitial(session?.user?.email)
+                      <div
+                        className="w-full h-full flex items-center justify-center text-sm font-bold text-[#0b0e13]"
+                        style={{ background: "linear-gradient(135deg, #4F8CFF, #4ef2b2)" }}
+                      >
+                        {getInitial(session?.user?.email)}
+                      </div>
                     )}
                   </button>
-                  { }
+
+                  {/* Dropdown menu */}
                   {showUserMenu && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
-                      <div className="absolute right-0 mt-2 w-56 rounded-xl z-50 overflow-hidden" style={{ background: "rgba(23, 27, 34, 0.95)", backdropFilter: "blur(12px)", border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)" }}>
-                        <div className="px-4 py-3 border-b border-white/5">
-                          <p className="text-sm text-[#E5E7EB] truncate" style={{ fontFamily: "var(--font-inter)" }}>{session?.user?.email}</p>
+                      <div
+                        className="absolute right-0 top-11 w-56 rounded-2xl z-50 overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
+                        style={{
+                          background: "rgba(18, 22, 30, 0.96)",
+                          backdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        {/* User info header */}
+                        <div className="px-4 py-3 border-b border-white/6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[var(--accent)]/30">
+                              {avatarSrc ? (
+                                <img src={avatarSrc} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div
+                                  className="w-full h-full flex items-center justify-center text-xs font-bold text-[#0b0e13]"
+                                  style={{ background: "linear-gradient(135deg, #4F8CFF, #4ef2b2)" }}
+                                >
+                                  {getInitial(session?.user?.email)}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-sm font-semibold text-white truncate" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                                {displayName}
+                              </span>
+                              <span className="text-[10px] text-[var(--text-muted)] truncate" style={{ fontFamily: "var(--font-inter)" }}>
+                                {session?.user?.email}
+                              </span>
+                            </div>
+                          </div>
+                          {/* Online dot */}
+                          <div className="flex items-center gap-1.5 mt-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+                            <span className="text-[9px] text-[var(--accent)] font-mono uppercase tracking-widest">Active</span>
+                          </div>
                         </div>
 
-                        <Link href="/settings/profile" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#E5E7EB] hover:bg-white/5 transition-colors" style={{ fontFamily: "var(--font-inter)" }} onClick={() => setShowUserMenu(false)}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                          Profile
-                        </Link>
-                        <button onClick={() => signOut({ callbackUrl: "/register" })} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#FF6B6B] hover:bg-white/5 transition-colors" style={{ fontFamily: "var(--font-inter)" }}>
-                          <LogOut className="w-4 h-4" />
-                          Sign Out
-                        </button>
+                        {/* Menu items */}
+                        <div className="py-1">
+                          <Link
+                            href={`/profile/${(session?.user as any)?.id}`}
+                            onClick={() => setShowUserMenu(false)}
+                            className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-main)] hover:bg-white/5 transition-colors"
+                            style={{ fontFamily: "var(--font-inter)" }}
+                          >
+                            <User className="w-4 h-4 text-[var(--text-muted)]" />
+                            View Profile
+                          </Link>
+                          <Link
+                            href="/settings/profile"
+                            onClick={() => setShowUserMenu(false)}
+                            className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-main)] hover:bg-white/5 transition-colors"
+                            style={{ fontFamily: "var(--font-inter)" }}
+                          >
+                            <Settings className="w-4 h-4 text-[var(--text-muted)]" />
+                            Settings
+                          </Link>
+                        </div>
+
+                        <div className="border-t border-white/6 py-1">
+                          <button
+                            onClick={() => { setShowUserMenu(false); signOut({ callbackUrl: "/register" }); }}
+                            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/8 transition-colors"
+                            style={{ fontFamily: "var(--font-inter)" }}
+                          >
+                            <LogOut className="w-4 h-4" />
+                            Sign Out
+                          </button>
+                        </div>
                       </div>
                     </>
                   )}
@@ -204,25 +232,18 @@ export default function FloatingNavbar() {
             {status === "unauthenticated" && (
               <Link
                 href="/login"
-                className={`px-6 py-2 rounded-full bg-gradient-to-r from-[#4F8CFF] to-[#2DE2A6] text-white font-medium hover:shadow-lg hover:shadow-[#4F8CFF]/30 transition-all duration-200 ${isCollapsed ? "scale-90 text-sm" : "text-base"}`}
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
+                className="px-4 py-2 rounded-full text-sm font-semibold text-[#0b0e13] transition-all active:scale-95"
+                style={{ background: "linear-gradient(135deg, #4F8CFF, #4ef2b2)", fontFamily: "var(--font-space-grotesk)" }}
               >
                 Log In
               </Link>
             )}
           </div>
         </div>
-      </nav >
+      </nav>
 
-      { }
-      {isAuthPage && (
-        <div className={`${isCollapsed ? "h-[52px]" : "h-[64px]"}`} />
-      )}
-
-      { }
+      {/* Desktop-only panels */}
       <NotificationPanel />
-
-      { }
       <NetworkSheet isOpen={isRadarOpen} onClose={() => setIsRadarOpen(false)} liveUsers={liveUsers} />
     </>
   );

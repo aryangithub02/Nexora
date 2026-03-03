@@ -143,63 +143,58 @@ export default function SavedPage() {
                 <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[120px]" />
             </div>
 
-            <div className="md:pl-[320px] pl-4 pr-8 py-12 relative">
-                { }
-                <div className="max-w-6xl mx-auto mb-10">
-                    <div className="flex items-start justify-between">
-                        { }
-                        <div className="flex items-center gap-4">
-                            { }
-                            <div className="w-10 h-10 flex items-center justify-center">
-                                <Bookmark className="w-6 h-6 text-[var(--accent)]/70 fill-[var(--accent)]/20" />
+            <div className="md:pl-[280px] px-4 py-4 md:py-10 pt-safe-top pb-safe-nav relative">
+                {/* Section header */}
+                <div className="max-w-6xl mx-auto mb-6 md:mb-10">
+                    <div className="flex flex-col gap-4">
+                        {/* Title row */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+                                    <Bookmark className="w-5 h-5 md:w-6 md:h-6 text-[var(--accent)]/70 fill-[var(--accent)]/20" />
+                                </div>
+                                <div>
+                                    <h1 className="text-xl md:text-2xl font-medium text-[var(--text-main)]/90 tracking-tight font-[family-name:var(--font-space-grotesk)]">
+                                        Saved Reels
+                                    </h1>
+                                    <p className="text-[var(--text-muted)] text-xs mt-0.5 font-[family-name:var(--font-inter)]">
+                                        Your personal collection of memories
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <h1 className="text-2xl font-medium text-[var(--text-main)]/90 tracking-tight font-[family-name:var(--font-space-grotesk)]">
-                                    Saved Reels
-                                </h1>
-                                <p className="text-[var(--text-muted)] text-sm mt-0.5 font-[family-name:var(--font-inter)]">
-                                    Your personal collection of memories
-                                </p>
+
+                            {/* Sort pills */}
+                            <div className="flex gap-1 bg-[var(--bg-card)]/80 p-1 rounded-full border border-[var(--border-soft)]">
+                                <button
+                                    onClick={() => setActiveSort('memory')}
+                                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 font-[family-name:var(--font-inter)] whitespace-nowrap ${activeSort === 'memory'
+                                            ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+                                            : 'text-[var(--text-muted)]'
+                                        }`}
+                                >
+                                    <Sparkles size={11} />
+                                    <span className="hidden sm:inline">Most Revisited</span>
+                                    <span className="sm:hidden">Top</span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveSort('recent')}
+                                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 font-[family-name:var(--font-inter)] whitespace-nowrap ${activeSort === 'recent'
+                                            ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
+                                            : 'text-[var(--text-muted)]'
+                                        }`}
+                                >
+                                    <Clock size={11} />
+                                    <span className="hidden sm:inline">Recently Saved</span>
+                                    <span className="sm:hidden">Recent</span>
+                                </button>
                             </div>
                         </div>
 
-                        { }
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setActiveSort('memory')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-500 font-[family-name:var(--font-inter)] ${activeSort === 'memory'
-                                    ? 'bg-[var(--accent)]/15 text-[var(--accent)] shadow-[0_0_20px_var(--accent-glow)]'
-                                    : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
-                                    }`}
-                            >
-                                <span className="flex items-center gap-2">
-                                    <Sparkles size={14} className={activeSort === 'memory' ? 'opacity-100' : 'opacity-50'} />
-                                    Most Revisited
-                                </span>
-                            </button>
-                            <button
-                                onClick={() => setActiveSort('recent')}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-500 font-[family-name:var(--font-inter)] ${activeSort === 'recent'
-                                    ? 'bg-[var(--accent)]/15 text-[var(--accent)] shadow-[0_0_20px_var(--accent-glow)]'
-                                    : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
-                                    }`}
-                            >
-                                <span className="flex items-center gap-2">
-                                    <Clock size={14} className={activeSort === 'recent' ? 'opacity-100' : 'opacity-50'} />
-                                    Recently Saved
-                                </span>
-                            </button>
+                        {/* Stats row */}
+                        <div className="flex items-center gap-6 font-[family-name:var(--font-jetbrains-mono)]">
+                            <span className="text-[var(--text-muted)] text-xs">{bookmarks.length} saved</span>
+                            <span className="text-[var(--text-muted)]/60 text-xs">{bookmarks.reduce((acc, b) => acc + b.revisitCount, 0)} total revisits</span>
                         </div>
-                    </div>
-
-                    { }
-                    <div className="flex items-center gap-8 mt-6 ml-14">
-                        <span className="text-[var(--text-muted)] text-sm font-[family-name:var(--font-jetbrains-mono)]">
-                            {bookmarks.length} saved
-                        </span>
-                        <span className="text-[var(--text-muted)]/60 text-sm font-[family-name:var(--font-jetbrains-mono)]">
-                            {bookmarks.reduce((acc, b) => acc + b.revisitCount, 0)} total revisits
-                        </span>
                     </div>
                 </div>
 

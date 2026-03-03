@@ -22,14 +22,14 @@ function HomeContent() {
   const highlightId = searchParams.get('reelId');
 
   useEffect(() => {
-    
+
     if (status === "unauthenticated") {
       router.push("/register");
       return;
     }
 
     if (status === "authenticated") {
-      
+
       fetch("/api/sessions", { method: "POST" }).catch(err => console.error("Session log failed", err));
 
       const fetchVideos = async () => {
@@ -42,11 +42,11 @@ function HomeContent() {
               try {
                 const targetReel = await apiClient.getAVideo(highlightId);
                 if (targetReel) {
-                  
+
                   data.unshift(targetReel);
                 }
               } catch (err: any) {
-                
+
                 const isNotFound = err.message && (err.message.includes("Video not found") || err.message.includes("404"));
                 if (!isNotFound) {
                   console.error("Could not hydrate target reel:", err);
@@ -78,14 +78,14 @@ function HomeContent() {
   if (status === "loading" || loading) {
     return (
       <main className="min-h-screen bg-[var(--bg-main)] relative overflow-hidden">
-        {}
+        { }
         <div className="hidden md:block fixed left-0 top-0 bottom-0 z-40">
           <LeftSpine onAvatarClick={toggleProfileMode} />
         </div>
 
-        <div className="w-full h-full md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope">
-          {}
-          <div className="flex flex-col items-center w-full pt-20">
+        <div className="w-full h-dvh md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope">
+          { }
+          <div className="flex flex-col items-center w-full pt-16 md:pt-20">
             <ReelSkeleton />
             <div className="hidden md:block opacity-50"><ReelSkeleton /></div>
           </div>
@@ -104,7 +104,7 @@ function HomeContent() {
 
   if (!videos.length) {
     return (
-      <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center pb-safe-nav pt-safe-top">
         <div className="text-center">
           <p
             className="text-[var(--text-muted)] text-lg mb-4"
@@ -128,17 +128,17 @@ function HomeContent() {
 
   return (
     <main className="min-h-screen bg-[var(--bg-main)] relative overflow-hidden">
-      {}
+      { }
       <div className="hidden md:block fixed left-0 top-0 bottom-0 z-40">
         <LeftSpine onAvatarClick={toggleProfileMode} />
       </div>
 
-      {}
-      {}
-      {}
+      { }
+      { }
+      { }
       <Feed videos={videos} onVideoDeleted={handleVideoDeleted} />
 
-      {}
+      { }
       <div className="hidden lg:block fixed right-0 top-0 bottom-0 z-40">
         <RightPanel profileMode={profileMode} toggleProfileMode={toggleProfileMode} />
       </div>

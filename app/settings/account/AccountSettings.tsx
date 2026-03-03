@@ -18,7 +18,12 @@ import {
     X,
     Check,
     CheckCircle2,
-    Copy
+    Copy,
+    MessageCircle,
+    AtSign,
+    UserPlus,
+    Compass,
+    Sparkles
 } from "lucide-react";
 
 import { Laptop, Smartphone, Monitor } from "lucide-react";
@@ -319,13 +324,13 @@ export default function AccountSettings() {
     };
 
     return (
-        <div className="space-y-12 relative z-10 pb-20">
-            { }
+        <div className="space-y-8 md:space-y-12 relative z-10 pb-20 px-1 md:px-0">
+            {/* ─────────── HEADER ─────────── */}
             <div>
-                <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                <h1 className="text-xl md:text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Account
                 </h1>
-                <p className="text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
+                <p className="text-[13px] md:text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
                     Manage your identity and security settings
                 </p>
             </div>
@@ -335,14 +340,14 @@ export default function AccountSettings() {
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Email & Password</h2>
 
                 { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center">
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center flex-shrink-0">
                                 <Mail className="w-5 h-5 text-[#4F8CFF]" />
                             </div>
-                            <div>
-                                <p className="text-sm text-white font-medium">{session?.user?.email}</p>
+                            <div className="min-w-0">
+                                <p className="text-sm text-white font-medium truncate">{session?.user?.email}</p>
                                 <p className="text-xs text-[#5C6270]">Primary email address</p>
                             </div>
                         </div>
@@ -397,13 +402,13 @@ export default function AccountSettings() {
                 </div>
 
                 { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#2DE2A6]/10 flex items-center justify-center">
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#2DE2A6]/10 flex items-center justify-center flex-shrink-0">
                                 <Lock className="w-5 h-5 text-[#2DE2A6]" />
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <p className="text-sm text-white font-medium">Password</p>
                                 <p className="text-xs text-[#5C6270]">Security is important</p>
                             </div>
@@ -507,51 +512,61 @@ export default function AccountSettings() {
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Privacy & Visibility</h2>
 
-                { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#9B59B6]/10 flex items-center justify-center">
+                {/* Account Type Card */}
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#9B59B6]/10 flex items-center justify-center flex-shrink-0">
                                 <Lock className="w-5 h-5 text-[#9B59B6]" />
                             </div>
-                            <div>
+                            <div className="min-w-0 text-left">
                                 <p className="text-sm text-white font-medium">Private Account</p>
                                 <p className="text-xs text-[#5C6270]">Only followers can see your posts</p>
                             </div>
                         </div>
                         <button
                             onClick={() => updatePrivacy('isPublic', !privacy.isPublic)}
-                            className={`relative w-12 h-6 rounded-full transition-colors ${!privacy.isPublic ? "bg-[#9B59B6]" : "bg-[#2A2F3A]"}`}
+                            className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${!privacy.isPublic ? "bg-[#9B59B6]" : "bg-[#2A2F3A]"}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${!privacy.isPublic ? "left-7" : "left-1"}`} />
                         </button>
                     </div>
-                    { }
-                    { }
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#2A2F3A]">
-                        <div>
-                            <p className="text-sm text-white font-medium">Require Follow Approval</p>
-                            <p className="text-xs text-[#5C6270]">Review every new follower</p>
+
+                    <div className="flex items-center justify-between gap-3 pt-4 border-t border-[#2A2F3A]">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center flex-shrink-0">
+                                <UserPlus className="w-5 h-5 text-[#4F8CFF]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                                <p className="text-sm text-white font-medium">Require Approval</p>
+                                <p className="text-xs text-[#5C6270]">Review every new follower</p>
+                            </div>
                         </div>
                         <button
                             onClick={() => updatePrivacy('requireFollowApproval', !privacy.requireFollowApproval)}
-                            className={`relative w-12 h-6 rounded-full transition-colors ${privacy.requireFollowApproval ? "bg-[#9B59B6]" : "bg-[#2A2F3A]"}`}
+                            className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${privacy.requireFollowApproval ? "bg-[#9B59B6]" : "bg-[#2A2F3A]"}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${privacy.requireFollowApproval ? "left-7" : "left-1"}`} />
                         </button>
                     </div>
                 </div>
 
-                { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-white font-medium">Allow Comments From</p>
+                {/* Interaction Card */}
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5 space-y-4">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center flex-shrink-0">
+                                <MessageCircle className="w-5 h-5 text-[#4F8CFF]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                                <p className="text-sm text-white font-medium">Comments</p>
+                                <p className="text-xs text-[#5C6270]">Who can comment</p>
+                            </div>
                         </div>
                         <select
                             value={privacy.commentPermission}
                             onChange={(e) => updatePrivacy('commentPermission', e.target.value)}
-                            className="bg-[#171B22] border border-[#2A2F3A] text-white text-xs rounded-lg px-2 py-1 outline-none focus:border-[#4F8CFF]"
+                            className="bg-[#171B22] border border-[#2A2F3A] text-white text-[11px] md:text-xs rounded-lg px-2 py-1.5 outline-none focus:border-[#4F8CFF] flex-shrink-0"
                         >
                             <option value="everyone">Everyone</option>
                             <option value="followers">Followers</option>
@@ -559,14 +574,20 @@ export default function AccountSettings() {
                         </select>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-white font-medium">Allow Mentions From</p>
+                    <div className="flex items-center justify-between gap-3 pt-4 border-t border-[#2A2F3A]">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#F4D03F]/10 flex items-center justify-center flex-shrink-0">
+                                <AtSign className="w-5 h-5 text-[#F4D03F]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                                <p className="text-sm text-white font-medium">Mentions</p>
+                                <p className="text-xs text-[#5C6270]">Who can @mention</p>
+                            </div>
                         </div>
                         <select
                             value={privacy.mentionPermission}
                             onChange={(e) => updatePrivacy('mentionPermission', e.target.value)}
-                            className="bg-[#171B22] border border-[#2A2F3A] text-white text-xs rounded-lg px-2 py-1 outline-none focus:border-[#4F8CFF]"
+                            className="bg-[#171B22] border border-[#2A2F3A] text-white text-[11px] md:text-xs rounded-lg px-2 py-1.5 outline-none focus:border-[#4F8CFF] flex-shrink-0"
                         >
                             <option value="everyone">Everyone</option>
                             <option value="followers">Followers</option>
@@ -575,28 +596,39 @@ export default function AccountSettings() {
                 </div>
 
                 { }
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-white font-medium">Show in Discover</p>
-                            <p className="text-xs text-[#5C6270]">Let others find your profile in search/discover</p>
+                {/* Discovery Card */}
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5 space-y-4">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#2DE2A6]/10 flex items-center justify-center flex-shrink-0">
+                                <Compass className="w-5 h-5 text-[#2DE2A6]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                                <p className="text-sm text-white font-medium">Appear in Discover</p>
+                                <p className="text-xs text-[#5C6270]">Let others find you</p>
+                            </div>
                         </div>
                         <button
                             onClick={() => updatePrivacy('appearInDiscover', !privacy.appearInDiscover)}
-                            className={`relative w-12 h-6 rounded-full transition-colors ${privacy.appearInDiscover ? "bg-[#4F8CFF]" : "bg-[#2A2F3A]"}`}
+                            className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${privacy.appearInDiscover ? "bg-[#2DE2A6]" : "bg-[#2A2F3A]"}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${privacy.appearInDiscover ? "left-7" : "left-1"}`} />
                         </button>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-white font-medium">Allow Profile Suggestions</p>
-                            <p className="text-xs text-[#5C6270]">Suggest your account to others</p>
+                    <div className="flex items-center justify-between gap-3 pt-4 border-t border-[#2A2F3A]">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center flex-shrink-0">
+                                <Sparkles className="w-5 h-5 text-[#4F8CFF]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                                <p className="text-sm text-white font-medium">Suggestions</p>
+                                <p className="text-xs text-[#5C6270]">Suggest your account</p>
+                            </div>
                         </div>
                         <button
                             onClick={() => updatePrivacy('allowSuggestions', !privacy.allowSuggestions)}
-                            className={`relative w-12 h-6 rounded-full transition-colors ${privacy.allowSuggestions ? "bg-[#4F8CFF]" : "bg-[#2A2F3A]"}`}
+                            className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${privacy.allowSuggestions ? "bg-[#4F8CFF]" : "bg-[#2A2F3A]"}`}
                         >
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${privacy.allowSuggestions ? "left-7" : "left-1"}`} />
                         </button>
@@ -605,7 +637,7 @@ export default function AccountSettings() {
             </section>
 
             { }
-            <section className="space-y-6">
+            < section className="space-y-6" >
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Data Ownership</h2>
 
                 { }
@@ -696,112 +728,116 @@ export default function AccountSettings() {
                         </div>
                     )}
                 </div>
-            </section>
+            </section >
 
             { }
-            <section className="space-y-6">
+            < section className="space-y-6" >
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">Session History</h2>
 
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] overflow-hidden">
                     <SessionHistoryList />
                 </div>
-            </section>
+            </section >
 
             { }
 
             { }
-            {show2FAModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                    <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
-                        <div className="text-center">
-                            <h3 className="text-xl font-bold text-white mb-2">Setup 2FA</h3>
-                            <p className="text-[#5C6270] text-sm">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc).</p>
-                        </div>
-                        <div className="flex justify-center p-4 bg-white rounded-xl">
-                            <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48" />
-                        </div>
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <p className="text-xs text-center text-gray-500 uppercase tracking-widest font-semibold">Setup Key (Manual)</p>
-                                <div
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(secret);
-                                        setCopied(true);
-                                        setTimeout(() => setCopied(false), 2000);
-                                    }}
-                                    className="relative group cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all flex items-center justify-between overflow-hidden"
-                                >
-                                    <div className="flex flex-col">
-                                        <span className="text-[10px] text-gray-500 font-mono uppercase">Key</span>
-                                        <code className="text-pink-400 font-mono tracking-[0.2em] text-sm break-all">
-                                            {secret}
-                                        </code>
-                                    </div>
-                                    <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
-                                        {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-pink-400" />}
-                                    </div>
-                                    {copied && (
-                                        <div className="absolute top-0 right-0 bg-green-500 text-white text-[8px] px-2 py-0.5 rounded-bl-lg font-bold">
-                                            COPIED
+            {
+                show2FAModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                        <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-white mb-2">Setup 2FA</h3>
+                                <p className="text-[#5C6270] text-sm">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc).</p>
+                            </div>
+                            <div className="flex justify-center p-4 bg-white rounded-xl">
+                                <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48" />
+                            </div>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <p className="text-xs text-center text-gray-500 uppercase tracking-widest font-semibold">Setup Key (Manual)</p>
+                                    <div
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(secret);
+                                            setCopied(true);
+                                            setTimeout(() => setCopied(false), 2000);
+                                        }}
+                                        className="relative group cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all flex items-center justify-between overflow-hidden"
+                                    >
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-gray-500 font-mono uppercase">Key</span>
+                                            <code className="text-pink-400 font-mono tracking-[0.2em] text-sm break-all">
+                                                {secret}
+                                            </code>
                                         </div>
-                                    )}
+                                        <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 group-hover:bg-pink-500/20 transition-colors">
+                                            {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-pink-400" />}
+                                        </div>
+                                        {copied && (
+                                            <div className="absolute top-0 right-0 bg-green-500 text-white text-[8px] px-2 py-0.5 rounded-bl-lg font-bold">
+                                                COPIED
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <input
-                                type="text"
-                                value={twoFactorCode}
-                                onChange={e => setTwoFactorCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                placeholder="0 0 0  0 0 0"
-                                className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 !text-white placeholder:text-[#5C6270] text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
+                                <input
+                                    type="text"
+                                    value={twoFactorCode}
+                                    onChange={e => setTwoFactorCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                    placeholder="0 0 0  0 0 0"
+                                    className="w-full bg-[#0F1117] border border-[#2A2F3A] rounded-lg px-4 py-3 !text-white placeholder:text-[#5C6270] text-center tracking-[0.5em] font-mono text-lg focus:border-[#2DE2A6] outline-none"
 
-                                maxLength={6}
-                            />
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => setShow2FAModal(false)}
-                                    className="flex-1 py-3 bg-[#1E232F] text-white font-medium rounded-lg hover:bg-[#2A2F3A] transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={confirm2FASetup}
-                                    className="flex-1 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded-lg shadow-lg transform transition active:scale-95"
-                                >
-                                    Verify & Enable
-                                </button>
+                                    maxLength={6}
+                                />
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShow2FAModal(false)}
+                                        className="flex-1 py-3 bg-[#1E232F] text-white font-medium rounded-lg hover:bg-[#2A2F3A] transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirm2FASetup}
+                                        className="flex-1 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold rounded-lg shadow-lg transform transition active:scale-95"
+                                    >
+                                        Verify & Enable
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             { }
-            {showBackupModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                    <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
-                        <div className="text-center">
-                            <h3 className="text-xl font-bold text-white mb-2">Backup Codes</h3>
-                            <p className="text-[#5C6270] text-sm">
-                                Save these codes in a safe place. You can use each code once to log in if you lose access to your phone.
-                            </p>
+            {
+                showBackupModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                        <div className="bg-[#161B22] border border-[#2A2F3A] rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-6">
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-white mb-2">Backup Codes</h3>
+                                <p className="text-[#5C6270] text-sm">
+                                    Save these codes in a safe place. You can use each code once to log in if you lose access to your phone.
+                                </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 p-4 bg-[#0F1117] rounded-xl border border-[#2A2F3A]">
+                                {backupCodes.map((code, i) => (
+                                    <div key={i} className="font-mono text-[#2DE2A6] text-center text-sm py-1">
+                                        {code}
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setShowBackupModal(false)}
+                                className="w-full py-3 bg-[#4F8CFF] text-white font-bold rounded-lg hover:bg-[#3D7AE8]"
+                            >
+                                I have saved them
+                            </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 p-4 bg-[#0F1117] rounded-xl border border-[#2A2F3A]">
-                            {backupCodes.map((code, i) => (
-                                <div key={i} className="font-mono text-[#2DE2A6] text-center text-sm py-1">
-                                    {code}
-                                </div>
-                            ))}
-                        </div>
-                        <button
-                            onClick={() => setShowBackupModal(false)}
-                            className="w-full py-3 bg-[#4F8CFF] text-white font-bold rounded-lg hover:bg-[#3D7AE8]"
-                        >
-                            I have saved them
-                        </button>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

@@ -180,18 +180,19 @@ export default function DiscoverPage() {
         <main className="min-h-screen bg-[var(--bg-main)] overflow-hidden">
             <LeftSpine onAvatarClick={() => { }} />
 
-            { }
+            {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--accent)]/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--accent)]/5 rounded-full blur-3xl" />
             </div>
 
-            <div className="md:pl-[320px] pl-4 pr-8 py-8 relative">
-                { }
-                <div className="max-w-7xl mx-auto mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+            {/* Mobile: pt-safe-top so content clears the top bar. Always pb-safe-nav so content is above the bottom nav */}
+            <div className="md:pl-[280px] px-4 md:pr-8 py-4 md:py-8 pt-safe-top pb-safe-nav relative">
+                {/* Header */}
+                <div className="max-w-7xl mx-auto mb-6">
+                    <div className="flex flex-col gap-4 mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-[var(--text-main)] mb-1 font-[family-name:var(--font-space-grotesk)]">
+                            <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-1 font-[family-name:var(--font-space-grotesk)]">
                                 Discover
                             </h1>
                             <p className="text-[var(--text-muted)] font-[family-name:var(--font-inter)] text-sm">
@@ -199,18 +200,18 @@ export default function DiscoverPage() {
                             </p>
                         </div>
 
-                        { }
-                        <div className="flex gap-1 bg-[var(--bg-card)]/80 backdrop-blur-md p-1.5 rounded-full border border-[var(--border-soft)] overflow-x-auto no-scrollbar">
+                        {/* Filter pills — horizontally scrollable on mobile */}
+                        <div className="flex gap-1.5 bg-[var(--bg-card)]/80 backdrop-blur-md p-1.5 rounded-full border border-[var(--border-soft)] overflow-x-auto scrollbar-hide">
                             {filterModes.map(mode => (
                                 <button
                                     key={mode.id}
                                     onClick={() => setActiveMode(mode.id)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 font-[family-name:var(--font-inter)] text-sm whitespace-nowrap ${activeMode === mode.id
-                                        ? 'bg-[var(--accent)] text-[#0F1117] shadow-lg'
-                                        : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                                    className={`flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-full transition-all duration-300 font-[family-name:var(--font-inter)] text-xs md:text-sm whitespace-nowrap flex-shrink-0 ${activeMode === mode.id
+                                            ? 'bg-[var(--accent)] text-[#0F1117] shadow-lg'
+                                            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                                         }`}
                                 >
-                                    <mode.icon size={14} />
+                                    <mode.icon size={13} />
                                     <span>{mode.label}</span>
                                 </button>
                             ))}

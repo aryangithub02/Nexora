@@ -150,8 +150,8 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   useEffect(() => {
     const calculateSafeHeight = () => {
       const isMobile = window.innerWidth < 768;
-      const TOP_BAR_HEIGHT = isMobile ? 64 : 0;
-      const BOTTOM_BAR_HEIGHT = isMobile ? 72 : 0;
+      const TOP_BAR_HEIGHT = isMobile ? 60 : 0;   // FloatingNavbar height
+      const BOTTOM_BAR_HEIGHT = isMobile ? 80 : 0; // MobileNavbar height
       const safeHeight = window.innerHeight - TOP_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
       document.documentElement.style.setProperty("--safe-height", `${safeHeight}px`);
     };
@@ -164,9 +164,8 @@ export default function Feed({ videos, onVideoDeleted }: FeedProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen md:h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope"
+      className="w-full overflow-y-auto snap-y snap-mandatory scrollbar-hide relative feed-envelope mt-[60px] h-[calc(100dvh-60px)] md:mt-0 md:h-full"
     >
-
       { }
       <div className="flex flex-col items-center w-full">
         <div className="text-center mb-6 opacity-50 hidden md:block">

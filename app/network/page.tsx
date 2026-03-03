@@ -150,49 +150,49 @@ export default function NetworkPage() {
         <main className="min-h-screen bg-[var(--bg-main)]">
             <LeftSpine onAvatarClick={() => { }} />
 
-            <div className="md:pl-[320px] pl-4 pr-8 py-8">
+            <div className="md:pl-[280px] px-4 py-4 md:py-8 pt-safe-top pb-safe-nav">
                 <div className="max-w-3xl mx-auto">
-                    { }
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-[var(--text-main)] mb-2 font-[family-name:var(--font-space-grotesk)]">
+                    {/* Header */}
+                    <div className="mb-6 md:mb-8">
+                        <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-1 font-[family-name:var(--font-space-grotesk)]">
                             Your Network
                         </h1>
-                        <p className="text-[var(--text-muted)] font-[family-name:var(--font-inter)]">
+                        <p className="text-[var(--text-muted)] text-sm font-[family-name:var(--font-inter)]">
                             Connect with creators and grow your community
                         </p>
                     </div>
 
-                    { }
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                        <div className="bg-[var(--bg-card)]/50 rounded-2xl p-6 border border-[var(--border-soft)]">
-                            <p className="text-4xl font-bold text-[var(--text-main)] font-[family-name:var(--font-space-grotesk)]">
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
+                        <div className="bg-[var(--bg-card)]/50 rounded-2xl p-4 md:p-6 border border-[var(--border-soft)]">
+                            <p className="text-3xl md:text-4xl font-bold text-[var(--text-main)] font-[family-name:var(--font-space-grotesk)]">
                                 {stats.following}
                             </p>
                             <p className="text-[var(--text-muted)] text-sm">Following</p>
                         </div>
-                        <div className="bg-[var(--bg-card)]/50 rounded-2xl p-6 border border-[var(--border-soft)]">
-                            <p className="text-4xl font-bold text-[var(--text-main)] font-[family-name:var(--font-space-grotesk)]">
+                        <div className="bg-[var(--bg-card)]/50 rounded-2xl p-4 md:p-6 border border-[var(--border-soft)]">
+                            <p className="text-3xl md:text-4xl font-bold text-[var(--text-main)] font-[family-name:var(--font-space-grotesk)]">
                                 {stats.followers}
                             </p>
                             <p className="text-[var(--text-muted)] text-sm">Followers</p>
                         </div>
                     </div>
 
-                    { }
-                    <div className="flex gap-2 mb-6">
+                    {/* Tab bar */}
+                    <div className="flex gap-1.5 mb-5 bg-[var(--bg-card)]/80 p-1 rounded-full border border-[var(--border-soft)] overflow-x-auto scrollbar-hide">
                         {tabs.map(tab => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all font-[family-name:var(--font-inter)] ${activeTab === tab.id
-                                    ? 'bg-[var(--accent)] text-[#0F1117]'
-                                    : 'bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-hover)]'
+                                className={`flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-full transition-all font-[family-name:var(--font-inter)] text-xs md:text-sm whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
+                                        ? 'bg-[var(--accent)] text-[#0F1117]'
+                                        : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                                     }`}
                             >
-                                <tab.icon size={16} />
+                                <tab.icon size={14} />
                                 <span>{tab.label}</span>
                                 {tab.count !== undefined && (
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-[var(--bg-main)]'
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-[var(--bg-main)]'
                                         }`}>
                                         {tab.count}
                                     </span>

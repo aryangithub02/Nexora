@@ -90,12 +90,12 @@ export default function NotificationSettings() {
     }) => (
         <button
             onClick={onChange}
-            className={`relative rounded-full transition-all duration-300 ${enabled ? "bg-[#2DE2A6]" : "bg-[#2A2F3A]"
-                } ${size === "small" ? "w-9 h-5" : "w-12 h-6"}`}
+            className={`relative rounded-full transition-all duration-300 flex-shrink-0 ${enabled ? "bg-[#2DE2A6] shadow-[0_0_12px_rgba(45,226,166,0.3)]" : "bg-[#2A2F3A]"
+                } ${size === "small" ? "w-9 h-5" : "w-11 h-6"}`}
         >
-            <div className={`absolute bg-white rounded-full transition-transform duration-300 shadow-md ${size === "small"
+            <div className={`absolute bg-white rounded-full transition-all duration-300 shadow-sm ${size === "small"
                 ? `w-3 h-3 top-1 ${enabled ? "left-5" : "left-1"}`
-                : `w-4 h-4 top-1 ${enabled ? "left-7" : "left-1"}`
+                : `w-4 h-4 top-1 ${enabled ? "left-6" : "left-1"}`
                 }`} />
         </button>
     );
@@ -114,52 +114,52 @@ export default function NotificationSettings() {
     };
 
     return (
-        <div className="space-y-12 relative z-10">
-            {}
+        <div className="space-y-8 md:space-y-12 relative z-10 px-1 md:px-0">
+            {/* ─────────── HEADER ─────────── */}
             <div>
-                <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                <h1 className="text-xl md:text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)] leading-tight">
                     Notifications
                 </h1>
-                <p className="text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
+                <p className="text-[13px] md:text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
                     Choose how you want to be notified
                 </p>
             </div>
 
-            {}
+            { }
             <section className="space-y-4">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Notification Channels
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {}
-                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${pushEnabled ? "bg-[#2DE2A6]/10" : "bg-[#1E232F]"
+                    { }
+                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                        <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${pushEnabled ? "bg-[#2DE2A6]/10" : "bg-[#1E232F]"
                                     }`}>
                                     <Smartphone className={`w-5 h-5 ${pushEnabled ? "text-[#2DE2A6]" : "text-[#5C6270]"}`} />
                                 </div>
-                                <div>
-                                    <p className="text-sm text-white font-medium">Push Notifications</p>
-                                    <p className="text-xs text-[#5C6270]">Get notified on your device</p>
+                                <div className="min-w-0">
+                                    <p className="text-sm text-white font-medium truncate">Push Notifications</p>
+                                    <p className="text-xs text-[#5C6270] truncate">Direct to device</p>
                                 </div>
                             </div>
                             <ToggleSwitch enabled={pushEnabled} onChange={() => setPushEnabled(!pushEnabled)} />
                         </div>
                     </div>
 
-                    {}
-                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${emailEnabled ? "bg-[#4F8CFF]/10" : "bg-[#1E232F]"
+                    { }
+                    <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                        <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${emailEnabled ? "bg-[#4F8CFF]/10" : "bg-[#1E232F]"
                                     }`}>
                                     <Mail className={`w-5 h-5 ${emailEnabled ? "text-[#4F8CFF]" : "text-[#5C6270]"}`} />
                                 </div>
-                                <div>
-                                    <p className="text-sm text-white font-medium">Email Notifications</p>
-                                    <p className="text-xs text-[#5C6270]">Get updates in your inbox</p>
+                                <div className="min-w-0">
+                                    <p className="text-sm text-white font-medium truncate">Email Alerts</p>
+                                    <p className="text-xs text-[#5C6270] truncate">Updates in inbox</p>
                                 </div>
                             </div>
                             <ToggleSwitch enabled={emailEnabled} onChange={() => setEmailEnabled(!emailEnabled)} />
@@ -167,11 +167,11 @@ export default function NotificationSettings() {
                     </div>
                 </div>
 
-                {}
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${soundEnabled ? "bg-[#F4D03F]/10" : "bg-[#1E232F]"
+                { }
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${soundEnabled ? "bg-[#F4D03F]/10" : "bg-[#1E232F]"
                                 }`}>
                                 {soundEnabled ? (
                                     <Volume2 className="w-5 h-5 text-[#F4D03F]" />
@@ -179,9 +179,9 @@ export default function NotificationSettings() {
                                     <VolumeX className="w-5 h-5 text-[#5C6270]" />
                                 )}
                             </div>
-                            <div>
-                                <p className="text-sm text-white font-medium">Notification Sounds</p>
-                                <p className="text-xs text-[#5C6270]">Play sounds for push notifications</p>
+                            <div className="min-w-0">
+                                <p className="text-sm text-white font-medium truncate">Notification Sounds</p>
+                                <p className="text-xs text-[#5C6270] truncate">Audible alerts for push</p>
                             </div>
                         </div>
                         <ToggleSwitch enabled={soundEnabled} onChange={() => setSoundEnabled(!soundEnabled)} />
@@ -189,7 +189,7 @@ export default function NotificationSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
@@ -202,7 +202,7 @@ export default function NotificationSettings() {
                 </div>
 
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] divide-y divide-[#2A2F3A]">
-                    {}
+                    { }
                     <div className="flex items-center justify-between p-4 bg-[#171B22]">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-[#2A2F3A] flex items-center justify-center">
@@ -231,7 +231,7 @@ export default function NotificationSettings() {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     {preferences.map((pref) => (
                         <div key={pref.type} className="flex items-center justify-between p-4 hover:bg-[#1E232F] transition-colors">
                             <div className="flex items-center gap-4">
@@ -269,7 +269,7 @@ export default function NotificationSettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-4">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Quiet Hours

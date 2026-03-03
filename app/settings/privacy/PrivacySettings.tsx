@@ -23,7 +23,7 @@ interface BlockedUser {
 }
 
 export default function PrivacySettings() {
-    
+
     const [isPublic, setIsPublic] = useState(true);
     const [requireFollowApproval, setRequireFollowApproval] = useState(false);
 
@@ -68,10 +68,10 @@ export default function PrivacySettings() {
     const ToggleSwitch = ({ enabled, onChange }: { enabled: boolean; onChange: () => void }) => (
         <button
             onClick={onChange}
-            className={`relative w-12 h-6 rounded-full transition-all duration-300 ${enabled ? "bg-[#2DE2A6]" : "bg-[#2A2F3A]"
+            className={`relative w-11 h-6 rounded-full transition-all duration-300 flex-shrink-0 ${enabled ? "bg-[#2DE2A6] shadow-[0_0_12px_rgba(45,226,166,0.2)]" : "bg-[#2A2F3A]"
                 }`}
         >
-            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 shadow-md ${enabled ? "left-7" : "left-1"
+            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-sm ${enabled ? "left-6" : "left-1"
                 }`} />
         </button>
     );
@@ -90,8 +90,8 @@ export default function PrivacySettings() {
         <button
             onClick={onClick}
             className={`flex items-center gap-3 p-3 rounded-lg border transition-all w-full text-left ${selected
-                    ? "border-[#2DE2A6]/50 bg-[#2DE2A6]/5"
-                    : "border-[#2A2F3A] hover:border-[#3A3F4A]"
+                ? "border-[#2DE2A6]/50 bg-[#2DE2A6]/5"
+                : "border-[#2A2F3A] hover:border-[#3A3F4A]"
                 }`}
         >
             <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selected ? "border-[#2DE2A6]" : "border-[#5C6270]"
@@ -110,45 +110,45 @@ export default function PrivacySettings() {
     );
 
     return (
-        <div className="space-y-12 relative z-10">
-            {}
-            <div>
-                <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+        <div className="space-y-8 md:space-y-12 relative z-10">
+            {/* ─────────── HEADER ─────────── */}
+            <div className="px-1 md:px-0">
+                <h1 className="text-xl md:text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
                     Privacy
                 </h1>
-                <p className="text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
+                <p className="text-[13px] md:text-sm text-[#5C6270] mt-1 font-[family-name:var(--font-inter)]">
                     Control how others can interact with you
                 </p>
             </div>
 
-            {}
-            <div className="bg-gradient-to-r from-[#4F8CFF]/10 to-[#2DE2A6]/10 rounded-xl border border-white/5 p-4">
+            {/* Visibility Dashboard */}
+            <div className="bg-gradient-to-r from-[#4F8CFF]/10 to-[#2DE2A6]/10 rounded-xl border border-white/5 p-4 mx-1 md:mx-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#4F8CFF]/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-[#4F8CFF]/20 flex items-center justify-center flex-shrink-0">
                         {isPublic ? <Eye className="w-4 h-4 text-[#4F8CFF]" /> : <EyeOff className="w-4 h-4 text-[#4F8CFF]" />}
                     </div>
                     <div>
-                        <p className="text-xs font-bold text-[#4F8CFF] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
-                            Who can see you now
+                        <p className="text-[10px] font-bold text-[#4F8CFF] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
+                            Current Status
                         </p>
-                        <p className="text-sm text-white/80 font-[family-name:var(--font-inter)]">
+                        <p className="text-sm text-white/80 font-[family-name:var(--font-inter)] leading-snug mt-0.5">
                             {getVisibilitySummary()}
                         </p>
                     </div>
                 </div>
             </div>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Account Visibility
                 </h2>
 
-                {}
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isPublic ? "bg-[#2DE2A6]/10" : "bg-[#FF6B6B]/10"
+                { }
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isPublic ? "bg-[#2DE2A6]/10" : "bg-[#FF6B6B]/10"
                                 }`}>
                                 {isPublic ? (
                                     <Eye className="w-5 h-5 text-[#2DE2A6]" />
@@ -156,14 +156,14 @@ export default function PrivacySettings() {
                                     <EyeOff className="w-5 h-5 text-[#FF6B6B]" />
                                 )}
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <p className="text-sm text-white font-medium">
                                     {isPublic ? "Public Account" : "Private Account"}
                                 </p>
                                 <p className="text-xs text-[#5C6270]">
                                     {isPublic
-                                        ? "Anyone can see your content and follow you"
-                                        : "Only approved followers can see your content"
+                                        ? "Anyone can see your content"
+                                        : "Only approved followers can see"
                                     }
                                 </p>
                             </div>
@@ -172,11 +172,11 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {}
-                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center">
+                { }
+                <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-4 md:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center flex-shrink-0">
                                 <UserPlus className="w-5 h-5 text-[#4F8CFF]" />
                             </div>
                             <div>
@@ -194,13 +194,13 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Interaction Controls
                 </h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-[#4F8CFF]/10 flex items-center justify-center">
@@ -230,7 +230,7 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5 space-y-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-[#F4D03F]/10 flex items-center justify-center">
@@ -256,13 +256,13 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Discovery Settings
                 </h2>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -280,7 +280,7 @@ export default function PrivacySettings() {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -299,14 +299,14 @@ export default function PrivacySettings() {
                 </div>
             </section>
 
-            {}
+            { }
             <section className="space-y-6">
                 <h2 className="text-xs font-bold text-[#5C6270] uppercase tracking-wider font-[family-name:var(--font-jetbrains-mono)]">
                     Blocked Users
                 </h2>
 
                 <div className="bg-[#0F1117] rounded-xl border border-[#2A2F3A] overflow-hidden">
-                    {}
+                    { }
                     <div className="p-4 border-b border-[#2A2F3A]">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C6270]" />
@@ -320,7 +320,7 @@ export default function PrivacySettings() {
                         </div>
                     </div>
 
-                    {}
+                    { }
                     {blockedUsers.length === 0 ? (
                         <div className="p-8 text-center">
                             <Ban className="w-8 h-8 text-[#5C6270] mx-auto mb-3" />

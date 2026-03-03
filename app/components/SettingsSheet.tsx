@@ -18,10 +18,10 @@ export default function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
     useEffect(() => {
         if (isOpen) {
             setIsVisible(true);
-            
+
             document.body.style.overflow = "hidden";
         } else {
-            setTimeout(() => setIsVisible(false), 300); 
+            setTimeout(() => setIsVisible(false), 300);
             document.body.style.overflow = "unset";
         }
     }, [isOpen]);
@@ -32,7 +32,7 @@ export default function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
         {
             icon: User,
             label: "Edit Profile",
-            href: "/settings/profile", 
+            href: "/settings/profile",
             description: "Name, bio, and avatar"
         },
         {
@@ -57,23 +57,23 @@ export default function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
 
     return (
         <div className={`fixed inset-0 z-[100] md:hidden transition-all duration-300 ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
-            {}
+            { }
             <div
                 className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
                 onClick={onClose}
             />
 
-            {}
+            { }
             <div
                 className={`absolute bottom-0 left-0 right-0 bg-[#0F1117] rounded-t-[32px] border-t border-white/10 p-6 transition-transform duration-300 ease-out transform ${isOpen ? "translate-y-0" : "translate-y-full"}`}
                 style={{
                     boxShadow: "0 -8px 40px rgba(0,0,0,0.6)"
                 }}
             >
-                {}
+                { }
                 <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-8" />
 
-                {}
+                { }
                 <div className="flex items-center gap-4 mb-8">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4F8CFF] to-[#2DE2A6] p-[2px]">
                         <div className="w-full h-full rounded-full bg-[#0F1117] overflow-hidden flex items-center justify-center">
@@ -102,7 +102,7 @@ export default function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
                     </div>
                 </div>
 
-                {}
+                { }
                 <div className="space-y-2 mb-8">
                     {menuItems.map((item, index) => (
                         <Link
@@ -126,7 +126,7 @@ export default function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
                     ))}
                 </div>
 
-                {}
+                { }
                 <button
                     onClick={() => signOut()}
                     className="w-full p-4 rounded-2xl bg-[#171B22] text-[#FF6B6B] font-medium flex items-center justify-center gap-2 hover:bg-[#FF6B6B]/10 transition-colors"

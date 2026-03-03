@@ -95,9 +95,9 @@ export default function NotificationsPage() {
         <main className="min-h-screen bg-[#0F1117] flex relative">
             <LeftSpine onAvatarClick={() => { }} />
 
-            <div className="flex-1 md:ml-[320px] p-6">
+            <div className="flex-1 md:pl-[280px] px-4 pt-safe-top pb-safe-nav">
                 <div className="max-w-2xl mx-auto">
-                    <h1 className="text-3xl font-bold text-white mb-8 font-[family-name:var(--font-space-grotesk)]">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8 font-[family-name:var(--font-space-grotesk)]">
                         Notifications
                     </h1>
 
